@@ -23,6 +23,7 @@ spring:
     username: mykim
     password: kmy5708!@#
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # todo : db connection정보가 노출되어있음, 추후 암호화
 
   # JPA 관련
   jpa:
