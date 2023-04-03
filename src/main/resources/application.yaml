@@ -80,11 +80,11 @@ spring:
       mode: always
 
   # Spring Data REST : 도메인 모델과 repository를 분석해서, RESTful API를 제공
-  data:
-    rest:
-      base-path: /api
-      detection-strategy: annotated
-      # spring.data.rest.base-path : repository resource를 노출할 기본 경로
-      # spring.data.rest.detection-strategy :
-        # api로 만들 repository를 찾는 전략
-        # annotated : @RepositoryRestResource, @RestResource가 달린 자원들을 노출
+#  data:
+#    rest:
+#      base-path: /api
+#      detection-strategy: annotated
+#      # spring.data.rest.base-path : repository resource를 노출할 기본 경로
+#      # spring.data.rest.detection-strategy :
+#        # api로 만들 repository를 찾는 전략
+#        # annotated : @RepositoryRestResource, @RestResource가 달린 자원들을 노출
