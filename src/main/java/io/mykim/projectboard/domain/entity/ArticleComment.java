@@ -1,4 +1,4 @@
-package io.mykim.projectboard.domain;
+package io.mykim.projectboard.domain.entity;
 
 import io.mykim.projectboard.config.jpa.BaseTimeEntity;
 import lombok.AccessLevel;

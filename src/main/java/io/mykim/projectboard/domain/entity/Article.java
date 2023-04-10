@@ -1,6 +1,8 @@
-package io.mykim.projectboard.domain;
+package io.mykim.projectboard.domain.entity;
 
 import io.mykim.projectboard.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.dto.request.RequestArticleCreateDto;
+import io.mykim.projectboard.dto.request.RequestArticleEditDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,9 @@ public class Article extends BaseTimeEntity {
         return new Article(title, content, hashtag);
     }
 
+    public static Article of(RequestArticleCreateDto createDto) {
+        return new Article(createDto.getTitle(), createDto.getContent(), createDto.getHashtag());
+    }
 
     public void updateTitle(String title){
         this.title = title;
@@ -59,4 +64,10 @@ public class Article extends BaseTimeEntity {
         this.hashtag = hashtag;
     }
 
+
+    public void editArticle(RequestArticleEditDto editDto) {
+        this.title = editDto.getTitle();
+        this.content = editDto.getContent();
+        this.hashtag = editDto.getHashtag();
+    }
 }
