@@ -1,8 +1,11 @@
-package io.mykim.projectboard.repository;
+package io.mykim.projectboard.init;
 
 import io.mykim.projectboard.config.jpa.JpaConfig;
-import io.mykim.projectboard.domain.Article;
+import io.mykim.projectboard.domain.entity.Article;
+import io.mykim.projectboard.repository.ArticleCommentRepository;
+import io.mykim.projectboard.repository.ArticleRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
+@Disabled("초기 설정 시 진행했던 테스트이므로 개발을 진행됨에 따라 해당 테스트는 진행안함")
 @DisplayName("JPA 연결 테스트")
 @Import(JpaConfig.class)  // auding 관련 config import
 @DataJpaTest

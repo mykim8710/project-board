@@ -1,4 +1,4 @@
-package io.mykim.projectboard.controller;
+package io.mykim.projectboard.init;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
