@@ -1,4 +1,4 @@
-package io.mykim.projectboard.global.pagination;
+package io.mykim.projectboard.global.select.sort;
 
 import lombok.Getter;
 import lombok.ToString;
