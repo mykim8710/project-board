@@ -1,19 +1,16 @@
 package io.mykim.projectboard.api;
 
-import io.mykim.projectboard.dto.request.RequestArticleCreateDto;
-import io.mykim.projectboard.dto.request.RequestArticleEditDto;
-import io.mykim.projectboard.dto.response.ResponseArticleFindDto;
-import io.mykim.projectboard.dto.response.ResponseArticleListDto;
-import io.mykim.projectboard.global.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.pagination.CustomPaginationResponse;
-import io.mykim.projectboard.global.pagination.CustomSortingRequest;
+import io.mykim.projectboard.dto.request.ArticleCreateDto;
+import io.mykim.projectboard.dto.request.ArticleEditDto;
+import io.mykim.projectboard.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
+import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.service.ArticleCommentService;
 import io.mykim.projectboard.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,17 +29,16 @@ public class ArticleApiController {
      *
      * pagination : offset, limit
      * sort : id,DESC/title,ASC........
-     * search : keyword
-     * /api/v1/articles?keyword=?&offset=?&limit=?&sort=id,DESC/title,ASC......
+     * search : keyword, searchType
+     * /api/v1/articles?keyword=?&searchType=?&offset=?&limit=?&sort=id,DESC/title,ASC......
      */
-
     @GetMapping("/api/v1/articles")
     public ResponseEntity<CommonResponse> findAllArticleApi(@ModelAttribute CustomPaginationRequest paginationRequest,
                                                             @ModelAttribute CustomSortingRequest sortingRequest,
-                                                            @RequestParam String keyword) {
+                                                            @ModelAttribute ArticleSearchCondition searchCondition) {
 
-        log.info("[GET] /api/v1/articles?keyword={}&offset={}&limit={}&sort={}  =>  find all Article api", keyword, paginationRequest.getOffset(), paginationRequest.getLimit(), sortingRequest.getSort());
-        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.COMMON_OK, articleService.findAllArticle(paginationRequest, sortingRequest, keyword));
+        log.info("[GET] /api/v1/articles?keyword={}&searchType={}&offset={}&limit={}&sort={}  =>  find all Article api", searchCondition.getKeyword(), searchCondition.getSearchType(), paginationRequest.getOffset(), paginationRequest.getLimit(), sortingRequest.getSort());
+        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.COMMON_OK, articleService.findAllArticle(paginationRequest, sortingRequest, searchCondition));
         return ResponseEntity
                 .status(commonResponse.getStatus())
                 .body(commonResponse);
@@ -60,8 +56,8 @@ public class ArticleApiController {
 
     // 게시글 저장
     @PostMapping("/api/v1/articles")
-    public ResponseEntity<CommonResponse> createArticleApi(@RequestBody @Valid RequestArticleCreateDto createDto) {
-        log.info("[POST] /api/v1/articles  =>  create Article api, RequestArticleCreateDto = {}", createDto);
+    public ResponseEntity<CommonResponse> createArticleApi(@RequestBody @Valid ArticleCreateDto createDto) {
+        log.info("[POST] /api/v1/articles  =>  create Article api, ArticleCreateDto = {}", createDto);
         CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.INSERT_OK, articleService.createArticle(createDto));
         return ResponseEntity
                 .status(commonResponse.getStatus())
@@ -70,8 +66,8 @@ public class ArticleApiController {
 
     // 게시글 단건 수정
     @PatchMapping("/api/v1/articles/{articleId}")
-    public ResponseEntity<CommonResponse> editArticleApi(@PathVariable Long articleId, @RequestBody @Valid RequestArticleEditDto editDto) {
-        log.info("[PATCH] /api/v1/articles/{}  =>  edit Article api, RequestArticleEditDto = {}", articleId, editDto);
+    public ResponseEntity<CommonResponse> editArticleApi(@PathVariable Long articleId, @RequestBody @Valid ArticleEditDto editDto) {
+        log.info("[PATCH] /api/v1/articles/{}  =>  edit Article api, ArticleEditDto = {}", articleId, editDto);
         articleService.editArticle(editDto, articleId);
         CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.UPDATE_OK);
         return ResponseEntity
@@ -89,40 +85,6 @@ public class ArticleApiController {
                 .status(commonResponse.getStatus())
                 .body(commonResponse);
     }
-
-
-    // 댓글 전체 목록조회
-    //@GetMapping("/api/v1/article-comments")
-
-
-
-    // 댓글 단건 조회
-    //@GetMapping("/api/v1/article-comments/{articleCommentId}")
-
-
-
-    // 게시글 하부 댓글 전체 목록조회 +search
-    //@PostMapping("/api/v1/articles/{articleId}/article-comments")
-
-
-
-    // 게시글 하부 댓글 단건 조회
-    //@PostMapping("/api/v1/articles/{articleId}/article-comments/{articleCommentId}")
-
-
-
-    // 게시글 하부 댓글 저장
-    //@PostMapping("/api/v1/articles/{articleId}/article-comments")
-
-
-
-    // 게시글 하부 댓글 수정
-    //@PatchMapping("/api/v1/articles/{articleId}/article-comments/{articleCommentId}")
-
-
-
-    // 게시글 하부 댓글 삭제
-    //@DeleteMapping("/api/v1/articles/{articleId}/article-comments/{articleCommentId}")
 
 
 }

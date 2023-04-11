@@ -1,13 +1,14 @@
 package io.mykim.projectboard.service;
 
 import io.mykim.projectboard.domain.entity.Article;
-import io.mykim.projectboard.dto.request.RequestArticleCreateDto;
-import io.mykim.projectboard.dto.request.RequestArticleEditDto;
+import io.mykim.projectboard.dto.request.ArticleCreateDto;
+import io.mykim.projectboard.dto.request.ArticleEditDto;
+import io.mykim.projectboard.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.dto.response.ResponseArticleListDto;
-import io.mykim.projectboard.global.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.pagination.CustomPaginationResponse;
-import io.mykim.projectboard.global.pagination.CustomSortingRequest;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
+import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
 import io.mykim.projectboard.repository.ArticleRepository;
@@ -18,8 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,9 +34,9 @@ public class ArticleService {
      * 검색 : keyword.contain("") => article_title, article_content, article_hashtag, user_nickname
      */
     @Transactional(readOnly = true)
-    public ResponseArticleListDto findAllArticle(CustomPaginationRequest paginationRequest, CustomSortingRequest sortingRequest, String keyword) {
+    public ResponseArticleListDto findAllArticle(CustomPaginationRequest paginationRequest, CustomSortingRequest sortingRequest, ArticleSearchCondition searchCondition) {
         PageRequest pageRequest = PageRequest.of(paginationRequest.getOffset() - 1, paginationRequest.getLimit(), Sort.by(sortingRequest.of()));
-        Page<ResponseArticleFindDto> allArticle = articleRepository.findAllArticle(pageRequest, keyword);
+        Page<ResponseArticleFindDto> allArticle = articleRepository.findAllArticle(pageRequest, searchCondition);
 
         return ResponseArticleListDto.builder()
                 .responseArticleFindDtos(allArticle.getContent())
@@ -53,14 +52,14 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long createArticle(RequestArticleCreateDto createDto) {
+    public Long createArticle(ArticleCreateDto createDto) {
         // dto to entity
         Article article = Article.of(createDto);
         return articleRepository.save(article).getId();
     }
 
     @Transactional
-    public void editArticle(RequestArticleEditDto editDto, Long articleId) {
+    public void editArticle(ArticleEditDto editDto, Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
         findArticle.editArticle(editDto);
     }

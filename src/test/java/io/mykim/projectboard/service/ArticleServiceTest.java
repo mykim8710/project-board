@@ -1,15 +1,15 @@
 package io.mykim.projectboard.service;
 
 import io.mykim.projectboard.domain.entity.Article;
-import io.mykim.projectboard.dto.request.RequestArticleCreateDto;
-import io.mykim.projectboard.dto.request.RequestArticleEditDto;
+import io.mykim.projectboard.dto.request.ArticleCreateDto;
+import io.mykim.projectboard.dto.request.ArticleEditDto;
+import io.mykim.projectboard.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.dto.response.ResponseArticleListDto;
-import io.mykim.projectboard.global.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.pagination.CustomSortingRequest;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
+import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.repository.ArticleRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,7 +37,7 @@ class ArticleServiceTest {
         String title = "title";
         String content = "content";
         String hashtag = "hashtag";
-        RequestArticleCreateDto createDto = new RequestArticleCreateDto(title, content, hashtag);
+        ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtag);
 
         // when
         Long articleId = articleService.createArticle(createDto);
@@ -100,10 +99,12 @@ class ArticleServiceTest {
         int limit = 5;
         CustomPaginationRequest customPaginationRequest = new CustomPaginationRequest(offset, limit);
 
-        String keyword= "";
+        String keyword = "";
+        String searchType = "A";
+        ArticleSearchCondition articleSearchCondition = new ArticleSearchCondition(keyword, searchType);
 
         // when
-        ResponseArticleListDto result = articleService.findAllArticle(customPaginationRequest, customSortingRequest, keyword);
+        ResponseArticleListDto result = articleService.findAllArticle(customPaginationRequest, customSortingRequest, articleSearchCondition);
 
         // then
         Assertions.assertThat(result.getResponseArticleFindDtos().size()).isEqualTo(limit);
@@ -122,7 +123,7 @@ class ArticleServiceTest {
         String newTitle = "newTitle";
         String newContent = "newContent";
         String newHashtag = "newHashtag";
-        RequestArticleEditDto editDto = new RequestArticleEditDto(newTitle, newContent, newHashtag);
+        ArticleEditDto editDto = new ArticleEditDto(newTitle, newContent, newHashtag);
 
         // when
         articleService.editArticle(editDto, article.getId());

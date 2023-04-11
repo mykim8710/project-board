@@ -1,6 +1,6 @@
 package io.mykim.projectboard.dto.response;
 
-import io.mykim.projectboard.global.pagination.CustomPaginationResponse;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
 import lombok.Builder;
 import lombok.Getter;
 
