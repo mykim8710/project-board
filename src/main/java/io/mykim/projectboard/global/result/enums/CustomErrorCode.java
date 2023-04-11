@@ -13,6 +13,7 @@ public enum CustomErrorCode {
 
     // article
     NOT_FOUND_ARTICLE(404, "A001", "not found this article"),
+    NOT_FOUND_ARTICLE_COMMENT(404, "A001", "not found this article comment"),
 
     ;
 

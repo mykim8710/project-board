@@ -27,14 +27,17 @@ public class ArticleComment extends BaseTimeEntity {
     @Column(name = "article_comment_content", nullable = false, length = 500)
     private String content;
 
-
-    private ArticleComment(Article article, String content) {
-        this.article = article;
+    private ArticleComment(String content, Article article) {
         this.content = content;
+        this.article = article;
     }
 
-    public static ArticleComment of(Article article, String content) {
-        return new ArticleComment(article, content);
+    public static ArticleComment of(String content, Article article) {
+        return new ArticleComment(content, article);
+    }
+
+    public void editArticleComment(String content) {
+        this.content = content;
     }
 
 }
