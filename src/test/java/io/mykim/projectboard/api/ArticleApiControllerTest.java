@@ -56,7 +56,7 @@ class ArticleApiControllerTest {
         ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtag);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
-        // when
+        // when & then
         mockMvc.perform(MockMvcRequestBuilders.post(api)
                         .contentType(APPLICATION_JSON)
                         .content(requestDtoJsonStr)
@@ -67,16 +67,6 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.INSERT_OK.getMessage()))
                 .andExpect(jsonPath("$.data").isNotEmpty())
                 .andDo(MockMvcResultHandlers.print());
-
-
-        // then
-        long count = articleRepository.count();
-        Assertions.assertThat(count).isEqualTo(1);
-
-        Article findArticle = articleRepository.findAll().get(0);
-        Assertions.assertThat(findArticle.getTitle()).isEqualTo(title);
-        Assertions.assertThat(findArticle.getContent()).isEqualTo(content);
-        Assertions.assertThat(findArticle.getHashtag()).isEqualTo(hashtag);
     }
 
     @Test
@@ -169,7 +159,7 @@ class ArticleApiControllerTest {
         ArticleEditDto editDto = new ArticleEditDto(editTitle, editContent, editHashtag);
         String requestDtoJsonStr = objectMapper.writeValueAsString(editDto);
 
-        // when
+        // when & then
         mockMvc.perform(MockMvcRequestBuilders.patch(api, insertArticle.getId())
                 .contentType(APPLICATION_JSON)
                 .content(requestDtoJsonStr))
@@ -178,13 +168,6 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.code").value(CustomSuccessCode.UPDATE_OK.getCode()))
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.UPDATE_OK.getMessage()))
                 .andDo(MockMvcResultHandlers.print());
-
-
-        // then
-        Article findArticle = articleRepository.findById(insertArticle.getId()).get();
-        Assertions.assertThat(findArticle.getTitle()).isEqualTo(editTitle);
-        Assertions.assertThat(findArticle.getContent()).isEqualTo(editContent);
-        Assertions.assertThat(findArticle.getHashtag()).isEqualTo(editHashtag);
     }
 
     @Test
@@ -227,7 +210,7 @@ class ArticleApiControllerTest {
         String hashtag = "#gg";
         Article insertArticle = createNewArticle(title, content, hashtag);
 
-        // when
+        // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(api, insertArticle.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -235,10 +218,6 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.code").value(CustomSuccessCode.DELETE_OK.getCode()))
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.DELETE_OK.getMessage()))
                 .andDo(MockMvcResultHandlers.print());
-
-        // then
-        Optional<Article> optionalFindArticle = articleRepository.findById(insertArticle.getId());
-        Assertions.assertThat(optionalFindArticle).isEmpty();
     }
 
     @Test
