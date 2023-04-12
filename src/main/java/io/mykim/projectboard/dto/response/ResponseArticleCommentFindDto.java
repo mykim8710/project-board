@@ -1,7 +1,6 @@
 package io.mykim.projectboard.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import io.mykim.projectboard.domain.entity.Article;
 import io.mykim.projectboard.domain.entity.ArticleComment;
 import lombok.Getter;
 
@@ -28,5 +27,15 @@ public class ResponseArticleCommentFindDto {
 
     public static ResponseArticleCommentFindDto of(ArticleComment articleComment) {
         return new ResponseArticleCommentFindDto(articleComment);
+    }
+
+    @QueryProjection
+    public ResponseArticleCommentFindDto(Long articleCommentId, String articleCommentContent, LocalDateTime createdAt, String createdBy, LocalDateTime lastModifiedAt, String lastModifiedBy) {
+        this.articleCommentId = articleCommentId;
+        this.articleCommentContent = articleCommentContent;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedBy = lastModifiedBy;
     }
 }

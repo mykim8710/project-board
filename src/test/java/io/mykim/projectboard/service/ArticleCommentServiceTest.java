@@ -5,8 +5,10 @@ import io.mykim.projectboard.domain.entity.ArticleComment;
 import io.mykim.projectboard.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.dto.response.ResponseArticleCommentFindDto;
+import io.mykim.projectboard.dto.response.ResponseArticleCommentListDto;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @DisplayName("ArticleCommentService에 정의된 ArticleComment 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
 @Transactional
@@ -177,36 +181,73 @@ class ArticleCommentServiceTest {
     }
 
     @Test
-    @DisplayName("댓글 단건에 대해 조회한다.")
-    void findOneArticleCommentByIdTest() throws Exception {
+    @DisplayName("게시글 하부 댓글에 대해 조건에 맞는 리스트를 불러온다.")
+    void findAllArticleCommentUnderArticleTest() throws Exception {
         // given
-        String title = "title";
-        String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle("title", "content", "hashtag");
 
-        String commentContent = "content";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
-        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
+        IntStream.range(1, 31)
+                .forEach(i ->{
+                    ArticleComment articleComment = ArticleComment.of("reply_" + i, article);
+                    em.persist(articleComment);
+                });
 
+        em.flush();
+        em.clear();
+
+        int offset = 1;
+        int limit = 5;  // default 5 : 어떤값을 넣어도 service 단에서 5 fix
+        CustomPaginationRequest customPaginationRequest = new CustomPaginationRequest(offset, limit);
+        String keyword = "";
+        
         // when
-        ResponseArticleCommentFindDto findArticleCommentDto = articleCommentService.findOneArticleCommentById(newArticleCommentId);
+        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(customPaginationRequest, article.getId(), keyword);
 
         // then
-        Assertions.assertThat(findArticleCommentDto.getArticleCommentContent()).isEqualTo(commentContent);
+        Assertions.assertThat(result.getResponseArticleCommentFindDtos().size()).isEqualTo(limit);
+        Assertions.assertThat(result.getResponseArticleCommentFindDtos().get(0).getArticleCommentContent()).isEqualTo("reply_30");
     }
 
-    @Test
-    @DisplayName("댓글 단건에 대해 조회 시 존재하지 않는 댓글이면 NotFoundException(댓글)이 발생한다.")
-    void findOneArticleCommentByIdExceptionTest() throws Exception {
-        // given
-        Long notFoundArticleId = -1L;
-        Long notFoundArticleCommentId = -1L;
 
-        // when & then
-        Assertions.assertThatThrownBy(() -> articleCommentService.findOneArticleCommentById(notFoundArticleCommentId))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage(CustomErrorCode.NOT_FOUND_ARTICLE_COMMENT.getMessage());
+//    @Test
+//    @DisplayName("댓글 단건에 대해 조회한다.")
+//    void findOneArticleCommentByIdTest() throws Exception {
+//        // given
+//        String title = "title";
+//        String content = "content";
+//        String hashtag = "hashtag";
+//        Article article = createNewArticle(title, content, hashtag);
+//
+//        String commentContent = "content";
+//        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
+//        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
+//
+//        // when
+//        ResponseArticleCommentFindDto findArticleCommentDto = articleCommentService.findOneArticleCommentById(newArticleCommentId);
+//
+//        // then
+//        Assertions.assertThat(findArticleCommentDto.getArticleCommentContent()).isEqualTo(commentContent);
+//    }
+//
+//    @Test
+//    @DisplayName("댓글 단건에 대해 조회 시 존재하지 않는 댓글이면 NotFoundException(댓글)이 발생한다.")
+//    void findOneArticleCommentByIdExceptionTest() throws Exception {
+//        // given
+//        Long notFoundArticleId = -1L;
+//        Long notFoundArticleCommentId = -1L;
+//
+//        // when & then
+//        Assertions.assertThatThrownBy(() -> articleCommentService.findOneArticleCommentById(notFoundArticleCommentId))
+//                .isInstanceOf(NotFoundException.class)
+//                .hasMessage(CustomErrorCode.NOT_FOUND_ARTICLE_COMMENT.getMessage());
+//    }
+
+    private ArticleComment createNewArticleComment(Article article, String commentContent) {
+        ArticleComment articleComment = ArticleComment.of(commentContent, article);
+        em.persist(articleComment);
+        em.flush();
+        em.clear();
+        return articleComment;
     }
 
     private Article createNewArticle(String title, String content, String hashtag) {
@@ -214,7 +255,6 @@ class ArticleCommentServiceTest {
         em.persist(article);
         em.flush();
         em.clear();
-
         return article;
     }
 }

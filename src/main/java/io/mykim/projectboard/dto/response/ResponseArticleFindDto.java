@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 public class ResponseArticleFindDto {
     private Long articleId;
     private String articleTitle;
-    private String articleContent;
+    private String
+            articleContent;
     private String articleHashtag;
     private LocalDateTime createdAt;
     private String createdBy;
