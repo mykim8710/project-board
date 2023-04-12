@@ -1,6 +1,7 @@
-package io.mykim.projectboard.controller;
+package io.mykim.projectboard.init;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+@Disabled("data rest가 적용한 api사용 안할예정이므로 테스트 진행안함")
 @DisplayName("Data REST, HAL로 설정한 api 테스트")
 @Slf4j
 @AutoConfigureMockMvc // @SpringBootTest에서 MockMvc 객체를 사용하기 위함
