@@ -31,7 +31,8 @@ class ArticleViewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("articles"))// model에 해당 key값이 있는지
+                .andExpect(MockMvcResultMatchers.view().name("articles/index")) // viewName 확인
+                .andExpect(MockMvcResultMatchers.model().attributeExists("articles"))   // model에 해당 key값이 있는지
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -46,7 +47,9 @@ class ArticleViewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(url, articleId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("article"))// model에 해당 key값이 있는지
+                .andExpect(MockMvcResultMatchers.view().name("articles/detail"))    // viewName 확인
+                .andExpect(MockMvcResultMatchers.model().attributeExists("article"))        // model에 해당 key값이 있는지
+                .andExpect(MockMvcResultMatchers.model().attributeExists("articleComments"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -60,6 +63,7 @@ class ArticleViewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.view().name("articles/search")) // viewName 확인
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -73,6 +77,7 @@ class ArticleViewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.view().name("articles/search-hashtag")) // viewName 확인
                 .andDo(MockMvcResultHandlers.print());
     }
 
