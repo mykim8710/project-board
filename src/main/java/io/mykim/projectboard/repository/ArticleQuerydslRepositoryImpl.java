@@ -75,7 +75,7 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
             case "H" :  // hashtag
                 return articleHashtagLike(searchCondition.getKeyword());
 
-            case "U" :  // createdBy(User)
+            case "N" :  // createdBy(User Nickname)
                 return articleCreatedByLike(searchCondition.getKeyword());
 
             default:    // A : Universal search

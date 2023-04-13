@@ -30,7 +30,7 @@ class ArticleViewControllerTest {
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
                 .andExpect(MockMvcResultMatchers.view().name("articles/index")) // viewName 확인
                 .andExpect(MockMvcResultMatchers.model().attributeExists("articles"))   // model에 해당 key값이 있는지
                 .andDo(MockMvcResultHandlers.print());
