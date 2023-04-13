@@ -1,98 +1,91 @@
 <!DOCTYPE html>
-<html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <title>게시글 목록 페이지</title>
-    </head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: header"/>
 
     <body>
-        <header>
-            헤더 삽입부
-            <hr>
-        </header>
+        <header th:replace="~{fragments/bodyHeader :: bodyHeader}"/>
 
-        <main>
-            <form>
-                <label for="searchType" hidden>검색유형</label>
-                <select id="searchType" name="searchType">
-                    <option value="T">제목</option>
-                    <option value="C">본문</option>
-                    <option value="H">해시태그</option>
-                    <option value="N">닉네임</option>
-                </select>
+        <div>
+            <main>
+                <form>
+                    <label for="searchType" hidden>검색유형</label>
+                    <select id="searchType" name="searchType">
+                        <option value="T">제목</option>
+                        <option value="C">본문</option>
+                        <option value="H">해시태그</option>
+                        <option value="N">닉네임</option>
+                    </select>
 
-                <label for="keyword" hidden>검색어</label>
-                <input type="search" placeholder="검색어" name="keyword" id="keyword">
-                <button type="submit">검색</button>
-            </form>
+                    <label for="keyword" hidden>검색어</label>
+                    <input type="search" placeholder="검색어" name="keyword" id="keyword">
+                    <button type="submit">검색</button>
+                </form>
 
-            <table border="1">
-                <thead>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>해시태그</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>첫번째글입니다.</td>
-                        <td>#java</td>
-                        <td>mykim</td>
-                        <td>2023-04-01</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>두번째글입니다.</td>
-                        <td>#spring</td>
-                        <td>mykim2</td>
-                        <td>2023-04-02</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>세번째글입니다.</td>
-                        <td>#python</td>
-                        <td>mykim3</td>
-                        <td>2023-04-03</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>네번째글입니다.</td>
-                        <td>#c</td>
-                        <td>mykim4</td>
-                        <td>2023-04-04</td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-            <select id="limit" name="limit">
-                <option value="5">5줄</option>
-                <option value="10">10줄</option>
-                <option value="20">20줄</option>
-                <option value="30">30줄</option>
-            </select>
-            <nav>
-                <table>
-                    <tr>
-                        <td>first</td>
-                        <td>previous</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>next</td>
-                        <td>last</td>
-                    </tr>
+                <table border="1">
+                    <thead>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>해시태그</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>첫번째글입니다.</td>
+                            <td>#java</td>
+                            <td>mykim</td>
+                            <td>2023-04-01</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>두번째글입니다.</td>
+                             <td>#spring</td>
+                            <td>mykim2</td>
+                            <td>2023-04-02</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>세번째글입니다.</td>
+                            <td>#python</td>
+                            <td>mykim3</td>
+                            <td>2023-04-03</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>네번째글입니다.</td>
+                            <td>#c</td>
+                            <td>mykim4</td>
+                            <td>2023-04-04</td>
+                        </tr>
+                    </tbody>
                 </table>
-            </nav>
-        </main>
 
-        <footer>
-            <hr>
-            푸터 삽입부
-        </footer>
+
+                <select id="limit" name="limit">
+                    <option value="5">5줄</option>
+                    <option value="10">10줄</option>
+                    <option value="20">20줄</option>
+                    <option value="30">30줄</option>
+                </select>
+                <nav>
+                    <table>
+                        <tr>
+                            <td>first</td>
+                            <td>previous</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>next</td>
+                            <td>last</td>
+                        </tr>
+                    </table>
+                </nav>
+            </main>
+        </div>
+
+        <footer th:replace="fragments/footer :: footer"/>
     </body>
 </html>
