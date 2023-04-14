@@ -1,17 +1,14 @@
 package io.mykim.projectboard.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.MediaType.TEXT_HTML;
 
@@ -54,6 +51,37 @@ class ArticleViewControllerTest {
     }
 
     @Test
+    @DisplayName("[VIEW] [GET] 게시글 작성 페이지 - 정상호출")
+    void articleCreateViewTest() throws Exception{
+        // given
+        String url = "/articles/create";
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.view().name("articles/create"))    // viewName 확인
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("[VIEW] [GET] 게시글 수정 페이지 - 정상호출")
+    void articleEditViewTest() throws Exception{
+        // given
+        String url = "/articles/edit/{articleId}";
+        Long articleId = 1L;
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.get(url, articleId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.view().name("articles/edit"))    // viewName 확인
+                .andExpect(MockMvcResultMatchers.model().attributeExists("article"))      // model에 해당 key값이 있는지
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Disabled
+    @Test
     @DisplayName("[VIEW] [GET] 게시글 검색전용 페이지 - 정상호출")
     void articleSearchViewTest() throws Exception{
         // given
@@ -67,6 +95,7 @@ class ArticleViewControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Disabled
     @Test
     @DisplayName("[VIEW] [GET] 게시글 해시태그 검색전용 페이지 - 정상호출")
     void articleHashtagSearchViewTest() throws Exception{

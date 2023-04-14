@@ -35,6 +35,17 @@ public class ArticleViewController {
         return "articles/detail";
     }
 
+    @GetMapping("/create")
+    public String articleCreateView() {
+        log.info("[GET] /articles/create =>  article create View");
+        return "articles/create";
+    }
 
+    @GetMapping("/edit/{articleId}")
+    public String articleEditView(@PathVariable Long articleId, Model model) {
+        log.info("[GET] /articles/edit/{} =>  article edit View", articleId);
+        model.addAttribute("article", new Object());
+        return "articles/edit";
+    }
 
 }
