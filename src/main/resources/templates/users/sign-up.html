@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: header"/>
+
+    <body>
+        <header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+        <main>
+            <form>
+                <input type="text" name="username">
+                <input type="password" name="password">
+                <input type="text" name="nickname">
+                <input type="text" name="email">
+                <input type="text" name="memo">
+                <button type="submit">회원가입</button>
+            </form>
+        </main>
+
+        <footer id="footer" th:replace="fragments/footer :: footer"/>
+    </body>
+</html>
