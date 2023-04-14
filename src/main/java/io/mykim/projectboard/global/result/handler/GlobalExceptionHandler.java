@@ -1,9 +1,9 @@
 package io.mykim.projectboard.global.result.handler;
 
+import io.mykim.projectboard.global.result.exception.BusinessRollbackException;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import io.mykim.projectboard.global.result.model.ValidationError;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
-import io.mykim.projectboard.global.result.exception.BusinessRollbackException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
