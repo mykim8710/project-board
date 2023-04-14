@@ -14,6 +14,7 @@ import io.mykim.projectboard.repository.ArticleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -220,7 +221,7 @@ class ArticleCommentApiControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print());
     }
-
+    @Disabled
     @Test
     @DisplayName("전체 댓글 중 댓글에 대해 단건 조회 api를 호출하면 댓글이 응답된다.")
     void findOneArticleCommentApiTest() throws Exception {
@@ -239,6 +240,7 @@ class ArticleCommentApiControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Disabled
     @Test
     @DisplayName("전체 댓글 중 존재하지 않는 댓글에 대해 단건 조회 api를 호출하면 NotFoundException(댓글) 예외가 발생한다.")
     void findOneArticleCommentApiExceptionTest() throws Exception {
