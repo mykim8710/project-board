@@ -1,9 +1,9 @@
 package io.mykim.projectboard.init;
 
-import io.mykim.projectboard.config.jpa.JpaConfig;
-import io.mykim.projectboard.domain.entity.Article;
-import io.mykim.projectboard.repository.ArticleCommentRepository;
-import io.mykim.projectboard.repository.ArticleRepository;
+import io.mykim.projectboard.global.config.jpa.JpaConfig;
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.repository.ArticleCommentRepository;
+import io.mykim.projectboard.article.repository.ArticleRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

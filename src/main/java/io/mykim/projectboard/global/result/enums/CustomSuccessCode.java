@@ -11,7 +11,7 @@ public enum CustomSuccessCode {
     UPDATE_OK(200, "", "update success"),
     DELETE_OK(200, "", "delete success"),
 
-
+    SIGN_IN_OK(200, "", "sign in success"),
 
     ;
 
