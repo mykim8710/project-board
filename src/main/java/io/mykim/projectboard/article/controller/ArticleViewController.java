@@ -1,7 +1,5 @@
-package io.mykim.projectboard.controller;
+package io.mykim.projectboard.article.controller;
 
-import io.mykim.projectboard.domain.entity.Article;
-import io.mykim.projectboard.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,13 +16,11 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ArticleViewController {
 
-    //private final ArticleService articleService;
-
     @GetMapping
     public String articlesView(Model model) {
         log.info("[GET] /articles  =>  articles View");
         model.addAttribute("articles", List.of());
-        return "articles/index";
+        return "articles/list";
     }
 
     @GetMapping("/{articleId}")

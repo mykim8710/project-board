@@ -1,9 +1,11 @@
 package io.mykim.projectboard.user.controller;
 
+import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -12,6 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
 @DisplayName("UserViewController 테스트 - 사용자 View")
+@Import(SpringSecurityConfig.class)
 @WebMvcTest(UserViewController.class)
 class UserViewControllerTest {
 

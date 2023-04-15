@@ -1,10 +1,13 @@
-package io.mykim.projectboard.controller;
+package io.mykim.projectboard.article.controller;
 
+import io.mykim.projectboard.article.controller.ArticleViewController;
+import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -13,7 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
 @DisplayName("ArticleViewController 테스트 - 게시글(댓글) View")
-@WebMvcTest(ArticleViewController.class)    // Application Context 완전하게 Start 시키지 않고 web layer를 테스트 하고 싶을 때 
+@Import(SpringSecurityConfig.class)
+@WebMvcTest(ArticleViewController.class)    // Application Context 완전하게 Start 시키지 않고 web layer를 테스트 하고 싶을 때
 class ArticleViewControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +32,7 @@ class ArticleViewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
-                .andExpect(MockMvcResultMatchers.view().name("articles/index")) // viewName 확인
+                .andExpect(MockMvcResultMatchers.view().name("articles/list")) // viewName 확인
                 .andExpect(MockMvcResultMatchers.model().attributeExists("articles"))   // model에 해당 key값이 있는지
                 .andDo(MockMvcResultHandlers.print());
     }
