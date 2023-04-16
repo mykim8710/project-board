@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: header"/>
+
+    <body>
+        <header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+        <main>
+            <header>
+                <h1>게시글 수정 페이지</h1>
+            </header>
+
+            <section>
+                <form>
+                    <textarea rows="3"></textarea>
+                    <button type="submit">수정</button>
+                </form>
+
+                <button type="button">취소</button>
+
+            </section>
+        </main>
+
+        <footer id="footer" th:replace="fragments/bodyFooter :: footer"/>
+    </body>
+</html>

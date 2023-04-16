@@ -6,10 +6,11 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
-import io.mykim.projectboard.dto.response.QResponseArticleFindDto;
+import io.mykim.projectboard.article.dto.response.QResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import io.mykim.projectboard.article.entity.Article;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,8 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.mykim.projectboard.domain.entity.QArticle.article;
+import static io.mykim.projectboard.article.entity.QArticle.article;
+
 
 public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository {
     private final JPAQueryFactory queryFactory;
@@ -75,7 +77,7 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
             case "H" :  // hashtag
                 return articleHashtagLike(searchCondition.getKeyword());
 
-            case "U" :  // createdBy(User)
+            case "N" :  // createdBy(User Nickname)
                 return articleCreatedByLike(searchCondition.getKeyword());
 
             default:    // A : Universal search
