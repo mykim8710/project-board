@@ -21,6 +21,11 @@ public class CustomPaginationRequest {
         this.limit = limit > MAX_LIMIT_VALUE ? DEFAULT_LIMIT_VALUE : limit;
     }
 
+    public CustomPaginationRequest() {
+        this.offset = DEFAULT_OFFSET_VALUE;
+        this.limit = DEFAULT_LIMIT_VALUE;
+    }
+
     public CustomPaginationRequest(int offset, int limit) {
         this.offset = offset;
         this.limit = limit;

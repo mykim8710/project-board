@@ -41,6 +41,9 @@ public class ArticleService {
         return ResponseArticleListDto.builder()
                 .responseArticleFindDtos(allArticle.getContent())
                 .paginationResponse(CustomPaginationResponse.of(allArticle.getTotalElements(), allArticle.getTotalPages(), allArticle.getNumber()))
+                .paginationRequest(paginationRequest)
+                .sortingRequest(sortingRequest)
+                .searchCondition(searchCondition)
                 .build();
     }
 

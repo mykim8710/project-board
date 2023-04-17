@@ -149,3 +149,8 @@
     left: auto;
     right: 13px;
 }
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+}

@@ -15,7 +15,7 @@
             <div class="col-lg-12">
                 <div class="article-form form-style-two rounded-buttons">
                     <div>
-                        <h1>1번 게시글</h1>
+                        <h1><span th:text="${article.id}"></span>번 게시글</h1>
                     </div>
 
                     <div class="row py-3 px-3">
@@ -23,14 +23,14 @@
                             <div class="form-input">
                                 <label>게시글 제목</label>
                                 <div class="input-items default">
-                                    <input type="text" placeholder="title" name="title" disabled value=""/>
+                                    <input type="text" placeholder="title" name="title" disabled th:value="${article.title}"/>
                                 </div>
                             </div>
 
                             <div class="form-input">
                                 <label>게시글 본문</label>
                                 <div class="input-items default">
-                                    <textarea name="content" disabled value=""></textarea>
+                                    <textarea name="content" disabled th:text="${article.content}"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -39,29 +39,32 @@
                             <div class="form-input">
                                 <label>작성자</label>
                                 <div class="input-items default">
-                                    <input type="text" placeholder="nickname" name="nickname" disabled value=""/>
+                                    <p th:text="${article.createdBy}">mykim</p>
                                 </div>
                             </div>
                             <div class="form-input">
                                 <label>최종수정일</label>
                                 <div class="input-items default">
-                                    <input type="date" placeholder="2022-01-01" name="lastModifiedAt" disabled value=""/>
+                                    <p th:text="${#temporals.format(article.lastModifiedAt, 'yyyy-MM-dd HH:mm')}">2023-01-01</p>
                                 </div>
                             </div>
                             <div class="form-input">
                                 <label>해시태그</label>
                                 <div class="input-items default">
-                                    <input type="text" placeholder="#hashtag" name="hashtag" disabled value=""/>
+                                    <p th:text="${article.hashtag}">hashtag</p>
                                 </div>
                             </div>
                             <br>
 
                             <div class="form-input rounded-buttons">
-                                <button class="btn primary-btn rounded-full" type="button" onclick="location.href='/articles/edit/1'">게시글 수정</button>
+                                <button class="btn primary-btn rounded-full"
+                                        th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|"
+                                        type="button">게시글 수정</button>
                             </div>
 
                             <div class="form-input rounded-buttons">
-                                <button class="btn primary-btn-outline rounded-full" type="button" onclick="location.href='/articles'">게시글 목록</button>
+                                <button class="btn primary-btn-outline rounded-full" type="button"
+                                        th:onclick="|location.href='@{/articles (offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|">게시글 목록</button>
                             </div>
                         </div>
                     </div>

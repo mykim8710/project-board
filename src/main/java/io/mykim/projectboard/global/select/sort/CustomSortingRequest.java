@@ -12,9 +12,10 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 public class CustomSortingRequest {
+    private static final String DEFAULT_SORTING_CONDITION = "id_DESC";
     private static final String DEFAULT_PROPERTY = "id";
     private static final String SEPARATOR_SORT_CONDITION = "/";
-    private static final String SEPARATOR_DIRECTION_PROPERTY = ",";
+    private static final String SEPARATOR_DIRECTION_PROPERTY = "_";
 
     private String sort;    // Custom rule : id,DESC/title,ASC......
 
@@ -39,6 +40,10 @@ public class CustomSortingRequest {
 
                     return new Sort.Order(direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, property);
                 }).collect(Collectors.toList());
+    }
+
+    public CustomSortingRequest() {
+        this.sort = DEFAULT_SORTING_CONDITION;
     }
 
     public CustomSortingRequest(String sort) {

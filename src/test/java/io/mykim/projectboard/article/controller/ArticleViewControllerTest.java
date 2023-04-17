@@ -72,7 +72,7 @@ class ArticleViewControllerTest {
     @DisplayName("[VIEW] [GET] 게시글 수정 페이지 - 정상호출")
     void articleEditViewTest() throws Exception{
         // given
-        String url = "/articles/edit/{articleId}";
+        String url = "/articles/{articleId}/edit";
         Long articleId = 1L;
 
         // when & then

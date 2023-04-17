@@ -1,15 +1,14 @@
 package io.mykim.projectboard.article.dto.request;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArticleCreateDto {
     @NotBlank(message = "글 제목을 입력해주세요.")
     private String title;
@@ -21,5 +20,8 @@ public class ArticleCreateDto {
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
+    }
+
+    public ArticleCreateDto() {
     }
 }
