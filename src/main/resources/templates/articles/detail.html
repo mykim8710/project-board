@@ -1,93 +1,177 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/header :: header"/>
 
-    <body>
-        <header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/articles.css"/>
+</head>
 
-        <main>
-            <header>
-                <h1>1번째 글 제목</h1>
-            </header>
+<body>
+<header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-            <aside>
-                <p><span class="nick-name">mykim</span></p>
-                <p><a class="email" rel="me" href="mailto:mykim@mykim.com">mykim@mykim.com</a></p>
-                <p><time datetime="2023-04-12T00:00:00">2023-04-12</time></p>
-                <p>#Java</p>
-            </aside>
+<main class="article-area article-one">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="article-form form-style-two rounded-buttons">
+                    <div>
+                        <h1>1번 게시글</h1>
+                    </div>
 
-            <section>
-                <p>본문<br><br></p>
+                    <div class="row py-3 px-3">
+                        <div class="col-md-9">
+                            <div class="form-input">
+                                <label>게시글 제목</label>
+                                <div class="input-items default">
+                                    <input type="text" placeholder="title" name="title" disabled value=""/>
+                                </div>
+                            </div>
 
-                <div>
+                            <div class="form-input">
+                                <label>게시글 본문</label>
+                                <div class="input-items default">
+                                    <textarea name="content" disabled value=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-input">
+                                <label>작성자</label>
+                                <div class="input-items default">
+                                    <input type="text" placeholder="nickname" name="nickname" disabled value=""/>
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <label>최종수정일</label>
+                                <div class="input-items default">
+                                    <input type="date" placeholder="2022-01-01" name="lastModifiedAt" disabled value=""/>
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <label>해시태그</label>
+                                <div class="input-items default">
+                                    <input type="text" placeholder="#hashtag" name="hashtag" disabled value=""/>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-input rounded-buttons">
+                                <button class="btn primary-btn rounded-full" type="button" onclick="location.href='/articles/edit/1'">게시글 수정</button>
+                            </div>
+
+                            <div class="form-input rounded-buttons">
+                                <button class="btn primary-btn-outline rounded-full" type="button" onclick="location.href='/articles'">게시글 목록</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <form>
-                        <label for="articleComment" hidden>댓글작성</label>
-                        <textarea id ="articleComment" placeholder="댓글 쓰기" rows="3"></textarea>
-                        <button type="submit">댓글작성</button>
+                        <div class="row py-3 px-3">
+                            <div class="col-md-9">
+                                <div class="form-input">
+                                    <label>댓글을 작성해주세요.</label>
+                                    <div class="input-items default">
+                                        <textarea name="article-comment-content" style="height: 100px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" style="margin-top: 30px;">
+                                <div class="form-input rounded-buttons">
+                                    <button class="btn primary-btn-outline rounded-full" type="submit">댓글 작성</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 
-                    <ul>
-                        <li>
-                            <div>
-                                <time><small>2022-01-01</small></time>
-                                <strong>mykim</strong>
-                                <p>
-                                    reply ~~~~~
-                                    reply ~~~~~
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <time><small>2022-01-01</small></time>
-                                <strong>mykim</strong>
-                                <p>
-                                    reply ~~~~~
-                                    reply ~~~~~
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <time><small>2022-01-01</small></time>
-                                <strong>mykim</strong>
-                                <p>
-                                    reply ~~~~~
-                                    reply ~~~~~
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <time><small>2022-01-01</small></time>
-                                <strong>mykim</strong>
-                                <p>
-                                    reply ~~~~~
-                                    reply ~~~~~
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <time><small>2022-01-01</small></time>
-                                <strong>mykim</strong>
-                                <p>
-                                    reply ~~~~~
-                                    reply ~~~~~
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
+                    <div class="row py-3 px-3">
+                        <div class="col-md-12">
+                            <ul>
+                                <li>
+                                    <div class="row my-3">
+                                        <div class="row col-md-12 col-lg-12">
+                                            <b>Jyc</b>
+                                            <span>2022/01/01</span>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="row my-3">
+                                        <div class="row col-md-12 col-lg-12">
+                                            <b>Jyc</b>
+                                            <span>2022/01/01</span>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="row my-3">
+                                        <div class="row col-md-12 col-lg-12">
+                                            <b>Jyc</b>
+                                            <span>2022/01/01</span>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="row my-3">
+                                        <div class="row col-md-12 col-lg-12">
+                                            <b>Jyc</b>
+                                            <span>2022/01/01</span>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="row my-3">
+                                        <div class="row col-md-12 col-lg-12">
+                                            <b>Jyc</b>
+                                            <span>2022/01/01</span>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-12">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">이전글</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span class="sr-only">다음글</span>
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</main>
 
-                <nav class="page-navigation" rel="navigation">
-                    <a class="page-previous" href="#">previous article</a>
-                    <a class="page-next" href="#">next article</a>
-                </nav>
-            </section>
-        </main>
-
-        <footer id="footer" th:replace="fragments/bodyFooter :: footer"/>
-    </body>
+<div id="bodyFooter" th:replace="fragments/bodyFooter :: bodyFooter"/>
+</body>
 </html>
