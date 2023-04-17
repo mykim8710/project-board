@@ -1,69 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/header :: header"/>
 
-    <head>
-        <!--====== Bootstrap CSS ======-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap-grid.min.css"/>
-        <!--====== Lineicons CSS as we are using this for icons ======-->
-        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
-        <!--====== Starter Style CSS to make components work ======-->
-        <link rel="stylesheet" href="https://cdn.ayroui.com/1.0/css/starter.css"/>
-        <link rel="stylesheet" href="../css/user.css"/>
-    </head>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/user.css"/>
+</head>
 
-    <body>
-        <main class="signin-area signin-one">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5">
-                        <form action="#">
-                            <div class="signin-form form-style-two rounded-buttons">
-                                <div>
-                                    <h1>로그인</h1>
-                                </div>
+<body>
+<main class="signin-area signin-one">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <form action="#">
+                    <div class="signin-form form-style-two rounded-buttons">
+                        <div>
+                            <h1>로그인</h1>
+                        </div>
 
-                                <div class="row">
+                        <div class="row">
 
-                                    <div class="col-md-12">
-                                        <div class="form-input">
-                                            <label>계정을 입력해주세요.</label>
-                                            <div class="input-items default">
-                                                <input type="text" placeholder="Username" name="username"/>
-                                                <i class="lni lni-user"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-input">
-                                            <label>비밀번호를 입력해주세요.</label>
-                                            <div class="input-items default">
-                                                <input type="password" placeholder="Password" name="password"/>
-                                                <i class="lni lni-key"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-input rounded-buttons">
-                                            <button class="btn primary-btn rounded-full" type="submit">로그인</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-input rounded-buttons">
-                                            <button class="btn primary-btn-outline rounded-full" type="button" onclick="location.href='/users/sign-up'">회원가입</button>
-                                        </div>
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label>계정을 입력해주세요.</label>
+                                    <div class="input-items default">
+                                        <input type="text" placeholder="Username" name="username"/>
+                                        <i class="lni lni-user"></i>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label>비밀번호를 입력해주세요.</label>
+                                    <div class="input-items default">
+                                        <input type="password" placeholder="Password" name="password"/>
+                                        <i class="lni lni-key"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-input rounded-buttons">
+                                    <button class="btn primary-btn rounded-full" type="submit">로그인</button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-input rounded-buttons">
+                                    <button class="btn primary-btn-outline rounded-full" type="button"
+                                            onclick="location.href='/users/sign-up'">회원가입
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- row -->
+                </form>
             </div>
-            <!-- container -->
-        </main>
-    </body>
+        </div>
+    </div>
+</main>
+</body>
 </html>
