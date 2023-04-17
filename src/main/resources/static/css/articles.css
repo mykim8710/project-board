@@ -1,0 +1,151 @@
+.article-one .rounded-buttons .primary-btn {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: var(--shadow-2);
+}
+
+.article-one .rounded-buttons .active.primary-btn, .article-one .rounded-buttons .primary-btn:hover, .article-one .rounded-buttons .primary-btn:focus {
+    background: var(--primary-dark);
+    color: var(--white);
+    box-shadow: var(--shadow-4);
+}
+
+.article-one .rounded-buttons .deactive.primary-btn {
+    background: var(--gray-4);
+    color: var(--dark-3);
+    pointer-events: none;
+}
+
+.article-one .rounded-buttons .primary-btn-outline {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.article-one .rounded-buttons .active.primary-btn-outline, .article-one .rounded-buttons .primary-btn-outline:hover, .article-one .rounded-buttons .primary-btn-outline:focus {
+    background: var(--primary-dark);
+    color: var(--white);
+}
+
+.article-one .rounded-buttons .deactive.primary-btn-outline {
+    color: var(--dark-3);
+    border-color: var(--gray-4);
+    pointer-events: none;
+}
+
+.article-one {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: var(--light-2);
+}
+
+.article-one .form-input {
+    margin-top: 16px;
+}
+
+.article-one .form-input .text a {
+    color: var(--primary);
+}
+
+.article-one .article-form {
+    background-color: var(--white);
+    padding: 40px;
+    border: 1px solid var(--gray-4);
+    border-radius: 8px;
+}
+
+.article-one .rounded-buttons {
+    margin-top: 20px;
+}
+
+.article-one .rounded-buttons .primary-btn {
+    width: 100%;
+}
+
+.article-one .rounded-buttons .primary-btn-outline {
+    width: 100%;
+}
+
+.article-one .form-input .help-block .list-unstyled li {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--error);
+}
+
+.article-one .form-input label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--dark-3);
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.article-one .form-input .input-items {
+    position: relative;
+}
+
+.article-one .form-input .input-items input, .article-one .form-input .input-items textarea {
+    width: 100%;
+    height: 44px;
+    border: 2px solid;
+    padding-left: 44px;
+    padding-right: 12px;
+    position: relative;
+    font-size: 16px;
+}
+
+.article-one .form-input .input-items textarea {
+    padding-top: 8px;
+    height: 300px;
+    resize: none;
+}
+
+.article-one .form-input .input-items i {
+    position: absolute;
+    top: 11px;
+    left: 13px;
+    font-size: 20px;
+    z-index: 9;
+}
+
+.article-one .form-input .input-items.default input, .article-one .form-input .input-items.default textarea {
+    border-color: var(--gray-4);
+    color: var(--dark-3);
+}
+
+.article-one .form-input .input-items.default input:focus, .article-one .form-input .input-items.default textarea:focus {
+    border-color: var(--primary);
+}
+
+.article-one .form-input .input-items.default input::placeholder, .article-one .form-input .input-items.default textarea::placeholder {
+    color: var(--dark-3);
+    opacity: 1;
+}
+
+.article-one .form-input .input-items.default i {
+    color: var(--dark-3);
+}
+
+.article-one .form-input .input-items.error input, .article-one .form-input .input-items.error textarea {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.article-one .form-input .input-items.error input::placeholder, .article-one .form-input .input-items.error textarea::placeholder {
+    color: var(--error);
+    opacity: 1;
+}
+
+.article-one .form-input .input-items.error i {
+    color: var(--error);
+}
+
+.article-one .form-style-two .form-input .input-items input, .article-one .form-style-two .form-input .input-items textarea {
+    border-radius: 5px;
+    padding-left: 12px;
+    padding-right: 44px;
+}
+
+.article-one .form-style-two .form-input .input-items i {
+    left: auto;
+    right: 13px;
+}

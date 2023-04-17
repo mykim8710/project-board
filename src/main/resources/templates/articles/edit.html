@@ -1,26 +1,71 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/header :: header"/>
 
-    <body>
-        <header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/articles.css"/>
+</head>
 
-        <main>
-            <header>
-                <h1>게시글 수정 페이지</h1>
-            </header>
+<body>
+<header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-            <section>
-                <form>
-                    <textarea rows="3"></textarea>
-                    <button type="submit">수정</button>
+<main class="article-area article-one">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form action="#">
+                    <div class="article-form form-style-two rounded-buttons">
+                        <div>
+                            <h1>1번글 수정</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label>게시글 제목을 입력해주세요.</label>
+                                    <div class="input-items default">
+                                        <input type="text" placeholder="title" name="title"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label>게시글 본문을 입력해주세요.</label>
+                                    <div class="input-items default">
+                                        <textarea name="content"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-input">
+                                    <label>해시태그를 입력해주세요.</label>
+                                    <div class="input-items default">
+                                        <input type="text" placeholder="#hashtag" name="hashtag"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-input rounded-buttons">
+                                    <button class="btn primary-btn rounded-full" type="submit">게시글 수정</button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-input rounded-buttons">
+                                    <button class="btn primary-btn-outline rounded-full" type="button" onclick="location.href='/articles/1'">취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</main>
 
-                <button type="button">취소</button>
-
-            </section>
-        </main>
-
-        <footer id="footer" th:replace="fragments/bodyFooter :: footer"/>
-    </body>
+<div id="bodyFooter" th:replace="fragments/bodyFooter :: bodyFooter"/>
+</body>
 </html>
