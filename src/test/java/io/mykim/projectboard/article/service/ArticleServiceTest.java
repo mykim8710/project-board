@@ -92,7 +92,7 @@ class ArticleServiceTest {
         em.flush();
         em.clear();
 
-        String sort = "id,ASC";
+        String sort = "id_ASC";
         CustomSortingRequest customSortingRequest = new CustomSortingRequest(sort);
 
         int offset = 2;

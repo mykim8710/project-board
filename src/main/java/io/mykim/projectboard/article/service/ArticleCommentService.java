@@ -46,25 +46,19 @@ public class ArticleCommentService {
      * pagination
      *  offset : 1 ~
      *  limit : 5(default)
-     * Sorting : lastModifiedAt Desc
-     * Search : content....
      *
      *   select *
      *     from article_comment
      *    where article_id = ?
-     *      and content like %keyword%
-     * order by lastModifiedAt Desc
+     * order by id Desc
      *
      */
     @Transactional(readOnly = true)
     public ResponseArticleCommentListDto findAllArticleCommentUnderArticle(CustomPaginationRequest paginationRequest,
-                                                                           Long articleId, String keyword) {
+                                                                           Long articleId) {
 
-        // todo :
-        //  현재 sorting은 lastModifiedAt Desc로 고정
-        //  sorting, paging(limit : 5로 고정), search에 대해 뷰 개발하면서 수정가능성이 있음
-        PageRequest pageRequest = PageRequest.of(paginationRequest.getOffset() - 1, 5);
-        Page<ResponseArticleCommentFindDto> allArticleCommentUnderArticle = articleCommentRepository.findAllArticleCommentUnderArticle(pageRequest, articleId, keyword);
+        PageRequest pageRequest = PageRequest.of(paginationRequest.getOffset() - 1, paginationRequest.getLimit());
+        Page<ResponseArticleCommentFindDto> allArticleCommentUnderArticle = articleCommentRepository.findAllArticleCommentUnderArticle(pageRequest, articleId);
 
         return ResponseArticleCommentListDto.builder()
                 .responseArticleCommentFindDtos(allArticleCommentUnderArticle.getContent())

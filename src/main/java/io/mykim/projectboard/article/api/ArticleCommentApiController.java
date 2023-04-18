@@ -42,10 +42,10 @@ public class ArticleCommentApiController {
 
     // 게시글 하부 댓글 목록조회 (+search +pagination +sorting)
     @GetMapping("/api/v1/articles/{articleId}/article-comments")
-    public ResponseEntity<CommonResponse> findAllArticleCommentUnderArticleApi(@ModelAttribute CustomPaginationRequest paginationRequest,
-                                                                               @PathVariable Long articleId, @RequestParam String keyword) {
-        log.info("[GET] /api/v1/articles/{}/article-comments?offset={}&limit={}&keyword={}  =>  find all ArticleComment under Article api", articleId, paginationRequest.getOffset(), paginationRequest.getOffset(), keyword);
-        CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK, articleCommentService.findAllArticleCommentUnderArticle(paginationRequest, articleId, keyword));
+    public ResponseEntity<CommonResponse> findAllArticleCommentUnderArticleApi(@PathVariable Long articleId, @ModelAttribute CustomPaginationRequest paginationRequest) {
+        log.info("[GET] /api/v1/articles/{}/article-comments?offset={}&limit={} => find all ArticleComment under Article api", articleId, paginationRequest.getOffset(), paginationRequest.getLimit());
+        CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK, articleCommentService.findAllArticleCommentUnderArticle(paginationRequest, articleId));
+
         return ResponseEntity
                 .status(response.getStatus())
                 .body(response);

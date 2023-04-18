@@ -75,111 +75,41 @@
                         </div>
                     </div>
 
-                    <form>
-                        <div class="row py-3 px-3">
-                            <div class="col-md-9">
-                                <div class="form-input">
-                                    <label>댓글을 작성해주세요.</label>
-                                    <div class="input-items default">
-                                        <textarea name="article-comment-content" style="height: 100px;"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" style="margin-top: 30px;">
-                                <div class="form-input rounded-buttons">
-                                    <button class="btn primary-btn-outline rounded-full" type="submit">댓글 작성</button>
+                    <div class="row py-3 px-3">
+                        <div class="col-md-9">
+                            <div class="form-input">
+                                <label>댓글을 작성해주세요.</label>
+                                <div class="input-items default">
+                                    <textarea id="article-comment-content" style="height: 100px;"></textarea>
                                 </div>
                             </div>
                         </div>
-                    </form>
+
+                        <div class="col-md-3" style="margin-top: 30px;">
+                            <div class="form-input rounded-buttons">
+                                <button id="article-comment-create-button" class="btn primary-btn-outline rounded-full" type="button">댓글 작성</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row py-3 px-3">
                         <div class="col-md-12">
-                            <ul>
-                                <li>
-                                    <div class="row my-3">
-                                        <div class="row col-md-12 col-lg-12">
-                                            <b>Jyc</b>
-                                            <span>2022/01/01</span>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row my-3">
-                                        <div class="row col-md-12 col-lg-12">
-                                            <b>Jyc</b>
-                                            <span>2022/01/01</span>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row my-3">
-                                        <div class="row col-md-12 col-lg-12">
-                                            <b>Jyc</b>
-                                            <span>2022/01/01</span>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row my-3">
-                                        <div class="row col-md-12 col-lg-12">
-                                            <b>Jyc</b>
-                                            <span>2022/01/01</span>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row my-3">
-                                        <div class="row col-md-12 col-lg-12">
-                                            <b>Jyc</b>
-                                            <span>2022/01/01</span>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet.  Lorem ipsum dolor sit amet
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                            <ul id="articleCommentArea"></ul>
                         </div>
 
                         <div class="col-md-12">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">이전글</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span class="sr-only">다음글</span>
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <nav aria-label="Page navigation" id="articleCommentPaginationArea"></nav>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <input type="hidden" th:value="${article.id}" id="articleId">
 </main>
+
+<script defer type="text/javascript" src="/js/articleComment.js"></script>
 
 <div id="bodyFooter" th:replace="fragments/bodyFooter :: bodyFooter"/>
 </body>

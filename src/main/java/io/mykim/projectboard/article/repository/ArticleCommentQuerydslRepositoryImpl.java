@@ -25,7 +25,7 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
     }
 
     @Override
-    public Page<ResponseArticleCommentFindDto> findAllArticleCommentUnderArticle(Pageable pageable, Long articleId, String keyword) {
+    public Page<ResponseArticleCommentFindDto> findAllArticleCommentUnderArticle(Pageable pageable, Long articleId) {
         List<ResponseArticleCommentFindDto> articleCommentFindDtos = queryFactory
                                                                         .select(new QResponseArticleCommentFindDto(
                                                                                 articleComment.id.as("articleCommentId"),
@@ -36,22 +36,18 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
                                                                                 articleComment.lastModifiedBy.as("lastModifiedBy")
                                                                         ))
                                                                         .from(articleComment)
-                                                                        .where(articleComment.article.id.eq(articleId).and(articleCommentContentLike(keyword)))
+                                                                        .where(articleComment.article.id.eq(articleId))
                                                                         .offset(pageable.getOffset())
                                                                         .limit(pageable.getPageSize())
-                                                                        .orderBy(articleComment.lastModifiedAt.desc())
+                                                                        .orderBy(articleComment.id.desc())
                                                                         .fetch();
 
         Long count = queryFactory
                         .select(articleComment.count())
                         .from(articleComment)
-                        .where(articleComment.article.id.eq(articleId).and(articleCommentContentLike(keyword)))
+                        .where(articleComment.article.id.eq(articleId))
                         .fetchOne();
 
         return new PageImpl<>(articleCommentFindDtos, pageable, count);
-    }
-
-    private BooleanExpression articleCommentContentLike(String keyword) {
-        return !StringUtils.hasLength(keyword) ? null : articleComment.content.contains(keyword);
     }
 }

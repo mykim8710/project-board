@@ -82,9 +82,9 @@ class ArticleApiControllerTest {
                             .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.data").isNotEmpty())
-                .andExpect(jsonPath("$.data.articleTitle").value(title))
-                .andExpect(jsonPath("$.data.articleContent").value(content))
-                .andExpect(jsonPath("$.data.articleHashtag").value(hashtag))
+                .andExpect(jsonPath("$.data.title").value(title))
+                .andExpect(jsonPath("$.data.content").value(content))
+                .andExpect(jsonPath("$.data.hashtag").value(hashtag))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -115,7 +115,7 @@ class ArticleApiControllerTest {
         articleRepository.saveAll(articles);
 
         String api = "/api/v1/articles";
-        String sort = "id,DESC";
+        String sort = "id_DESC";
         String keyword = "";
         String searchType = "";
         int offset = 1;
@@ -134,9 +134,9 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.COMMON_OK.getMessage()))
                 .andExpect(jsonPath("$.data").isNotEmpty())
                 .andExpect(jsonPath("$.data.responseArticleFindDtos.length()", Matchers.is(limit)))
-                .andExpect(jsonPath("$.data.responseArticleFindDtos[0].articleTitle").value("title30"))
-                .andExpect(jsonPath("$.data.responseArticleFindDtos[1].articleTitle").value("title29"))
-                .andExpect(jsonPath("$.data.responseArticleFindDtos[2].articleTitle").value("title28"))
+                .andExpect(jsonPath("$.data.responseArticleFindDtos[0].title").value("title30"))
+                .andExpect(jsonPath("$.data.responseArticleFindDtos[1].title").value("title29"))
+                .andExpect(jsonPath("$.data.responseArticleFindDtos[2].title").value("title28"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
