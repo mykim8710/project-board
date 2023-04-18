@@ -3,17 +3,19 @@ package io.mykim.projectboard.article.dto.response;
 import com.querydsl.core.annotations.QueryProjection;
 import io.mykim.projectboard.article.entity.Article;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-
 @Getter
+@ToString
+@Setter
 public class ResponseArticleFindDto {
-    private Long articleId;
-    private String articleTitle;
-    private String
-            articleContent;
-    private String articleHashtag;
+    private Long id;
+    private String title;
+    private String content;
+    private String hashtag;
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime lastModifiedAt;
@@ -21,10 +23,10 @@ public class ResponseArticleFindDto {
 
 
     private ResponseArticleFindDto(Article article) {
-        this.articleId = article.getId();
-        this.articleTitle = article.getTitle();
-        this.articleContent = article.getContent();
-        this.articleHashtag = article.getHashtag();
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.hashtag = article.getHashtag();
         this.createdAt = article.getCreatedAt();
         this.createdBy = article.getCreatedBy();
         this.lastModifiedAt = article.getLastModifiedAt();
@@ -36,11 +38,11 @@ public class ResponseArticleFindDto {
     }
 
     @QueryProjection
-    public ResponseArticleFindDto(Long articleId, String articleTitle, String articleContent, String articleHashtag, LocalDateTime createdAt, String createdBy, LocalDateTime lastModifiedAt, String lastModifiedBy) {
-        this.articleId = articleId;
-        this.articleTitle = articleTitle;
-        this.articleContent = articleContent;
-        this.articleHashtag = articleHashtag;
+    public ResponseArticleFindDto(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime lastModifiedAt, String lastModifiedBy) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.hashtag = hashtag;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.lastModifiedAt = lastModifiedAt;

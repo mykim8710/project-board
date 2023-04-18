@@ -10,7 +10,6 @@ import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.article.service.ArticleService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,8 +62,8 @@ class ArticleServiceTest {
 
         // then
         Assertions.assertThat(findArticle).isNotNull();
-        Assertions.assertThat(findArticle.getArticleTitle()).isEqualTo(title);
-        Assertions.assertThat(findArticle.getArticleContent()).isEqualTo(content);
+        Assertions.assertThat(findArticle.getTitle()).isEqualTo(title);
+        Assertions.assertThat(findArticle.getContent()).isEqualTo(content);
     }
 
     @Test
@@ -109,7 +108,7 @@ class ArticleServiceTest {
 
         // then
         Assertions.assertThat(result.getResponseArticleFindDtos().size()).isEqualTo(limit);
-        Assertions.assertThat(result.getResponseArticleFindDtos().get(0).getArticleTitle()).isEqualTo("title6");
+        Assertions.assertThat(result.getResponseArticleFindDtos().get(0).getTitle()).isEqualTo("title6");
     }
 
     @Test
@@ -124,7 +123,7 @@ class ArticleServiceTest {
         String newTitle = "newTitle";
         String newContent = "newContent";
         String newHashtag = "newHashtag";
-        ArticleEditDto editDto = new ArticleEditDto(newTitle, newContent, newHashtag);
+        ArticleEditDto editDto = new ArticleEditDto(article.getId(), newTitle, newContent, newHashtag);
 
         // when
         articleService.editArticle(editDto, article.getId());

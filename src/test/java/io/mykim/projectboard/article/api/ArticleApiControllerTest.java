@@ -154,7 +154,7 @@ class ArticleApiControllerTest {
         String editTitle = "qwerty";
         String editContent = "qwerty";
         String editHashtag = "#qwerty";
-        ArticleEditDto editDto = new ArticleEditDto(editTitle, editContent, editHashtag);
+        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag);
         String requestDtoJsonStr = objectMapper.writeValueAsString(editDto);
 
         // when & then
@@ -182,7 +182,7 @@ class ArticleApiControllerTest {
         String editTitle = "qwerty";
         String editContent = "qwerty";
         String editHashtag = "#qwerty";
-        ArticleEditDto editDto = new ArticleEditDto(editTitle, editContent, editHashtag);
+        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag);
         String requestDtoJsonStr = objectMapper.writeValueAsString(editDto);
 
         // when & then

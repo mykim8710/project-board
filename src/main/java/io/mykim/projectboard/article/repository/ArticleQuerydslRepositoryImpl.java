@@ -35,14 +35,14 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
     public Page<ResponseArticleFindDto> findAllArticle(Pageable pageable, ArticleSearchCondition searchCondition) {
         List<ResponseArticleFindDto> responseArticleFindDtos = queryFactory
                                                                     .select(new QResponseArticleFindDto(
-                                                                            article.id.as("articleId"),
-                                                                            article.title.as("articleTitle"),
-                                                                            article.content.as("articleContent"),
-                                                                            article.hashtag.as("articleHashtag"),
-                                                                            article.createdAt.as("articleCreateAt"),
-                                                                            article.createdBy.as("articleCreatedBy"),
-                                                                            article.lastModifiedAt.as("articleLastModifiedAt"),
-                                                                            article.lastModifiedBy.as("articleLastModifiedBy")))
+                                                                            article.id.as("id"),
+                                                                            article.title.as("title"),
+                                                                            article.content.as("content"),
+                                                                            article.hashtag.as("hashtag"),
+                                                                            article.createdAt.as("createAt"),
+                                                                            article.createdBy.as("createdBy"),
+                                                                            article.lastModifiedAt.as("lastModifiedAt"),
+                                                                            article.lastModifiedBy.as("lastModifiedBy")))
                                                                     .from(article)
                                                                     .where(createUniversalSearchCondition(searchCondition))
                                                                     .offset(pageable.getOffset())

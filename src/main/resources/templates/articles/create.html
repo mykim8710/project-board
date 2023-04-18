@@ -13,7 +13,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <form action="#">
+                <form action="list.html" th:action th:object="${article}" method="post">
+
                     <div class="article-form form-style-two rounded-buttons">
                         <div>
                             <h1>게시글 작성</h1>
@@ -24,7 +25,8 @@
                                 <div class="form-input">
                                     <label>게시글 제목을 입력해주세요.</label>
                                     <div class="input-items default">
-                                        <input type="text" placeholder="title" name="title"/>
+                                        <input type="text" id="articleTitle" th:field="*{title}" th:errorclass="field-error" class="form-control" placeholder="제목을 입력하세요.">
+                                        <p class="field-error" th:errors="*{title}">게시글 제목 오류</p>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +35,8 @@
                                 <div class="form-input">
                                     <label>게시글 본문을 입력해주세요.</label>
                                     <div class="input-items default">
-                                        <textarea name="content"></textarea>
+                                        <textarea id="articleContent" th:field="*{content}" th:errorclass="field-error" placeholder="게시글 본문을 입력하세요."></textarea>
+                                        <p class="field-error" th:errors="*{content}">게시글 본문 오류</p>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +45,7 @@
                                 <div class="form-input">
                                     <label>해시태그를 입력해주세요.</label>
                                     <div class="input-items default">
-                                        <input type="text" placeholder="#hashtag" name="hashtag"/>
+                                        <input type="text" id="articleHashTag" th:field="*{hashtag}" placeholder="#hashtag" autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +58,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-input rounded-buttons">
-                                    <button class="btn primary-btn-outline rounded-full" type="button" onclick="location.href='/articles'">취소</button>
+                                    <button class="btn primary-btn-outline rounded-full" type="button"
+                                            th:onclick="|location.href='@{/articles (offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|">취소</button>
                                 </div>
                             </div>
                         </div>
