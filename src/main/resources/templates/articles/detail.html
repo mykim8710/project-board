@@ -63,6 +63,12 @@
                             </div>
 
                             <div class="form-input rounded-buttons">
+                                <form id="search-form" th:action="@{/articles/{id}/delete(id=${article.id})}" th:method="post">
+                                    <button class="btn primary-btn rounded-full" type="submit">게시글 삭제</button>
+                                </form>
+                            </div>
+
+                            <div class="form-input rounded-buttons">
                                 <button class="btn primary-btn-outline rounded-full" type="button"
                                         th:onclick="|location.href='@{/articles (offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|">게시글 목록</button>
                             </div>

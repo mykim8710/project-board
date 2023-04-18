@@ -100,4 +100,11 @@ public class ArticleViewController {
         return "redirect:/articles/{articleId}";
     }
 
+    @PostMapping("/{articleId}/delete")
+    public String articleRemove(@PathVariable Long articleId) {
+        log.info("[POST] /articles/{}/delete => article delete");
+        articleService.removeArticle(articleId);
+        return "redirect:/articles";
+    }
+
 }
