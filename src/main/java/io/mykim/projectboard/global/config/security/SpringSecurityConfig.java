@@ -56,8 +56,8 @@ public class SpringSecurityConfig {
         // 로그인 설정
         httpSecurity
                 .formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/sign-in")
+                .loginPage("/users/sign-in")
+                .loginProcessingUrl("/users/sign-in")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler(authenticationSuccessHandler())

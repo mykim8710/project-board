@@ -148,3 +148,7 @@
     color: var(--dark-3);
     margin-top: 8px;
 }
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+}

@@ -1099,3 +1099,5 @@ insert into article_comment (article_comment_content, article_id, created_at, la
 insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by, last_modified_by) values ('Nunc nisl.', 48, '2022-04-17 13:18:26', '2022-03-30 10:21:15', 'Frannie', 'Dick');
 insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by, last_modified_by) values ('Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.', 1, '2022-09-07 09:48:46', '2022-05-12 18:31:35', 'Martita', 'Rodolphe');
 insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by, last_modified_by) values ('In hac habitasse platea dictumst.', 28, '2022-07-22 10:56:27', '2023-02-16 12:46:35', 'Phelia', 'Nariko');
+
+insert into users(created_at, created_by, last_modified_at, last_modified_by, user_email, user_memo, user_nickname, user_password, user_name, user_type) values ('2022-04-17 13:18:26', 'test', '2022-04-17 13:18:26', 'test', 'abc@abc.com', 'memo', 'abc', '$2a$10$sqPmJxoV2Md0KLTS1WA6gugWHbAw1lWYmw5ASt61A1HVCUAog5hbi', 'abc', 'GENERAL');

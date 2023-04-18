@@ -20,7 +20,7 @@ public class UserApiController {
 
     @GetMapping("/api/v1/users/duplicate-check")
     public ResponseEntity<CommonResponse> duplicateCheckUserInfoApi(@ModelAttribute UserInfoDuplicateCheckDto duplicateCheckDto) {
-        log.info("[POST] /api/v1/users/duplicate-check?type={}&keyword={}  =>  duplicate Check UserInfo api", duplicateCheckDto.getType(), duplicateCheckDto.getKeyword());
+        log.info("[GET] /api/v1/users/duplicate-check?type={}&keyword={}  =>  duplicate Check UserInfo api", duplicateCheckDto.getType(), duplicateCheckDto.getKeyword());
         CommonResponse response = userService.duplicateCheckUserInfo(duplicateCheckDto);
         return ResponseEntity
                 .status(response.getStatus())
