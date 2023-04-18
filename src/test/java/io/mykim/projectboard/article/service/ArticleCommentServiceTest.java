@@ -196,12 +196,11 @@ class ArticleCommentServiceTest {
         em.clear();
 
         int offset = 1;
-        int limit = 5;  // default 5 : 어떤값을 넣어도 service 단에서 5 fix
+        int limit = 5;
         CustomPaginationRequest customPaginationRequest = new CustomPaginationRequest(offset, limit);
-        String keyword = "";
         
         // when
-        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(customPaginationRequest, article.getId(), keyword);
+        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(customPaginationRequest, article.getId());
 
         // then
         Assertions.assertThat(result.getResponseArticleCommentFindDtos().size()).isEqualTo(limit);

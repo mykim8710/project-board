@@ -18,9 +18,6 @@ import javax.validation.Valid;
 public class UserApiController {
     private final UserService userService;
 
-    @PostMapping("/api/v1/users/sign-in")
-
-
     @GetMapping("/api/v1/users/duplicate-check")
     public ResponseEntity<CommonResponse> duplicateCheckUserInfoApi(@ModelAttribute UserInfoDuplicateCheckDto duplicateCheckDto) {
         log.info("[POST] /api/v1/users/duplicate-check?type={}&keyword={}  =>  duplicate Check UserInfo api", duplicateCheckDto.getType(), duplicateCheckDto.getKeyword());
