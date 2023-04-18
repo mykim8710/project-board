@@ -25,7 +25,6 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ArticleViewController {
     private final ArticleService articleService;
-    private final ArticleCommentService articleCommentService;
 
     @GetMapping
     public String articlesView(@RequestParam(defaultValue = "") String keyword,
@@ -47,7 +46,6 @@ public class ArticleViewController {
     public String articlesDetailView(@PathVariable Long articleId, Model model) {
         log.info("[GET] /articles/{} =>  article Detail View", articleId);
         model.addAttribute("article", articleService.findOneArticle(articleId));
-        model.addAttribute("articleComments", List.of());
         return "articles/detail";
     }
 
