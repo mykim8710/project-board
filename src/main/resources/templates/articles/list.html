@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header"/>
 
 <body>
@@ -108,7 +108,7 @@
                 <input type="hidden" th:value="${articles.getSearchCondition().getSearchType()}" name="searchType">
             </form>
 
-            <a class="btn btn-warning me-md-2" role="button" id="create-article-btn"
+            <a class="btn btn-warning me-md-2 btn-sm" role="button" id="create-article-btn" sec:authorize="isAuthenticated()"
                th:href="@{/articles/create (offset     = ${articles.getPaginationRequest().getOffset()},
                                             limit      = ${articles.getPaginationRequest().getLimit()},
                                             searchType = ${articles.getSearchCondition().getSearchType()},
