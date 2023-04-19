@@ -48,10 +48,16 @@ public class SpringSecurityConfig {
         // 권한 별 url 접근설정
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/**").permitAll();
-//                .antMatchers("/admin").hasAnyRole("ADMIN")
-//                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
-//                .anyRequest().authenticated();
+                .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
+
+
+                .antMatchers("/users/**").anonymous()
+                .antMatchers("/", "/articles", "/articles/{articleId}").permitAll()
+
+                //
+
+
+                .anyRequest().authenticated();
 
         // 로그인 설정
         httpSecurity
