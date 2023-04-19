@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org " xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <header class="p-3 text-bg-dark bodyHeader" th:fragment="bodyHeader">
     <div class="container">
@@ -8,10 +8,17 @@
                 <h3><a class="text-warning" href="/articles">Mykim's Project Board</a></h3>
             </div>
 
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/sign-out'">Sign-out</button>
-                <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/sign-in'">Sign-in</button>
-                <button type="button" class="btn btn-warning" onclick="location.href='/users/sign-up'">Sign-up</button>
+            <div class="text-end" sec:authorize="isAnonymous()">
+                <button type="button" class="btn btn-outline-light me-2 btn-sm" onclick="location.href='/users/sign-up'">Sign-up</button>
+                <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/users/sign-in'">Sign-in</button>
+            </div>
+
+            <div class="text-end" sec:authorize="isAuthenticated()">
+                <span>반갑습니다. <span th:text="${#authentication.principal.nickname}">mykim</span> 님</span>
+
+                <form th:action="@{/logout}" th:method="post">
+                    <button type="submit" class="btn btn-warning btn-sm">Sign-out</button>
+                </form>
             </div>
         </div>
     </div>

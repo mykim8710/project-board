@@ -71,7 +71,7 @@ public class SpringSecurityConfig {
         // 로그아웃 설정
         httpSecurity
                 .logout()
-                .logoutUrl("/sign-out")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)	                 // 로그아웃 후 세션 전체 삭제 여부
                 .deleteCookies("JSESSIONID"); // 로그아웃 후 cookie 삭제
