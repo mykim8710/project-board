@@ -6,10 +6,14 @@ import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.article.service.ArticleService;
+import io.mykim.projectboard.global.config.security.PrincipalDetail;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
+import io.mykim.projectboard.user.dto.response.UserSignInResponseDto;
+import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -57,7 +61,10 @@ public class ArticleViewController {
     }
 
     @PostMapping("/create")
-    public String articleCreate(@Validated @ModelAttribute("article") ArticleCreateDto articleCreateDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String articleCreate(@Validated @ModelAttribute("article") ArticleCreateDto articleCreateDto,
+                                @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes) {
         log.info("[POST] /articles/create  =>  article create, ArticleCreateDto = {}", articleCreateDto);
 
         if(bindingResult.hasErrors()) {
@@ -72,14 +79,20 @@ public class ArticleViewController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String articleEditView(@PathVariable Long articleId, Model model) {
+    public String articleEditView(@PathVariable Long articleId,
+                                  @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
+                                  Model model) {
         log.info("[GET] /articles/{}/edit => article edit View", articleId);
         model.addAttribute("article", articleService.findOneArticle(articleId));
         return "articles/edit";
     }
 
     @PostMapping("/{articleId}/edit")
-    public String articleEdit(@PathVariable Long articleId, @Validated @ModelAttribute("article") ArticleEditDto articleEditDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String articleEdit(@PathVariable Long articleId,
+                              @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
+                              @Validated @ModelAttribute("article") ArticleEditDto articleEditDto,
+                              BindingResult bindingResult) {
+
         log.info("[POST] /articles/{}/edit => article edit, ArticleCreateDto = {}", articleId, articleEditDto);
 
         if(bindingResult.hasErrors()) {
@@ -99,7 +112,9 @@ public class ArticleViewController {
     }
 
     @PostMapping("/{articleId}/delete")
-    public String articleRemove(@PathVariable Long articleId) {
+    public String articleRemove(@PathVariable Long articleId,
+                                @AuthenticationPrincipal UserSignInResponseDto signInResponseDto) {
+
         log.info("[POST] /articles/{}/delete => article delete");
         articleService.removeArticle(articleId);
         return "redirect:/articles";
