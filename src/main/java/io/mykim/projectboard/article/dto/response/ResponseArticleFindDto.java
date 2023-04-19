@@ -1,5 +1,6 @@
 package io.mykim.projectboard.article.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import io.mykim.projectboard.article.entity.Article;
 import lombok.Getter;
@@ -16,8 +17,10 @@ public class ResponseArticleFindDto {
     private String title;
     private String content;
     private String hashtag;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd HH:mm:ss")
     private LocalDateTime createdAt;
     private String createdBy;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd HH:mm:ss")
     private LocalDateTime lastModifiedAt;
     private String lastModifiedBy;
 
