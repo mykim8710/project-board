@@ -1,8 +1,8 @@
 package io.mykim.projectboard.article.entity;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
-import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
+import io.mykim.projectboard.global.config.jpa.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
                 @Index(columnList = "article_title"),
                 @Index(columnList = "article_hashtag")
         })
-public class Article extends BaseTimeEntity {
+public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id", nullable = false)
@@ -33,13 +33,9 @@ public class Article extends BaseTimeEntity {
     @Column(name = "article_hashtag", length = 255)
     private String hashtag;
 
-    // [양방향 매핑]
-    // article - articleComment, 1 : N
-    // 연관관계의 주인 : articleComment가 articleId(fk)를 가짐
     @ToString.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // CascadeType.ALL : 게시글이 지워지면 연관된 댓글도 함께 삭제
     private List<ArticleComment> articleComments = new ArrayList<>();
-
 
     private Article(String title, String content, String hashtag) {
         this.title = title;
@@ -72,10 +68,4 @@ public class Article extends BaseTimeEntity {
         this.content = editDto.getContent();
         this.hashtag = editDto.getHashtag();
     }
-
-//    // 양방향 편의 메서드, article - articleComment, 1 : N
-//    public void addArticleComment(ArticleComment articleComment) {
-//        this.articleComments.add(articleComment);
-//        articleComment.setArticle(this);
-//    }
 }

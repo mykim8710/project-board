@@ -9,9 +9,11 @@ import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.article.service.ArticleService;
+import io.mykim.projectboard.user.dto.response.UserSignInResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,7 +23,6 @@ import javax.validation.Valid;
 @RestController
 public class ArticleApiController {
     private final ArticleService articleService;
-    private final ArticleCommentService articleCommentService;
 
 
     /**

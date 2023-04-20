@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header"/>
 
 <head>
@@ -39,13 +39,13 @@
                             <div class="form-input">
                                 <label>작성자</label>
                                 <div class="input-items default">
-                                    <p th:text="${article.createdBy}">mykim</p>
+                                    <p th:text="${article.nickname}">mykim</p>
                                 </div>
                             </div>
                             <div class="form-input">
                                 <label>최종수정일</label>
                                 <div class="input-items default">
-                                    <p th:text="${#temporals.format(article.lastModifiedAt, 'yyyy-MM-dd HH:mm')}">2023-01-01</p>
+                                    <p th:text="${#temporals.format(article.lastModifiedAt, 'yyyy/MM/dd HH:mm')}">2023-01-01</p>
                                 </div>
                             </div>
                             <div class="form-input">
@@ -56,13 +56,13 @@
                             </div>
                             <br>
 
-                            <div class="form-input rounded-buttons">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
                                 <button class="btn primary-btn rounded-full"
                                         th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|"
                                         type="button">게시글 수정</button>
                             </div>
 
-                            <div class="form-input rounded-buttons">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
                                 <form id="search-form" th:action="@{/articles/{id}/delete(id=${article.id})}" th:method="post">
                                     <button class="btn primary-btn rounded-full" type="submit">게시글 삭제</button>
                                 </form>

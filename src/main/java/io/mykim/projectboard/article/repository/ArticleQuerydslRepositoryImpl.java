@@ -11,6 +11,7 @@ import io.mykim.projectboard.article.dto.response.QResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.entity.Article;
 
+import io.mykim.projectboard.user.entity.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.mykim.projectboard.article.entity.QArticle.article;
+import static io.mykim.projectboard.user.entity.QUser.user;
 
 
 public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository {
@@ -40,10 +42,12 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
                                                                             article.content.as("content"),
                                                                             article.hashtag.as("hashtag"),
                                                                             article.createdAt.as("createAt"),
-                                                                            article.createdBy.as("createdBy"),
                                                                             article.lastModifiedAt.as("lastModifiedAt"),
-                                                                            article.lastModifiedBy.as("lastModifiedBy")))
+                                                                            article.createdBy.id.as("userId"),
+                                                                            article.createdBy.nickname.as("nickname")
+                                                                    ))
                                                                     .from(article)
+                                                                    .innerJoin(article.createdBy, user)
                                                                     .where(createUniversalSearchCondition(searchCondition))
                                                                     .offset(pageable.getOffset())
                                                                     .limit(pageable.getPageSize())
@@ -55,6 +59,7 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
         Long count = queryFactory
                             .select(article.count())
                             .from(article)
+                            .innerJoin(article.createdBy, user)
                             .where(createUniversalSearchCondition(searchCondition))
                             .fetchOne();
 
@@ -103,7 +108,7 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
     }
 
     private BooleanExpression articleCreatedByLike(String keyword) {
-        return !StringUtils.hasLength(keyword) ? null : article.createdBy.contains(keyword);
+        return !StringUtils.hasLength(keyword) ? null : article.createdBy.nickname.contains(keyword);
     }
 
     private List<OrderSpecifier> getOrderSpecifier(Sort sort) {

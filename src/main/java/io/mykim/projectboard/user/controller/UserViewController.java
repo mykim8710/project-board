@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserViewController {
     private final UserService userService;
 
+    @GetMapping("/")
+    public String indexView() {
+        log.info("[GET] / => index view, redirect to /articles");
+        return "redirect:/articles";
+    }
+
     @GetMapping("/users/sign-up")
     public String createUserView(Model model) {
         log.info("[GET] /users/sign-up  =>  create User(sign up) view");

@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static io.mykim.projectboard.article.entity.QArticleComment.articleComment;
+import static io.mykim.projectboard.user.entity.QUser.user;
 
 
 public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuerydslRepository {
@@ -31,11 +32,12 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
                                                                                 articleComment.id.as("articleCommentId"),
                                                                                 articleComment.content.as("articleCommentContent"),
                                                                                 articleComment.createdAt.as("createdAt"),
-                                                                                articleComment.createdBy.as("createdBy"),
                                                                                 articleComment.lastModifiedAt.as("lastModifiedAt"),
-                                                                                articleComment.lastModifiedBy.as("lastModifiedBy")
+                                                                                articleComment.createdBy.id.as("userId"),
+                                                                                articleComment.createdBy.nickname.as("nickname")
                                                                         ))
                                                                         .from(articleComment)
+                                                                        .innerJoin(articleComment.createdBy, user)
                                                                         .where(articleComment.article.id.eq(articleId))
                                                                         .offset(pageable.getOffset())
                                                                         .limit(pageable.getPageSize())

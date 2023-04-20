@@ -15,19 +15,18 @@ public class ResponseArticleCommentFindDto {
     private String articleCommentContent;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy/MM/dd HH:mm:ss")
     private LocalDateTime createdAt;
-    private String createdBy;
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy/MM/dd HH:mm:ss")
-
     private LocalDateTime lastModifiedAt;
-    private String lastModifiedBy;
+    private Long userId;
+    private String nickname;
 
     private ResponseArticleCommentFindDto(ArticleComment articleComment) {
         this.articleCommentId = articleComment.getId();
         this.articleCommentContent = articleComment.getContent();
         this.createdAt = articleComment.getCreatedAt();
-        this.createdBy = articleComment.getCreatedBy();
         this.lastModifiedAt = articleComment.getLastModifiedAt();
-        this.lastModifiedBy = articleComment.getLastModifiedBy();
+        this.userId = articleComment.getCreatedBy().getId();
+        this.nickname = articleComment.getCreatedBy().getNickname();
     }
 
     public static ResponseArticleCommentFindDto of(ArticleComment articleComment) {
@@ -35,12 +34,15 @@ public class ResponseArticleCommentFindDto {
     }
 
     @QueryProjection
-    public ResponseArticleCommentFindDto(Long articleCommentId, String articleCommentContent, LocalDateTime createdAt, String createdBy, LocalDateTime lastModifiedAt, String lastModifiedBy) {
+    public ResponseArticleCommentFindDto(Long articleCommentId,
+                                         String articleCommentContent,
+                                         LocalDateTime createdAt, LocalDateTime lastModifiedAt,
+                                         Long userId, String nickname) {
         this.articleCommentId = articleCommentId;
         this.articleCommentContent = articleCommentContent;
         this.createdAt = createdAt;
-        this.createdBy = createdBy;
         this.lastModifiedAt = lastModifiedAt;
-        this.lastModifiedBy = lastModifiedBy;
+        this.userId = userId;
+        this.nickname = nickname;
     }
 }

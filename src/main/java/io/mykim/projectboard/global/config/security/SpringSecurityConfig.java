@@ -48,10 +48,17 @@ public class SpringSecurityConfig {
         // 권한 별 url 접근설정
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/**").permitAll();
-//                .antMatchers("/admin").hasAnyRole("ADMIN")
-//                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
-//                .anyRequest().authenticated();
+                .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
+
+
+                .antMatchers("/users/**", "/api/v1/users/**").anonymous()
+                .antMatchers("/", "/articles", "/articles/{articleId}").permitAll()
+
+
+                //
+
+
+                .anyRequest().authenticated();
 
         // 로그인 설정
         httpSecurity
@@ -71,7 +78,7 @@ public class SpringSecurityConfig {
         // 로그아웃 설정
         httpSecurity
                 .logout()
-                .logoutUrl("/sign-out")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)	                 // 로그아웃 후 세션 전체 삭제 여부
                 .deleteCookies("JSESSIONID"); // 로그아웃 후 cookie 삭제

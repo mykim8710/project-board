@@ -29,12 +29,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         /**
          * form login 방식
          */
-        //response.sendRedirect("/");
+        response.sendRedirect("/");
 
         /**
          * API login 방식
          */
-        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+        /*MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
         MediaType jsonMimeType = MediaType.APPLICATION_JSON;
 
         HttpStatus result = HttpStatus.OK;
@@ -42,7 +42,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         if (jsonConverter.canWrite(result.getClass(), jsonMimeType)) {
             jsonConverter.write(commonResult, jsonMimeType, new ServletServerHttpResponse(response));
-        }
+        }*/
     }
 
     /*
