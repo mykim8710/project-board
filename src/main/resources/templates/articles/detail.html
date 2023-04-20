@@ -39,7 +39,7 @@
                             <div class="form-input">
                                 <label>작성자</label>
                                 <div class="input-items default">
-                                    <p th:text="${article.createdBy}">mykim</p>
+                                    <p th:text="${article.nickname}">mykim</p>
                                 </div>
                             </div>
                             <div class="form-input">
@@ -56,13 +56,13 @@
                             </div>
                             <br>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.nickname} == ${article.createdBy}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
                                 <button class="btn primary-btn rounded-full"
                                         th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|"
                                         type="button">게시글 수정</button>
                             </div>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.nickname} == ${article.createdBy}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
                                 <form id="search-form" th:action="@{/articles/{id}/delete(id=${article.id})}" th:method="post">
                                     <button class="btn primary-btn rounded-full" type="submit">게시글 삭제</button>
                                 </form>

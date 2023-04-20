@@ -79,7 +79,7 @@ function drawArticleCommentListDom(articleId, articleComments) {
 
         let html = `<div class="row my-3">
                         <div class="col-md-9 col-lg-9">
-                            <b class="me-4">${articleComment.createdBy}</b>
+                            <b class="me-4">${articleComment.nickname}</b>
                             <time>${articleComment.lastModifiedAt}</time>
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control w-90 articleCommentContent" value="${articleComment.articleCommentContent}" disabled="disabled" id="articleCommentContent_${articleComment.articleCommentId}">

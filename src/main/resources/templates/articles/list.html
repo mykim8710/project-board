@@ -81,7 +81,7 @@
                            th:text="${article.title}">게시글 제목</a>
                     </td>
                     <td class="hashtag" th:text="${article.getHashtag}">#게시글 해시태그</td>
-                    <td class="user-nickname" th:text="${article.createdBy}">작성자 닉네임</td>
+                    <td class="user-nickname" th:text="${article.nickname}">작성자 닉네임</td>
                     <td class="created-at">
                         <time th:text="${#temporals.format(article.createdAt, 'yyyy/MM/dd HH:mm')}">2022-01-01</time>
                     </td>
