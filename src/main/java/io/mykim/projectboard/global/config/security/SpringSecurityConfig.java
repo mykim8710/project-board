@@ -51,8 +51,9 @@ public class SpringSecurityConfig {
                 .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
 
 
-                .antMatchers("/users/**").anonymous()
+                .antMatchers("/users/**", "/api/v1/users/**").anonymous()
                 .antMatchers("/", "/articles", "/articles/{articleId}").permitAll()
+
 
                 //
 
