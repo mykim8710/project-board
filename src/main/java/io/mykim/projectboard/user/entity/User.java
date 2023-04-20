@@ -1,12 +1,17 @@
 package io.mykim.projectboard.user.entity;
 
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,14 +35,19 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_type", length = 50)
     private UserType userType;
 
+    // [양방향 매핑]
+    // user - articles, 1 : N
+    // 연관관계의 주인 : articles이 userId(fk)를 가짐
+    @ToString.Exclude
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 게시글도 삭제
+    private List<Article> articles = new ArrayList<>();
 
-    // todo : Article, ArticleComment와 연관관계 추후설정
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 게시글도 삭제
-//    private List<Article> articles = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 댓글도 삭제
-//    private List<ArticleComment> articleComments = new ArrayList<>();
-
+    // [양방향 매핑]
+    // user - articleComment, 1 : N
+    // 연관관계의 주인 : articleComment가 userId(fk)를 가짐
+    @ToString.Exclude
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 댓글도 삭제
+    private List<ArticleComment> articleComments = new ArrayList<>();
 
     private User(UserCreateDto createDto) {
         this.username = createDto.getUsername();
