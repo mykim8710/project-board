@@ -27,6 +27,8 @@ public enum CustomErrorCode {
     NOT_FOUND_USER(400, "U004", "not found this username"),
 
     NOT_MATCH_PASSWORD(400, "U005", "not match password"),
+
+    UN_AUTHORIZED_USER(401, "U006", "you can not access this article."),
     ;
 
 

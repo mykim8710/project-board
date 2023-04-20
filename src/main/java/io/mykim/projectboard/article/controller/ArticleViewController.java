@@ -3,16 +3,15 @@ package io.mykim.projectboard.article.controller;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
-import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
-import io.mykim.projectboard.article.service.ArticleCommentService;
+import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.service.ArticleService;
-import io.mykim.projectboard.global.config.security.PrincipalDetail;
+import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
-import io.mykim.projectboard.user.dto.response.UserSignInResponseDto;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -62,9 +62,9 @@ public class ArticleViewController {
 
     @PostMapping("/create")
     public String articleCreate(@Validated @ModelAttribute("article") ArticleCreateDto articleCreateDto,
-                                @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
+
         log.info("[POST] /articles/create  =>  article create, ArticleCreateDto = {}", articleCreateDto);
 
         if(bindingResult.hasErrors()) {
@@ -80,20 +80,32 @@ public class ArticleViewController {
 
     @GetMapping("/{articleId}/edit")
     public String articleEditView(@PathVariable Long articleId,
-                                  @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
-                                  Model model) {
+                                  @AuthenticationPrincipal User user,
+                                  Model model, HttpServletResponse response) throws IOException {
         log.info("[GET] /articles/{}/edit => article edit View", articleId);
-        model.addAttribute("article", articleService.findOneArticle(articleId));
+
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
+        if(!findArticleDto.getUserId().equals(user.getId())) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+        }
+
+        model.addAttribute("article", findArticleDto);
         return "articles/edit";
     }
 
     @PostMapping("/{articleId}/edit")
-    public String articleEdit(@PathVariable Long articleId,
-                              @AuthenticationPrincipal UserSignInResponseDto signInResponseDto,
+    public String articleEdit(@PathVariable Long articleId, @AuthenticationPrincipal User user,
                               @Validated @ModelAttribute("article") ArticleEditDto articleEditDto,
-                              BindingResult bindingResult) {
+                              BindingResult bindingResult, HttpServletResponse response) throws IOException {
 
         log.info("[POST] /articles/{}/edit => article edit, ArticleCreateDto = {}", articleId, articleEditDto);
+
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
+        if(!findArticleDto.getUserId().equals(user.getId())) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+        }
 
         if(bindingResult.hasErrors()) {
             log.info("validation errors = {}", bindingResult);
@@ -104,20 +116,25 @@ public class ArticleViewController {
             });
 
             return "articles/edit";
+        } else {
+            articleService.editArticle(articleEditDto, articleId);
+            return "redirect:/articles/{articleId}";
         }
-
-        articleService.editArticle(articleEditDto, articleId);
-
-        return "redirect:/articles/{articleId}";
     }
 
     @PostMapping("/{articleId}/delete")
-    public String articleRemove(@PathVariable Long articleId,
-                                @AuthenticationPrincipal UserSignInResponseDto signInResponseDto) {
-
+    public void articleRemove(@PathVariable Long articleId, @AuthenticationPrincipal User user, HttpServletResponse response) throws IOException {
         log.info("[POST] /articles/{}/delete => article delete");
-        articleService.removeArticle(articleId);
-        return "redirect:/articles";
+
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
+        if(!findArticleDto.getUserId().equals(user.getId())) {
+            System.out.println("do this ");
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+        } else {
+            articleService.removeArticle(articleId);
+            response.sendRedirect("/articles");
+        }
     }
 
 }
