@@ -1,11 +1,14 @@
 package io.mykim.projectboard.global.config.security;
 
 import io.mykim.projectboard.global.config.security.handler.CustomAccessDeniedHandler;
+import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationEntryPoint;
 import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationFailureHandler;
 import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,10 +17,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,17 +56,13 @@ public class SpringSecurityConfig {
         // 권한 별 url 접근설정
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
-
-
-                .antMatchers("/users/**", "/api/v1/users/**").anonymous()
-                .antMatchers("/", "/articles", "/articles/{articleId}").permitAll()
-
-
-                //
-
-
-                .anyRequest().authenticated();
+                    .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
+                    .antMatchers(HttpMethod.POST,"/api/v1/articles/{articleId}/article-comments").authenticated()
+                    .antMatchers(HttpMethod.PATCH,"/api/v1/articles/{articleId}/article-comments").authenticated()
+                    .antMatchers(HttpMethod.DELETE,"/api/v1/articles/{articleId}/article-comments").authenticated()
+                    .antMatchers("/users/**", "/api/v1/users/**").anonymous()
+                    .antMatchers(HttpMethod.GET, "/", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll()
+                    .anyRequest().authenticated();
 
         // 로그인 설정
         httpSecurity
@@ -73,6 +77,7 @@ public class SpringSecurityConfig {
         // Exception 설정
         httpSecurity
                 .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler()); // 접근권한이 없을때 handler
 
         // 로그아웃 설정
@@ -80,15 +85,12 @@ public class SpringSecurityConfig {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)	                 // 로그아웃 후 세션 전체 삭제 여부
+                .invalidateHttpSession(true)	 // 로그아웃 후 세션 전체 삭제 여부
                 .deleteCookies("JSESSIONID"); // 로그아웃 후 cookie 삭제
-
 
         return httpSecurity.build();
     }
 
-
-    // CustomAuthenticationProvider가 자동으로 등록되어있음
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -102,6 +104,11 @@ public class SpringSecurityConfig {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean
