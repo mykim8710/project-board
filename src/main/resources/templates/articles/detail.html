@@ -9,6 +9,18 @@
 <body>
 <header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
 
+<!-- 자바스크립트 인라인 사용 후 -->
+<script th:inline="javascript">
+    let articleId = [[${article.id}]];
+
+    [# sec:authorize="isAnonymous()"]
+    let signInUserId = 0;
+    [/]
+    [# sec:authorize="isAuthenticated()"]
+    let signInUserId = [[${#authentication.principal.id}]];
+    [/]
+</script>
+
 <main class="article-area article-one">
     <div class="container">
         <div class="row justify-content-center">
@@ -105,11 +117,10 @@
             </div>
         </div>
     </div>
-
-    <input type="hidden" th:value="${article.id}" id="articleId">
 </main>
 
-<script defer type="text/javascript" src="/js/articleComment.js"></script>
+<script type="text/javascript" src="/js/articleComment.js"></script>
+<script type="text/javascript" src="/js/articleCommentApis.js"></script>
 
 <div id="bodyFooter" th:replace="fragments/bodyFooter :: bodyFooter"/>
 </body>

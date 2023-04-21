@@ -6,9 +6,11 @@ import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.article.service.ArticleCommentService;
+import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,27 +22,7 @@ public class ArticleCommentApiController {
 
     private final ArticleCommentService articleCommentService;
 
-    // 댓글 전체 목록조회 +search +pagination +sorting
-//    @GetMapping("/api/v1/article-comments")
-//    public ResponseEntity<CommonResponse> findAllArticleCommentUnderArticleApi() {
-//        log.info("[GET] /api/v1/article-comments  =>  find all ArticleComment api");
-//        CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK, null);
-//        return ResponseEntity
-//                .status(response.getStatus())
-//                .body(response);
-//    }
-
-    // 댓글 전체 중 단건 조회
-//    @GetMapping("/api/v1/article-comments/{articleCommentId}")
-//    public ResponseEntity<CommonResponse> findOneArticleCommentApi(@PathVariable Long articleCommentId) {
-//        log.info("[GET] /api/v1/article-comments/{}  =>  find One ArticleComment api", articleCommentId);
-//        CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK, articleCommentService.findOneArticleCommentById(articleCommentId));
-//        return ResponseEntity
-//                .status(response.getStatus())
-//                .body(response);
-//    }
-
-    // 게시글 하부 댓글 목록조회 (+search +pagination +sorting)
+    // 게시글 하부 댓글 목록조회 (+pagination)
     @GetMapping("/api/v1/articles/{articleId}/article-comments")
     public ResponseEntity<CommonResponse> findAllArticleCommentUnderArticleApi(@PathVariable Long articleId, @ModelAttribute CustomPaginationRequest paginationRequest) {
         log.info("[GET] /api/v1/articles/{}/article-comments?offset={}&limit={} => find all ArticleComment under Article api", articleId, paginationRequest.getOffset(), paginationRequest.getLimit());
@@ -51,7 +33,7 @@ public class ArticleCommentApiController {
                 .body(response);
     }
 
-    // 게시글 하부 댓글 단건 조회
+    // 게시글 하부 댓글 단건 조회 : not used
     @GetMapping("/api/v1/articles/{articleId}/article-comments/{articleCommentId}")
     public ResponseEntity<CommonResponse> findOneArticleCommentUnderArticleApi(@PathVariable Long articleId, @PathVariable Long articleCommentId) {
         log.info("[GET] /api/v1/articles/{}/article-comments/{}  =>  find One ArticleComment under Article api", articleId, articleCommentId);

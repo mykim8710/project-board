@@ -28,7 +28,9 @@ public enum CustomErrorCode {
 
     NOT_MATCH_PASSWORD(400, "U005", "not match password"),
 
-    UN_AUTHORIZED_USER(401, "U006", "you can not access this article."),
+    UN_AUTHORIZED_USER(401, "U006", "You are an unauthenticated user."),
+
+    NOT_ALLOWED_USER(403, "U007", "You are not allowed user."),
     ;
 
 

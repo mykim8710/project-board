@@ -1,21 +1,26 @@
 package io.mykim.projectboard.article.service;
 
-import io.mykim.projectboard.article.entity.Article;
-import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentListDto;
-import io.mykim.projectboard.global.result.enums.CustomErrorCode;
-import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.global.result.enums.CustomErrorCode;
+import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
+import io.mykim.projectboard.global.result.exception.NotFoundException;
+import io.mykim.projectboard.global.result.exception.UnAuthorizedException;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
+import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,18 +32,6 @@ import static io.mykim.projectboard.global.result.enums.CustomErrorCode.NOT_FOUN
 public class ArticleCommentService {
     private final ArticleCommentRepository articleCommentRepository;
     private final ArticleRepository articleRepository;
-
-//    @Transactional(readOnly = true)
-//    public List<ResponseArticleCommentFindDto> findAllArticleComment() {
-//
-//        return null;
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public ResponseArticleCommentFindDto findOneArticleCommentById(Long articleCommentId) {
-//        ArticleComment articleComment = articleCommentRepository.findById(articleCommentId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE_COMMENT));
-//        return ResponseArticleCommentFindDto.of(articleComment);
-//    }
 
 
     /**
@@ -85,12 +78,27 @@ public class ArticleCommentService {
     @Transactional
     public void editArticleComment(ArticleCommentEditDto editDto, Long articleId, Long articleCommentId) {
         ArticleComment articleComment = articleCommentRepository.findArticleCommentByIdAndArticleId(articleId, articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
+        confirmArticleCreatedUserId(articleComment.getCreatedBy().getId());
         articleComment.editArticleComment(editDto.getContent());
     }
 
     @Transactional
     public void removeArticleComment(Long articleId, Long articleCommentId) {
         ArticleComment articleComment = articleCommentRepository.findArticleCommentByIdAndArticleId(articleId, articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
+        confirmArticleCreatedUserId(articleComment.getCreatedBy().getId());
         articleCommentRepository.delete(articleComment);
+    }
+
+    private Long getSignInUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return user.getId();
+    }
+
+    private void confirmArticleCreatedUserId(Long articleCommentCreatedUserId) {
+        Long signInUserId = getSignInUserId();
+        if(!articleCommentCreatedUserId.equals(signInUserId)) {
+            throw new NotAllowedUserException(CustomErrorCode.NOT_ALLOWED_USER);
+        }
     }
 }
