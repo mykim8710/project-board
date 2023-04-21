@@ -84,10 +84,10 @@ public class ArticleViewController {
                                   Model model, HttpServletResponse response) throws IOException {
         log.info("[GET] /articles/{}/edit => article edit View", articleId);
 
-        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
         ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
         if(!findArticleDto.getUserId().equals(user.getId())) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         }
 
         model.addAttribute("article", findArticleDto);
@@ -101,10 +101,10 @@ public class ArticleViewController {
 
         log.info("[POST] /articles/{}/edit => article edit, ArticleCreateDto = {}", articleId, articleEditDto);
 
-        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
         ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
         if(!findArticleDto.getUserId().equals(user.getId())) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         }
 
         if(bindingResult.hasErrors()) {
@@ -126,11 +126,11 @@ public class ArticleViewController {
     public void articleRemove(@PathVariable Long articleId, @AuthenticationPrincipal User user, HttpServletResponse response) throws IOException {
         log.info("[POST] /articles/{}/delete => article delete");
 
-        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음
+        // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
         ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
         if(!findArticleDto.getUserId().equals(user.getId())) {
             System.out.println("do this ");
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), CustomErrorCode.UN_AUTHORIZED_USER.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         } else {
             articleService.removeArticle(articleId);
             response.sendRedirect("/articles");

@@ -8,8 +8,8 @@ import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
+import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.result.exception.UnAuthorizedException;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
@@ -89,7 +89,7 @@ public class ArticleService {
     private void confirmArticleCreatedUserId(Long articleCreatedUserId) {
         Long signInUserId = getSignInUserId();
         if(!articleCreatedUserId.equals(signInUserId)) {
-            throw new UnAuthorizedException(CustomErrorCode.UN_AUTHORIZED_USER);
+            throw new NotAllowedUserException(CustomErrorCode.NOT_ALLOWED_USER);
         }
     }
 }

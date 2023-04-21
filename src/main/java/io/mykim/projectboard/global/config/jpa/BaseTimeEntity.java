@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-@Table(indexes = {
-        @Index(columnList = "created_at"),
-        @Index(columnList = "last_modified_at")
-})
 public class BaseTimeEntity {
     @CreatedDate
     @Column(nullable = false, name = "created_at", updatable = false)
