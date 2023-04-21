@@ -61,8 +61,7 @@ public class SpringSecurityConfig {
                     .antMatchers(HttpMethod.PATCH,"/api/v1/articles/{articleId}/article-comments").authenticated()
                     .antMatchers(HttpMethod.DELETE,"/api/v1/articles/{articleId}/article-comments").authenticated()
                     .antMatchers("/users/**", "/api/v1/users/**").anonymous()
-                    .antMatchers(HttpMethod.GET, "/", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll()
-                    .anyRequest().authenticated();
+                    .antMatchers(HttpMethod.GET, "/", "/error-page/*", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll();
 
         // 로그인 설정
         httpSecurity
