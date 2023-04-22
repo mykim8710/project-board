@@ -7,10 +7,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -19,12 +16,12 @@ public class BaseEntity extends BaseTimeEntity {
     @CreatedBy
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id", name = "created_by_user_id", nullable = false, updatable = false)
+    @JoinColumn(referencedColumnName = "user_id", name = "created_by_user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User createdBy;
 
     @LastModifiedBy
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id", name = "last_modified_by_user_id", nullable = false)
+    @JoinColumn(referencedColumnName = "user_id", name = "last_modified_by_user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User lastModifiedBy;
 }
