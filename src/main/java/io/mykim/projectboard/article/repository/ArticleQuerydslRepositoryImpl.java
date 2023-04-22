@@ -47,7 +47,7 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
                                                                             article.createdBy.nickname.as("nickname")
                                                                     ))
                                                                     .from(article)
-                                                                    .innerJoin(article.createdBy, user)
+                                                                    .leftJoin(article.createdBy, user)
                                                                     .where(createUniversalSearchCondition(searchCondition))
                                                                     .offset(pageable.getOffset())
                                                                     .limit(pageable.getPageSize())

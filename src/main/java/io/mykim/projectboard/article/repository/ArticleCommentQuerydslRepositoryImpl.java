@@ -37,7 +37,7 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
                                                                                 articleComment.createdBy.nickname.as("nickname")
                                                                         ))
                                                                         .from(articleComment)
-                                                                        .innerJoin(articleComment.createdBy, user)
+                                                                        .leftJoin(articleComment.createdBy, user)
                                                                         .where(articleComment.article.id.eq(articleId))
                                                                         .offset(pageable.getOffset())
                                                                         .limit(pageable.getPageSize())
