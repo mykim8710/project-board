@@ -4,6 +4,7 @@ import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.service.ArticleService;
+import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
@@ -71,9 +72,9 @@ class ArticleViewControllerTest {
                                                             "content",
                                                             "hashtag",
                                                             LocalDateTime.now(),
-                                                            "mykim",
                                                             LocalDateTime.now(),
-                                                            "mykim"));
+                                                            1L,
+                                                    "mykim"));
 
         String url = "/articles/{articleId}";
         Long articleId = 1L;
@@ -90,6 +91,7 @@ class ArticleViewControllerTest {
 
     @Test
     @DisplayName("[VIEW] [GET] 게시글 작성 페이지 - 정상호출")
+    @WithAuthUser(username = "test")
     void articleCreateViewTest() throws Exception{
         // given
         String url = "/articles/create";
@@ -104,6 +106,7 @@ class ArticleViewControllerTest {
 
     @Test
     @DisplayName("[VIEW] [GET] 게시글 수정 페이지 - 정상호출")
+    @WithAuthUser(username = "test")
     void articleEditViewTest() throws Exception{
         // given
         given(articleService.findOneArticle(1L))
@@ -112,8 +115,8 @@ class ArticleViewControllerTest {
                                                             "content",
                                                             "hashtag",
                                                             LocalDateTime.now(),
-                                                            "mykim",
                                                             LocalDateTime.now(),
+                                                            1L,
                                                             "mykim"));
 
         String url = "/articles/{articleId}/edit";
@@ -125,36 +128,6 @@ class ArticleViewControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
                 .andExpect(MockMvcResultMatchers.view().name("articles/edit"))    // viewName 확인
                 .andExpect(MockMvcResultMatchers.model().attributeExists("article"))      // model에 해당 key값이 있는지
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("[VIEW] [GET] 게시글 검색전용 페이지 - 정상호출")
-    void articleSearchViewTest() throws Exception{
-        // given
-        String url = "/articles/search";
-
-        // when & then
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
-                .andExpect(MockMvcResultMatchers.view().name("articles/search")) // viewName 확인
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("[VIEW] [GET] 게시글 해시태그 검색전용 페이지 - 정상호출")
-    void articleHashtagSearchViewTest() throws Exception{
-        // given
-        String url = "/articles/search-hashtag";
-
-        // when & then
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(TEXT_HTML))
-                .andExpect(MockMvcResultMatchers.view().name("articles/search-hashtag")) // viewName 확인
                 .andDo(MockMvcResultHandlers.print());
     }
 }

@@ -2,6 +2,16 @@ spring:
   profiles:
     active: test
 
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+
   jpa:
 #    show-sql: true
     properties:
@@ -12,15 +22,7 @@ spring:
     init:
       mode: never
 
-#  data:
-#    rest:
-#      base-path: /api
-#      detection-strategy: annotated
-#        # spring.data.rest.base-path : repository resource를 노출할 기본 경로
-#        # spring.data.rest.detection-strategy :
-#      # api로 만들 repository를 찾는 전략
-#      # annotated : @RepositoryRestResource, @RestResource가 달린 자원들을 노출
-
 logging:
   level:
     org.hibernate.SQL: debug
+    org.hibernate.type: trace   # SQL 실행 파라미터를 로그로 남긴다.

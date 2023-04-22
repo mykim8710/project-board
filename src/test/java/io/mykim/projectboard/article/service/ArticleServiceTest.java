@@ -1,15 +1,20 @@
 package io.mykim.projectboard.article.service;
 
-import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
+import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
+import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
+import io.mykim.projectboard.user.dto.request.UserCreateDto;
+import io.mykim.projectboard.user.entity.User;
+import io.mykim.projectboard.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,11 +32,19 @@ import java.util.stream.IntStream;
 class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private EntityManager em;
 
     @Test
     @DisplayName("새로운 Article 생성하고 저장한다.")
+    @WithAuthUser(username = "test")
     void createArticleTest() throws Exception {
         // given
         String title = "title";
@@ -50,15 +63,16 @@ class ArticleServiceTest {
 
     @Test
     @DisplayName("id로 해당 Article을 조회한다.")
+    @WithAuthUser(username = "test")
     void findOneArticleByIdTest() throws Exception {
         // given
         String title = "title";
         String content = "content";
         String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article newArticle = createNewArticle(title, content, hashtag);
 
         // when
-        ResponseArticleFindDto findArticle = articleService.findOneArticle(article.getId());
+        ResponseArticleFindDto findArticle = articleService.findOneArticle(newArticle.getId());
 
         // then
         Assertions.assertThat(findArticle).isNotNull();
@@ -80,17 +94,13 @@ class ArticleServiceTest {
 
     @Test
     @DisplayName("조건에 맞는 Article 목록을 조회한다.")
+    @WithAuthUser(username = "test")
     void findAllArticleTest() throws Exception {
         // given
-        IntStream.range(1, 31)
-                .mapToObj(i -> Article.of("title"+i, "content"+i, "#hashtag"+i))
-                .collect(Collectors.toList())
-                .forEach(article -> {
-                    em.persist(article);
-                });
+        createUser();
 
-        em.flush();
-        em.clear();
+        IntStream.range(1, 31)
+                .forEach(i -> createNewArticle("title"+i, "content"+i, "#hashtag"+i));
 
         String sort = "id_ASC";
         CustomSortingRequest customSortingRequest = new CustomSortingRequest(sort);
@@ -113,6 +123,7 @@ class ArticleServiceTest {
 
     @Test
     @DisplayName("해당 id의 Article을 수정한다.")
+    @WithAuthUser(username = "test")
     void editArticleTest() throws Exception {
         // given
         String title = "title";
@@ -127,11 +138,10 @@ class ArticleServiceTest {
 
         // when
         articleService.editArticle(editDto, article.getId());
-        em.flush();
-        em.clear();
 
         // then
         Article findArticle = em.find(Article.class, article.getId());
+
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(newTitle);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(newContent);
         Assertions.assertThat(findArticle.getHashtag()).isEqualTo(newHashtag);
@@ -139,6 +149,7 @@ class ArticleServiceTest {
 
     @Test
     @DisplayName("해당 id의 Article을 삭제한다.")
+    @WithAuthUser(username = "test")
     void removeArticleTest() throws Exception {
         // given
         String title = "title";
@@ -148,8 +159,6 @@ class ArticleServiceTest {
 
         // when
         articleService.removeArticle(article.getId());
-        em.flush();
-        em.clear();
 
         // then
         Assertions.assertThatThrownBy(() -> articleService.findOneArticle(article.getId()))
@@ -159,11 +168,25 @@ class ArticleServiceTest {
 
     private Article createNewArticle(String title, String content, String hashtag) {
         Article article = Article.of(title, content, hashtag);
-        em.persist(article);
-        em.flush();
-        em.clear();
-
-        return article;
+        return articleRepository.save(article);
     }
 
+    private User createUser() {
+        String username = "test";
+        String password = "1234";
+        String email = "email@eamil.com";
+        String nickname = "nickname";
+        String memo = "memo";
+
+        UserCreateDto createDto = UserCreateDto.builder()
+                                                .username(username)
+                                                .password(password)
+                                                .email(email)
+                                                .nickname(nickname)
+                                                .memo(memo)
+                                                .build();
+
+        User user = User.of(createDto);
+        return userRepository.save(user);
+    }
 }

@@ -1,12 +1,16 @@
 package io.mykim.projectboard.article.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
-import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.user.dto.request.UserCreateDto;
+import io.mykim.projectboard.user.entity.User;
+import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -40,10 +43,17 @@ class ArticleApiControllerTest {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("[v1 / 인증 X] 새로운 게시글을 저장하는 api를 호출하면 게시글이 저장된다.")
+    @DisplayName("[v1 / 인증 적용] 새로운 게시글을 저장하는 api를 호출하면 게시글이 저장된다.")
+    @WithAuthUser(username = "test")
     void createArticleApiTest() throws Exception {
         // given
         String api = "/api/v1/articles";
@@ -68,7 +78,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 게시글 단건 조회 api 요청하면 조건에 맞는 게시글이 응답된다.")
+    @DisplayName("[v1 / 인증 적용] 게시글 단건 조회 api 요청하면 조건에 맞는 게시글이 응답된다.")
+    @WithAuthUser(username = "test")
     void findOneArticleApiTest() throws Exception {
         // given
         String title = "aa";
@@ -89,7 +100,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 존재하지않는 게시글에 대해 단건 조회 api 요청하면 NotFoundException 예외가 발생한다.")
+    @DisplayName("[v1 / 인증 적용] 존재하지않는 게시글에 대해 단건 조회 api 요청하면 NotFoundException 예외가 발생한다.")
+    @WithAuthUser(username = "test")
     void findOneArticleApiExceptionTest() throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}";
@@ -106,13 +118,12 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 게시글 전체 조회 api 요청하면 조건에 맞는 게시글 목록이 응답된다.")
+    @DisplayName("[v1 / 인증 적용] 게시글 전체 조회 api 요청하면 조건에 맞는 게시글 목록이 응답된다.")
+    @WithAuthUser(username = "test")
     void findAllArticleApiTest() throws Exception {
         // given
-        List<Article> articles = IntStream.range(1, 31)
-                .mapToObj(i -> Article.of("title" + i, "content" + i, "#hashtag" + i))
-                .collect(Collectors.toList());
-        articleRepository.saveAll(articles);
+        IntStream.range(1, 31)
+                .forEach(i -> createNewArticle("title" + i, "content" + i, "#hashtag" + i));
 
         String api = "/api/v1/articles";
         String sort = "id_DESC";
@@ -141,7 +152,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 게시글 수정 api를 요청하면 해당 게시글이 수정된다.")
+    @DisplayName("[v1 / 인증 적용] 게시글 수정 api를 요청하면 해당 게시글이 수정된다.")
+    @WithAuthUser(username = "test")
     void editArticleApiTest() throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}";
@@ -169,7 +181,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 존재하지않는 게시글에 대해 게시글 수정 api를 요청하면 NotFoundException 예외가 발생한다.")
+    @DisplayName("[v1 / 인증 적용] 존재하지않는 게시글에 대해 게시글 수정 api를 요청하면 NotFoundException 예외가 발생한다.")
+    @WithAuthUser(username = "test")
     void editArticleApiExceptionTest() throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}";
@@ -198,7 +211,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 게시글 삭제 api를 요청하면 해당 게시글이 삭제된다.")
+    @DisplayName("[v1 / 인증 적용] 게시글 삭제 api를 요청하면 해당 게시글이 삭제된다.")
+    @WithAuthUser(username = "test")
     void removeArticleApiTest() throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}";
@@ -219,7 +233,8 @@ class ArticleApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 X] 존재하지않는 게시글에 대해 게시글 삭제 api를 요청하면 NotFoundException 예외가 발생한다.")
+    @DisplayName("[v1 / 인증 적용] 존재하지않는 게시글에 대해 게시글 삭제 api를 요청하면 NotFoundException 예외가 발생한다.")
+    @WithAuthUser(username = "test")
     void removeArticleApiExceptionTest() throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}";
@@ -227,7 +242,7 @@ class ArticleApiControllerTest {
         String title = "aa";
         String content = "cc";
         String hashtag = "#gg";
-        Article insertArticle = createNewArticle(title, content, hashtag);
+        createNewArticle(title, content, hashtag);
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(api, -1L)
