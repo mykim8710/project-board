@@ -1,12 +1,6 @@
 package io.mykim.projectboard.global.config.security.handler;
 
-import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
-import io.mykim.projectboard.global.result.model.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
