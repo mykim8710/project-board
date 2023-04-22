@@ -6,15 +6,14 @@ import io.mykim.projectboard.global.config.security.handler.CustomAuthentication
 import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -22,10 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,12 +31,6 @@ public class SpringSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    // 인증을 무시할 경로들을 설정 >> static resource 보안설정
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers("/css/**", "/js/**");
     }
 
     /**
@@ -61,7 +50,8 @@ public class SpringSecurityConfig {
                     .antMatchers(HttpMethod.PATCH,"/api/v1/articles/{articleId}/article-comments").authenticated()
                     .antMatchers(HttpMethod.DELETE,"/api/v1/articles/{articleId}/article-comments").authenticated()
                     .antMatchers("/users/**", "/api/v1/users/**").anonymous()
-                    .antMatchers(HttpMethod.GET, "/", "/error-page/*", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll();
+                    .antMatchers(HttpMethod.GET, "/", "/error-page/*", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
 
         // 로그인 설정
         httpSecurity
