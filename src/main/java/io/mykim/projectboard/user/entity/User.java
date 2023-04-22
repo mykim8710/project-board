@@ -53,7 +53,21 @@ public class User extends BaseTimeEntity {
         this.userType = UserType.GENERAL;
     }
 
+    private User(Long id, String username, String password, String nickname, String email, String memo, UserType userType) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.memo = memo;
+        this.userType = userType;
+    }
+
     public static User of(UserCreateDto createDto) {
         return new User(createDto);
+    }
+
+    public static User of(Long id, String username, String password, String nickname, String email, String memo, UserType userType) {
+        return new User(id, username, password, nickname, email, memo, userType);
     }
 }
