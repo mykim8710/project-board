@@ -1,4 +1,4 @@
-package io.mykim.projectboard.user.exception;
+package io.mykim.projectboard.global.result.exception;
 
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.BusinessRollbackException;
