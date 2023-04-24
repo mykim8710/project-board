@@ -3,17 +3,14 @@ package io.mykim.projectboard.article.api;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
+import io.mykim.projectboard.article.service.ArticleService;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
-import io.mykim.projectboard.article.service.ArticleCommentService;
-import io.mykim.projectboard.article.service.ArticleService;
-import io.mykim.projectboard.user.dto.response.UserSignInResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

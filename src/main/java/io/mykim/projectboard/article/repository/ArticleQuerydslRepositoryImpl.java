@@ -10,8 +10,6 @@ import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.QResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.entity.Article;
-
-import io.mykim.projectboard.user.entity.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

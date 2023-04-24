@@ -2,15 +2,13 @@ package io.mykim.projectboard.article.api;
 
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
+import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.article.service.ArticleCommentService;
-import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

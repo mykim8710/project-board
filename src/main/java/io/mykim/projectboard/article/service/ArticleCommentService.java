@@ -11,7 +11,6 @@ import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.result.exception.UnAuthorizedException;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
 import io.mykim.projectboard.user.entity.User;

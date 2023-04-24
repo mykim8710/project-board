@@ -1,17 +1,13 @@
 package io.mykim.projectboard.article.repository;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import io.mykim.projectboard.article.dto.response.QResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static io.mykim.projectboard.article.entity.QArticleComment.articleComment;
