@@ -5,7 +5,7 @@ import io.mykim.projectboard.global.result.exception.NotValidRequestException;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.dto.request.UserInfoDuplicateCheckDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.exception.DuplicateUserInfoException;
+import io.mykim.projectboard.global.result.exception.DuplicateUserInfoException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

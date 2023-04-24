@@ -7,7 +7,7 @@ import io.mykim.projectboard.global.result.model.CommonResponse;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.dto.request.UserInfoDuplicateCheckDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.exception.DuplicateUserInfoException;
+import io.mykim.projectboard.global.result.exception.DuplicateUserInfoException;
 import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
