@@ -288,3 +288,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,visualstudiocode,macos,windows,gradle,eclipse
 /.idea/
+/src/main/resources/jasypt-encryptor-password.txt
+/src/test/resources/jasypt-encryptor-password.txt
+/src/test/java/io/mykim/projectboard/global/config/jasypt/JasyptConfigTest.java

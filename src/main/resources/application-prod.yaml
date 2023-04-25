@@ -4,9 +4,9 @@ spring:
       on-profile: prod
 
   datasource:
-    url: jdbc:mysql://aws-mykim-db.cnabvg8k9c9s.ap-northeast-2.rds.amazonaws.com:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: mykim
-    password: kmy5708!
+    url: ENC(ULcPH0GmGb3tzCt7Fpm2kUvzvQQSDNW6qYPQUmJIf0SPJdTMsaTnvHDdWXt68Syd+LzO3Lj9DlQo9RxD8qcpZSXhcqyapf1pAKte7GUu0Xt1jgn4KnbdRDerFxlaXGv8x7nbIPpNm3xktLRbk1RRTPodDju6Y00ftSzgD+FveGzwqo4AWwDwO1sm+mhRB1bNMdimIEkoEOKbNsD6aMqAcrpG9scHoRXt0vkch4Jww6E=)
+    username: ENC(aJLRUHyRuhuFqLDbBwPykA==)
+    password: ENC(vex0W+YzYpk+LbbRm/qEVWx9Ijelo2f+)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

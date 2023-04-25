@@ -5,9 +5,9 @@ spring:
 
   # DB Connection
   datasource:
-    url: jdbc:mysql://localhost:3308/board?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: mykim
-    password: kmy5708!@#
+    url: ENC(CS92Tt3CVi9b/jl5jHytt/L5h0UeJNZwxREzIXihxTNfIol0vBv5henwHAfXD2JtKO4MwV2mjV3pwenkwQ5kfVNyHdgsiz90KTauy8uNhwHLocbbhOZsqF5j4ZGL/Np6rxrXs8YaP5pYOyP+a1yZgs9Qbskj3nv2+H9T6sc+90w=)
+    username: ENC(cgCoNlPFZqMYcbCfur4Hug==)
+    password: ENC(wVSpofhv4sU1WUFKiVQi5nID+CCoUn1I)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # JPA 관련
