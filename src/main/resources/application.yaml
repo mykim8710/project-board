@@ -69,18 +69,23 @@ spring:
   sql.init.mode: always
     #app실행 시 data.sql 실행
 
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithMD5AndDES
+    pool-size: 2
+    key-obtention-iterations: 1000
+
 ---
 spring:
   config:
     activate:
       on-profile: prod
 
-    import: "aws-parameterstore:"
-
   datasource:
-    url: ${url}
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://aws-mykim-db.cnabvg8k9c9s.ap-northeast-2.rds.amazonaws.com:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: mykim
+    password: kmy5708!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -89,10 +94,3 @@ spring:
       ddl-auto: none
 
   sql.init.mode: never
-
-aws:
-  paramstore:
-    enabled: true
-    prefix: /springboot-aws
-    name: db-connection-parameter
-    profile-separator: _
