@@ -14,10 +14,20 @@ logging:
 
 spring:
   profiles:
-    default: dev
+    active: local
+
+  #DB Connection
+  datasource:
+    url: jdbc:mysql://localhost:3308/board?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: mykim
+    password: kmy5708!@#
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   # JPA 관련
   jpa:
+    defer-datasource-initialization: true
+      #초기 테스트 용 데이터 입력을 위한 data.sql 작동 활성화
+
     open-in-view: false
       # OSIV 설정 : Open Session In View(하이버네이트), Open EntityManager In View(JPA)
         # default : true
@@ -33,6 +43,15 @@ spring:
         # - 지연로딩 코드를 트랜잭션 안으로 넣어야 하는 단점
         # - 트랜잭션이 끝나기 전에 지연 로딩을 강제로 호출해 두어야 함?
 
+    hibernate:
+      ddl-auto: create
+        # ddl-auto: 'option'
+        # none : 아무것도 하지 않는다.
+        # create : 기존의 테이블이 있다면, 지우고 새로 만듬.
+        # create-drop : 테이블을 새로 만들고, 앱이 꺼지기 전에 지운다.
+      # update : Entity에서 추가된 필드를 테이블에 반영한다.(테이블 수정)
+      # validate : Entity와 테이블의 정합성이 맞는지 검증한다.(안맞으면 오류를 발생 : Application 종료)
+
     show-sql: true
       # SQL query 출력
 
@@ -47,27 +66,5 @@ spring:
         # hibernate.use_sql_comments: true
           #querydsl - jpql parameter
 
-# Jasypt : Java Simplified Encryption
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor
-    algorithm: PBEWithMD5AndDES
-    pool-size: 2
-    string-output-type: base64
-    key-obtention-iterations: 100000
-
-
-# h2 console 활성화
-#  h2:
-#    console:
-#      enabled: true
-
-# Spring Data REST : 도메인 모델과 repository를 분석해서, RESTful API를 제공
-#  data:
-#    rest:
-#      base-path: /api
-#      detection-strategy: annotated
-#      # spring.data.rest.base-path : repository resource를 노출할 기본 경로
-#      # spring.data.rest.detection-strategy :
-#        # api로 만들 repository를 찾는 전략
-#        # annotated : @RepositoryRestResource, @RestResource가 달린 자원들을 노출
+  sql.init.mode: always
+    #app실행 시 data.sql 실행
