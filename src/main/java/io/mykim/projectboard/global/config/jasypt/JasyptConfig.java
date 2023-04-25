@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableEncryptableProperties
 public class JasyptConfig {
-    @Value("${jasypt.encryptor.secrete-key}")
+    @Value("${jasypt.encryptor.secret-key}")
     private String secretKey;
 
     @Value("${jasypt.encryptor.algorithm}")

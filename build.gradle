@@ -62,7 +62,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-    systemProperty 'jasypt.encryptor.password', findProperty("jasypt.encryptor.password")
+    systemProperty 'jasypt.encryptor.secret-key', findProperty("jasypt.encryptor.secret-key")
 }
 
 //querydsl 추가 시작
