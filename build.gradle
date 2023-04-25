@@ -15,7 +15,7 @@ plugins {
 }
 
 group = 'io.mykim'
-version = '0.0.1-SNAPSHOT'
+version = 'v1.0-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
