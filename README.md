@@ -199,7 +199,7 @@ Spring Boot
 
 ## 데모 페이지
 AWS 배포예정
-*  https://[,,,,,,].com
+* (http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:8080)
 
 ## Reference
 * 유즈케이스 다이어그램 [#5](https://github.com/mykim8710/project-board/pull/5)
