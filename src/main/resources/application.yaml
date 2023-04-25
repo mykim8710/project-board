@@ -75,7 +75,7 @@ spring:
     activate:
       on-profile: prod
 
-    import: 'aws-parameterstore:'
+    import: "aws-parameterstore:"
 
   datasource:
     url: ${url}
