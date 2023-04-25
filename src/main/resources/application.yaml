@@ -68,3 +68,31 @@ spring:
 
   sql.init.mode: always
     #app실행 시 data.sql 실행
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+    import: 'aws-parameterstore:'
+
+  datasource:
+    url: ${url}
+    username: ${username}
+    password: ${password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+  sql.init.mode: never
+
+aws:
+  paramstore:
+    enabled: true
+    prefix: /springboot-aws
+    name: db-connection-parameter
+    profile-separator: _
