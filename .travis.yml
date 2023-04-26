@@ -33,6 +33,7 @@ before_deploy:
   - mv project-board-webservice.zip deploy/project-board-webservice.zip # project-board-webservice.zip파일을 deploy/project-board-webservice.zip로 이동
 
 deploy:
+  # S3
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY     # Travis CI repo setting에서 설정한 값
     secret_access_key: $AWS_SECRET_KEY # Travis CI repo setting에서 설정한 값
@@ -44,6 +45,18 @@ deploy:
     wait-until-deployed : true
     on:
       branch: main #main 브랜치 허용
+
+  # CodeDeploy
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY     # Travis CI repo setting에서 설정한 값
+    secret_access_key: $AWS_SECRET_KEY # Travis CI repo setting에서 설정한 값
+    bucket: project-board-build        # 생성한 S3 버킷명
+    key: project-board-webservice.zip  # 빌드파일을 압축해서 전달
+    bundle_type: zip                   # 압축확장자
+    application: project-board-webservice  # AWS 웹콘솔에서 등록한 CodeDeploy 애플리케이션
+    deployment_group: project-board-webservice-group  # AWS 웹콘솔에서 등록한 CodeDeploy 배포그룹
+    region: ap-northeast-2
+    wait-until-deployed : true
 
 # CI 실행 완료 시 작성한 이메일로 알람
 notifications:
