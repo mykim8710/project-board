@@ -24,6 +24,25 @@ cache:
 # 프로젝트 내에 권한이 추가된 gradlew를 활용하여 clean, build를 진행한다.
 script: "./gradlew clean build -Pjasypt.encryptor.secret-key=password"
 
+
+# deploy 명령어가 수행되기 전에 실행
+# CodeDeploy는 Jar파일을 인식하지 못하므로 Jar + 기타설정 파일들을 모아 압축
+before_deploy:
+  - zip -r project-board-webservice * #현재 위치의 모든 파일을 project-board-webservice 이름으로 압축
+  - mkdir -p deploy #deploy 라는 디렉토리를 Travis CI가 실행 중인 위치에 생성
+  - mv project-board-webservice.zip deploy/project-board-webservice.zip # project-board-webservice.zip파일을 deploy/project-board-webservice.zip로 이동
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY     # Travis CI repo setting에서 설정한 값
+    secret_access_key: $AWS_SECRET_KEY # Travis CI repo setting에서 설정한 값
+    bucket: project-board-build        # 생성한 S3 버킷명
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private      # zip파일 접근을 private로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리
+    wait-until-deployed : true
+
 # CI 실행 완료 시 작성한 이메일로 알람
 notifications:
   email:
