@@ -96,47 +96,47 @@ spring:
 
   sql.init.mode: never
 
-#---
-#server:
-#  port: 8081
-#
-#spring:
-#  config:
-#    activate:
-#      on-profile: prod1
-#
-#  datasource:
-#    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
-#    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
-#    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#
-#  jpa:
-#    defer-datasource-initialization: false
-#    hibernate:
-#      ddl-auto: none
-#
-#  sql.init.mode: never
-#
-#---
-#server:
-#  port: 8082
-#
-#spring:
-#  config:
-#    activate:
-#      on-profile: prod2
-#
-#  datasource:
-#    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
-#    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
-#    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#
-#  jpa:
-#    defer-datasource-initialization: false
-#    hibernate:
-#      ddl-auto: none
-#
-#  sql.init.mode: never
+---
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: prod1
+
+  datasource:
+    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
+    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
+    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+  sql.init.mode: never
+
+---
+server:
+  port: 8082
+
+spring:
+  config:
+    activate:
+      on-profile: prod2
+
+  datasource:
+    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
+    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
+    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+  sql.init.mode: never
 
