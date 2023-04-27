@@ -32,4 +32,4 @@ chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
-nohup java -jar -Dspring.profiles.active=prod $JAR_NAME --jasypt.encryptor.secret-key=$JASYPT_SECRET_KEY > $REPOSITORY/nohup.out 2>&1 &
+nohup java -jar -Dspring.profiles.active=prod $JAR_NAME --JASYPT_SECRET_KEY=$JASYPT_SECRET_KEY > $REPOSITORY/nohup.out 2>&1 &
