@@ -12,9 +12,6 @@ logging:
     org.hibernate.SQL: debug
       # Logger를 통해 하이버네이트 실행 SQL을 남김
 
-server:
-  port: 8080
-
 spring:
   profiles:
     active: local
