@@ -15,7 +15,7 @@ plugins {
 }
 
 group = 'io.mykim'
-version = 'v1.0-SNAPSHOT'
+version = 'v1.0-SNAPSHOT-' +new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = '17'
 
 configurations {

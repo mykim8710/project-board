@@ -2,7 +2,7 @@ version: 0.0  # CodeDeploy의 버전, 프로젝트의 버전이 아님, 0.0이�
 os: linux
 files:
   - source: /  # CodeDeploy에서 전달해준 파일 중 destination으로 이동시킬 대상 지정, / root경로를 지정하면 전체파일을 이야기함
-    destination: /home/ec2-user/app/step2/zip/  # source에서 지정된 파일을 받을 위치, 이후 Jar를 실행하는 등은 destination으로 옮긴파일들로 진행
+    destination: /home/ec2-user/app/step3/zip/  # source에서 지정된 파일을 받을 위치, 이후 Jar를 실행하는 등은 destination으로 옮긴파일들로 진행
     overwrite: yes  # 기존에 파일들이 있으면 덮어쓸지를 결정(yes)
 
 permissions:
@@ -12,7 +12,15 @@ permissions:
     group: ec2-user
 
 hooks:
+  AfterInstall:
+    - location: stop.sh # 엔진엑스와 연결되어 있지않은 스프링부트 프로젝트를 종료
+      timeout: 60
+      runas: ec2-user
   ApplicationStart:
-    - location: deploy.sh
+    - location: start.sh # 엔진엑스와 연결되어 있지 않은 Port로 새버전의 스프링부트를 시작
+      timeout: 60
+      runas: ec2-user
+  ValidateService:
+    - location: health.sh # 새 스프링부트가 정상적으로 실행되었는지 확인
       timeout: 60
       runas: ec2-user
