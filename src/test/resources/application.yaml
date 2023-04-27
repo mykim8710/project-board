@@ -33,3 +33,4 @@ jasypt:
     algorithm: PBEWithMD5AndDES
     pool-size: 2
     key-obtention-iterations: 1000
+    password: ${JASYPT_SECRET_KEY}

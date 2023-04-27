@@ -1,6 +1,7 @@
 package io.mykim.projectboard.global.config.jasypt;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -8,10 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 @EnableEncryptableProperties
 public class JasyptConfig {
-    @Value("${jasypt.encryptor.secret-key}")
+    @Value("${jasypt.encryptor.password}")
     private String secretKey;
 
     @Value("${jasypt.encryptor.algorithm}")
@@ -24,7 +26,7 @@ public class JasyptConfig {
     private String keyObtentionIterations;
 
     @Bean
-    public StringEncryptor stringEncryptor() {
+    public StringEncryptor jasyptStringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
 

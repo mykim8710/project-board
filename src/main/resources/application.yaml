@@ -21,10 +21,10 @@ spring:
 
   #DB Connection
   datasource:
-    url: jdbc:mysql://localhost:3308/board?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: mykim
-    password: kmy5708!@#
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(7pDf1vwRUGg76FyU91mbMhnBvoMvBYD/doKsfB1o6ciep0tzgcOkaoxz7wMzDiM2FCkilm4PdnPT/OUYlEUUBIAzGPTpgcdU+I9/aihyPQbeWl1mGtGLvkdtB7RokwZgGgaWQk+nEndnlSPWpp7z4O6wNHzj2a9R1+qRcOEOKpc=)
+    username: ENC(QgP9QWvVGt0A/mPmAZtBGQ==)
+    password: ENC(ypHIP7vlbMV3BO49swIlwsUxL4e2xyUp)
 
   # JPA 관련
   jpa:
@@ -78,6 +78,7 @@ jasypt:
     algorithm: PBEWithMD5AndDES
     pool-size: 2
     key-obtention-iterations: 1000
+    password: ${JASYPT_SECRET_KEY}
 
 ---
 spring:
@@ -86,9 +87,9 @@ spring:
       on-profile: prod
 
   datasource:
-    url: jdbc:mysql://aws-mykim-db.cnabvg8k9c9s.ap-northeast-2.rds.amazonaws.com:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: mykim
-    password: kmy5708!
+    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
+    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
+    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -106,8 +107,20 @@ spring:
   config:
     activate:
       on-profile: prod1
-  profiles:
-    include: prod
+
+  datasource:
+    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
+    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
+    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+  sql.init.mode: never
+
 ---
 server:
   port: 8082
@@ -116,5 +129,17 @@ spring:
   config:
     activate:
       on-profile: prod2
-  profiles:
-    include: prod
+
+  datasource:
+    url: ENC(AUfDE+ycjKkyls5vXQy2/tWMkk3YTx5T2Ju7sQAUpWgiqknFtpJ0DQZCOMJUwINPaFgK29KB5AsGKugwg8/d/9I+yKrNXGgKmvJc3ZgL5ttdm/vxS2b6aiX3wwn5xW6aLc45mVyQKkSRE2ZEc+QmQUvnYZ1GAEWEKkbcSqBycxRcrMY8TIGkZ4oAaKf75h7+13lFQmaX5/erFoBP/DbDfRtbP9/uNWRXWoPVDrociR8=)
+    username: ENC(QBB/27zo3GmIf9cgWgysvw==)
+    password: ENC(m/f4lYdDAfuW9gaTSyxIltrvrKb6nKrp)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+  sql.init.mode: never
+
