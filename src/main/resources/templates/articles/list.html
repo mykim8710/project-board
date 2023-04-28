@@ -158,7 +158,7 @@
 
                 <li class="page-item">
                     <a class="page-link"
-                       th:href="@{/articles (offset     = ${articles.getPaginationResponse().totalPage},
+                       th:href="@{/articles (offset     = ${articles.getPaginationResponse().endPage},
                                              limit      = ${articles.getPaginationRequest().getLimit()},
                                              searchType = ${articles.getSearchCondition().getSearchType()},
                                              keyword    = ${articles.getSearchCondition().getKeyword()},
