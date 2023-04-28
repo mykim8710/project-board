@@ -18,8 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "article",
         indexes = {
-                @Index(columnList = "article_title"),
-                @Index(columnList = "article_hashtag")
+                @Index(columnList = "article_title")
         })
 public class Article extends BaseEntity {
     @Id
@@ -30,25 +29,35 @@ public class Article extends BaseEntity {
     private String title;
     @Column(name = "article_content", nullable = false, length = 10000)
     private String content;
-    @Column(name = "article_hashtag", length = 255)
-    private String hashtag;
 
+
+    // [양방향 매핑]
+    // Article - ArticleComment => 1 : N
+    // 연관관계의 주인 : article_comment가 article_id(fk)를 갖는다
     @ToString.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // CascadeType.ALL : 게시글이 지워지면 연관된 댓글도 함께 삭제
     private List<ArticleComment> articleComments = new ArrayList<>();
 
-    private Article(String title, String content, String hashtag) {
+
+    // [양방향 매핑]
+    // Article - ArticleHashTag => 1 : N
+    // 연관관계의 주인 : article_hashtag가 article_id(fk)를 갖는다
+    @ToString.Exclude
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<ArticleHashTag> articleHashTags = new ArrayList<>();
+
+
+    private Article(String title, String content) {
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
     }
 
-    public static Article of(String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of(String title, String content) {
+        return new Article(title, content);
     }
 
     public static Article of(ArticleCreateDto createDto) {
-        return new Article(createDto.getTitle(), createDto.getContent(), createDto.getHashtag());
+        return new Article(createDto.getTitle(), createDto.getContent());
     }
 
     public void updateTitle(String title){
@@ -59,13 +68,9 @@ public class Article extends BaseEntity {
         this.content = content;
     }
 
-    public void updateHashtag(String hashtag){
-        this.hashtag = hashtag;
-    }
 
     public void editArticle(ArticleEditDto editDto) {
         this.title = editDto.getTitle();
         this.content = editDto.getContent();
-        this.hashtag = editDto.getHashtag();
     }
 }

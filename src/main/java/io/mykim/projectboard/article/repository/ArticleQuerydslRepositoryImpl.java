@@ -38,7 +38,6 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
                                                                             article.id.as("id"),
                                                                             article.title.as("title"),
                                                                             article.content.as("content"),
-                                                                            article.hashtag.as("hashtag"),
                                                                             article.createdAt.as("createAt"),
                                                                             article.lastModifiedAt.as("lastModifiedAt"),
                                                                             article.createdBy.id.as("userId"),
@@ -77,8 +76,8 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
             case "C" :  // content
                 return articleContentLike(searchCondition.getKeyword());
 
-            case "H" :  // hashtag
-                return articleHashtagLike(searchCondition.getKeyword());
+//            case "H" :  // hashtag
+//                return articleHashtagLike(searchCondition.getKeyword());
 
             case "N" :  // createdBy(User Nickname)
                 return articleCreatedByLike(searchCondition.getKeyword());
@@ -86,9 +85,9 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
             default:    // A : Universal search
                 return articleTitleLike(searchCondition.getKeyword())
                         .or(articleContentLike(searchCondition.getKeyword())
-                                .or(articleHashtagLike(searchCondition.getKeyword())
-                                        .or(articleCreatedByLike(searchCondition.getKeyword()))
-                                )
+//                                .or(articleHashtagLike(searchCondition.getKeyword())
+//                                        .or(articleCreatedByLike(searchCondition.getKeyword()))
+//                                )
                         );
         }
     }
@@ -101,9 +100,9 @@ public class ArticleQuerydslRepositoryImpl implements ArticleQuerydslRepository 
         return !StringUtils.hasLength(keyword) ? null : article.content.contains(keyword);
     }
 
-    private BooleanExpression articleHashtagLike(String keyword) {
-        return !StringUtils.hasLength(keyword) ? null : article.hashtag.contains(keyword);
-    }
+//    private BooleanExpression articleHashtagLike(String keyword) {
+//        return !StringUtils.hasLength(keyword) ? null : article.hashtag.contains(keyword);
+//    }
 
     private BooleanExpression articleCreatedByLike(String keyword) {
         return !StringUtils.hasLength(keyword) ? null : article.createdBy.nickname.contains(keyword);

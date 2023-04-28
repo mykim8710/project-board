@@ -9,10 +9,8 @@ import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
 import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -70,7 +68,6 @@ class ArticleViewControllerTest {
                 .willReturn(new ResponseArticleFindDto(1L,
                                                             "title",
                                                             "content",
-                                                            "hashtag",
                                                             LocalDateTime.now(),
                                                             LocalDateTime.now(),
                                                             1L,
@@ -113,7 +110,6 @@ class ArticleViewControllerTest {
                 .willReturn(new ResponseArticleFindDto(1L,
                                                             "title",
                                                             "content",
-                                                            "hashtag",
                                                             LocalDateTime.now(),
                                                             LocalDateTime.now(),
                                                             1L,

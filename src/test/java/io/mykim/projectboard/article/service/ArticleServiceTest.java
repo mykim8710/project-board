@@ -68,8 +68,7 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article newArticle = createNewArticle(title, content, hashtag);
+        Article newArticle = createNewArticle(title, content);
 
         // when
         ResponseArticleFindDto findArticle = articleService.findOneArticle(newArticle.getId());
@@ -100,7 +99,7 @@ class ArticleServiceTest {
         createUser();
 
         IntStream.range(1, 31)
-                .forEach(i -> createNewArticle("title"+i, "content"+i, "#hashtag"+i));
+                .forEach(i -> createNewArticle("title"+i, "content"+i));
 
         String sort = "id_ASC";
         CustomSortingRequest customSortingRequest = new CustomSortingRequest(sort);
@@ -129,7 +128,7 @@ class ArticleServiceTest {
         String title = "title";
         String content = "content";
         String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         String newTitle = "newTitle";
         String newContent = "newContent";
@@ -144,7 +143,6 @@ class ArticleServiceTest {
 
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(newTitle);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(newContent);
-        Assertions.assertThat(findArticle.getHashtag()).isEqualTo(newHashtag);
     }
 
     @Test
@@ -154,8 +152,7 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         // when
         articleService.removeArticle(article.getId());
@@ -166,8 +163,8 @@ class ArticleServiceTest {
                 .hasMessage(CustomErrorCode.NOT_FOUND_ARTICLE.getMessage());
     }
 
-    private Article createNewArticle(String title, String content, String hashtag) {
-        Article article = Article.of(title, content, hashtag);
+    private Article createNewArticle(String title, String content) {
+        Article article = Article.of(title, content);
         return articleRepository.save(article);
     }
 

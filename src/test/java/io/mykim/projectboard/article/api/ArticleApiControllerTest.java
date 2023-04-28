@@ -8,9 +8,6 @@ import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
-import io.mykim.projectboard.user.dto.request.UserCreateDto;
-import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -41,12 +37,6 @@ class ArticleApiControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -84,8 +74,7 @@ class ArticleApiControllerTest {
         // given
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
         String api = "/api/v1/articles/{articleId}";
 
         // when & then
@@ -95,7 +84,6 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.data").isNotEmpty())
                 .andExpect(jsonPath("$.data.title").value(title))
                 .andExpect(jsonPath("$.data.content").value(content))
-                .andExpect(jsonPath("$.data.hashtag").value(hashtag))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -123,7 +111,7 @@ class ArticleApiControllerTest {
     void findAllArticleApiTest() throws Exception {
         // given
         IntStream.range(1, 31)
-                .forEach(i -> createNewArticle("title" + i, "content" + i, "#hashtag" + i));
+                .forEach(i -> createNewArticle("title" + i, "content" + i));
 
         String api = "/api/v1/articles";
         String sort = "id_DESC";
@@ -160,8 +148,7 @@ class ArticleApiControllerTest {
 
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        Article insertArticle = createNewArticle(title, content, hashtag);
+        Article insertArticle = createNewArticle(title, content);
 
         String editTitle = "qwerty";
         String editContent = "qwerty";
@@ -189,8 +176,7 @@ class ArticleApiControllerTest {
 
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        Article insertArticle = createNewArticle(title, content, hashtag);
+        Article insertArticle = createNewArticle(title, content);
 
         String editTitle = "qwerty";
         String editContent = "qwerty";
@@ -219,8 +205,7 @@ class ArticleApiControllerTest {
 
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        Article insertArticle = createNewArticle(title, content, hashtag);
+        Article insertArticle = createNewArticle(title, content);
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(api, insertArticle.getId())
@@ -241,8 +226,7 @@ class ArticleApiControllerTest {
 
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        createNewArticle(title, content, hashtag);
+        createNewArticle(title, content);
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(api, -1L)
@@ -255,8 +239,8 @@ class ArticleApiControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    private Article createNewArticle(String title, String content, String hashtag) {
-        Article article = Article.of(title, content, hashtag);
+    private Article createNewArticle(String title, String content) {
+        Article article = Article.of(title, content);
         articleRepository.save(article);
         return article;
     }

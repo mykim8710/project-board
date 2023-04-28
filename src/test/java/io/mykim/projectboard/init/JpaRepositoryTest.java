@@ -51,7 +51,7 @@ class JpaRepositoryTest {
         long previousCount = articleRepository.count();
 
         // when
-        articleRepository.save(Article.of("title", "content", "aa"));
+        articleRepository.save(Article.of("title", "content"));
 
         // then
         Assertions.assertThat(articleRepository.count())
@@ -70,7 +70,6 @@ class JpaRepositoryTest {
         // when
         article.updateTitle(updateTitle);
         article.updateContent(updateContent);
-        article.updateHashtag(updateHashtag);
 
         articleRepository.flush();
 
@@ -78,7 +77,6 @@ class JpaRepositoryTest {
         Article findArticle = articleRepository.findById(1L).orElseThrow();
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(updateTitle);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(updateContent);
-        Assertions.assertThat(findArticle.getHashtag()).isEqualTo(updateHashtag);
     }
 
     @Test
