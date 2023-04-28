@@ -1,18 +1,17 @@
 package io.mykim.projectboard.article.service;
 
-import io.mykim.projectboard.article.entity.Article;
-import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentListDto;
+import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
 import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
 import io.mykim.projectboard.user.repository.UserRepository;
@@ -56,8 +55,7 @@ class ArticleCommentServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         String commentContent = "content";
         ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
@@ -94,7 +92,7 @@ class ArticleCommentServiceTest {
         String title = "title";
         String content = "content";
         String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         String commentContent = "reply~~reply";
         ArticleComment articleComment = createNewArticleComment(article, commentContent);
@@ -132,8 +130,7 @@ class ArticleCommentServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         String commentContent = "reply~~reply";
         ArticleComment articleComment = createNewArticleComment(article, commentContent);
@@ -167,8 +164,7 @@ class ArticleCommentServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         String commentContent = "content";
         ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
@@ -200,7 +196,7 @@ class ArticleCommentServiceTest {
     void findAllArticleCommentUnderArticleTest() throws Exception {
         // given
         createUser();
-        Article article = createNewArticle("title", "content", "hashtag");
+        Article article = createNewArticle("title", "content");
         IntStream.range(1, 31)
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
 
@@ -223,8 +219,8 @@ class ArticleCommentServiceTest {
         return articleCommentRepository.save(articleComment);
     }
 
-    private Article createNewArticle(String title, String content, String hashtag) {
-        Article article = Article.of(title, content, hashtag);
+    private Article createNewArticle(String title, String content) {
+        Article article = Article.of(title, content);
         return articleRepository.save(article);
     }
 

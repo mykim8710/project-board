@@ -65,7 +65,7 @@ class ArticleCommentApiControllerTest {
     @WithAuthUser(username = "test")
     void createArticleCommentApiTest() throws Exception {
         // given
-        Article article = createNewArticle("title", "content", "##");
+        Article article = createNewArticle("title", "content");
 
         String api = "/api/v1/articles/{articleId}/article-comments";
         String content = "cc";
@@ -115,7 +115,7 @@ class ArticleCommentApiControllerTest {
     @WithAuthUser(username = "test")
     void editArticleCommentApiTest() throws Exception {
         // given
-        Article article = createNewArticle("title", "content", "##");
+        Article article = createNewArticle("title", "content");
         ArticleComment articleComment = createNewArticleComment(article, "reply");
 
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
@@ -163,7 +163,7 @@ class ArticleCommentApiControllerTest {
     @WithAuthUser(username = "test")
     void removeArticleCommentApiTest() throws Exception {
         // given
-        Article article = createNewArticle("title", "content", "##");
+        Article article = createNewArticle("title", "content");
         ArticleComment articleComment = createNewArticleComment(article, "reply");
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
 
@@ -202,7 +202,7 @@ class ArticleCommentApiControllerTest {
     @WithAuthUser(username = "test")
     void findOneArticleCommentUnderArticleApiTest() throws Exception {
         // given
-        Article article = createNewArticle("title", "content", "##");
+        Article article = createNewArticle("title", "content");
         String articleCommentContent = "reply";
         ArticleComment articleComment = createNewArticleComment(article, articleCommentContent);
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
@@ -239,7 +239,7 @@ class ArticleCommentApiControllerTest {
     @WithAuthUser(username = "test")
     void findAllArticleCommentUnderArticleApiTest() throws Exception {
         // given
-        Article article = createNewArticle("title", "content", "hashtag");
+        Article article = createNewArticle("title", "content");
 
         IntStream.range(1, 31)
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
@@ -272,8 +272,8 @@ class ArticleCommentApiControllerTest {
         return articleComment;
     }
 
-    private Article createNewArticle(String title, String content, String hashtag) {
-        Article article = Article.of(title, content, hashtag);
+    private Article createNewArticle(String title, String content) {
+        Article article = Article.of(title, content);
         articleRepository.save(article);
         return article;
     }
