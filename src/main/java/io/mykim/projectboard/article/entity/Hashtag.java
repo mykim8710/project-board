@@ -13,9 +13,8 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "hashtag",
-        indexes = {
-            @Index(columnList = "hashtag_name")
-})
+       indexes = {@Index(columnList = "hashtag_name")}
+)
 public class Hashtag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

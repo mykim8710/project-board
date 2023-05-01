@@ -5,7 +5,6 @@ import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

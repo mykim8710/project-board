@@ -10,8 +10,6 @@ import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
 import io.mykim.projectboard.user.repository.UserRepository;
@@ -23,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @DisplayName("ArticleService에 정의된 Article 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
