@@ -2,15 +2,16 @@ package io.mykim.projectboard.article.controller;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleService;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -31,17 +32,15 @@ public class ArticleViewController {
     private final ArticleService articleService;
 
     @GetMapping
-    public String articlesView(@RequestParam(defaultValue = "") String keyword,
-                               @RequestParam(defaultValue = "") String searchType,
-                               @RequestParam(defaultValue = "1") int offset,
-                               @RequestParam(defaultValue = "10") int limit,
-                               @RequestParam(defaultValue = "id_DESC") String sort,
+    public String articlesView(@RequestParam(required = false) String searchKeyword,
+                               @RequestParam(required = false, name = "searchType") SearchType searchType,
+                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                Model model) {
 
-        log.info("[GET] /articles?keyword={}&searchType={}&offset={}&limit={}&sort={} => articles View", keyword, searchType, offset, limit, sort);
-
-        // add model
-        model.addAttribute("articles", articleService.findAllArticle(new CustomPaginationRequest(offset, limit), new CustomSortingRequest(sort), new ArticleSearchCondition(keyword, searchType)));
+        log.info("[GET] /articles?searchKeyword={}&searchType={}&offset={}&limit={}&sort={} => articles View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        model.addAttribute("articleSearchTypes", SearchType.values());
+        model.addAttribute("hashtagSearchType", SearchType.HASHTAG.name());
+        model.addAttribute("articles", articleService.findAllArticle(searchKeyword, searchType, pageable));
 
         return "articles/list";
     }

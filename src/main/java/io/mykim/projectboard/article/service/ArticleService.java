@@ -6,19 +6,18 @@ import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
+import io.mykim.projectboard.global.pageable.PageableRequestCondition;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,25 +29,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    /**
-     * 페이징
-     *  ㄴ offset : n번째 페이지부터
-     *  ㄴ limit : n개 가져오기
-     * 정렬 : order by "" asc or desc => id, title, lastModifiedAt
-     * 검색 : keyword.contain("") => article_title, article_content, article_hashtag, user_nickname
-     */
     @Transactional(readOnly = true)
-    public ResponseArticleListDto findAllArticle(CustomPaginationRequest paginationRequest, CustomSortingRequest sortingRequest, ArticleSearchCondition searchCondition) {
-        PageRequest pageRequest = PageRequest.of(paginationRequest.getOffset() - 1, paginationRequest.getLimit(), Sort.by(sortingRequest.of()));
-        Page<ResponseArticleFindDto> allArticle = articleRepository.findAllArticle(pageRequest, searchCondition);
+    public ResponseArticleListDto findAllArticle(String searchKeyword, SearchType searchType, Pageable pageable) {
+        Page<ResponseArticleFindDto> findArticles = articleRepository.findAllArticle(pageable, new ArticleSearchCondition(searchKeyword, searchType));
+
 
         return ResponseArticleListDto.builder()
-                .responseArticleFindDtos(allArticle.getContent())
-                .paginationResponse(CustomPaginationResponse.of(allArticle.getTotalElements(), allArticle.getTotalPages(), allArticle.getNumber()))
-                .paginationRequest(paginationRequest)
-                .sortingRequest(sortingRequest)
-                .searchCondition(searchCondition)
-                .build();
+                                        .responseArticleFindDtos(findArticles.getContent())
+                                        .paginationResponse(CustomPaginationResponse.of(findArticles.getTotalElements(), findArticles.getTotalPages(), findArticles.getNumber()))
+                                        .pageableRequestCondition(PageableRequestCondition.builder()
+                                                .page(pageable.getOffset())
+                                                .size(pageable.getPageSize())
+                                                .sort(pageable.getSort())
+                                                .searchKeyword(searchKeyword)
+                                                .searchType(searchType)
+                                                .build())
+                                        .build();
     }
 
     @Transactional(readOnly = true)

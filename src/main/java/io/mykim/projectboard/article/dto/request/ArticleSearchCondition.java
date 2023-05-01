@@ -1,5 +1,6 @@
 package io.mykim.projectboard.article.dto.request;
 
+import io.mykim.projectboard.article.enums.SearchType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ import lombok.ToString;
 @ToString
 public class ArticleSearchCondition {
     private String keyword;
-    private String searchType; // title, content, hashtag, createBy
+    private SearchType searchType;
 
-    public ArticleSearchCondition(String keyword, String searchType) {
+    public ArticleSearchCondition(String keyword, SearchType searchType) {
         this.keyword = keyword;
         this.searchType = searchType;
     }

@@ -1,4 +1,4 @@
-package io.mykim.projectboard.global.select.pagination;
+package io.mykim.projectboard.global.pageable;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -13,6 +13,7 @@ public class CustomPaginationResponse {
     private int nextPage;    // 다음 페이지 번호
     private int startPage;   // 첫페이지 번호
     private int endPage;     // 마지막 페이지 번호
+
 
     private CustomPaginationResponse(long totalCount, int totalPage, int page) {
         this.page = page;
@@ -47,11 +48,7 @@ public class CustomPaginationResponse {
          */
 
         startPage = ((page - 1) / pageCount) * pageCount + 1;
-        endPage = startPage + pageCount - 1;
-
-        if (endPage > totalPage) {
-            endPage = totalPage;
-        }
+        endPage = totalPage;
 
         prevPage = startPage - 1;
         if (prevPage < 1) {
