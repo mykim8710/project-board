@@ -10,18 +10,10 @@
         <form id="search-form" th:action="@{/articles}" th:method="get">
             <div class="input-group mb-3">
                 <select class="form-select" name="searchType">
-                    <option value=""  th:selected="${articles.getSearchCondition().getSearchType() == null || (articles.getSearchCondition().getSearchType().toString == '')}">검색유형</option>
-                    <option value="T" th:selected="${articles.getSearchCondition().getSearchType() != null && (articles.getSearchCondition().getSearchType().toString == 'T')}">제목</option>
-                    <option value="C" th:selected="${articles.getSearchCondition().getSearchType() != null && (articles.getSearchCondition().getSearchType().toString == 'C')}">본문</option>
-                    <option value="H" th:selected="${articles.getSearchCondition().getSearchType() != null && (articles.getSearchCondition().getSearchType().toString == 'H')}">해시태그</option>
-                    <option value="N" th:selected="${articles.getSearchCondition().getSearchType() != null && (articles.getSearchCondition().getSearchType().toString == 'N')}">닉네임</option>
+                    <option th:each="searchType : ${articleSearchTypes}" th:value="${searchType.name()}" th:text="${searchType.getDescription()}" th:selected="${articles.getPageableRequestCondition().searchType == searchType.name()}">제목</option>
                 </select>
-                
-                <input type="search" class="form-control" placeholder="검색 키워드" name="keyword" style="width: 60%;" th:value="${articles.getSearchCondition().getKeyword()}" autocomplete="off">
-                <input type="hidden" th:value="${articles.getPaginationRequest().getOffset()}" name="offset">
-                <input type="hidden" th:value="${articles.getPaginationRequest().getLimit()}" name="limit">
-                <input type="hidden" th:value="${articles.getSortingRequest().getSort()}" name="sort">
 
+                <input type="search" class="form-control" placeholder="검색 키워드" name="searchKeyword" style="width: 60%;" th:value="${param.searchKeyword}" autocomplete="off">
                 <button class="btn btn-warning" type="submit" style="width: 10%;">검색</button>
             </div>
         </form>
@@ -32,39 +24,33 @@
             <thead>
                 <tr class="table-dark">
                     <th class="article_id">
-                        <a th:href="@{/articles (offset     = ${articles.getPaginationRequest().getOffset()},
-                                                 limit      = ${articles.getPaginationRequest().getLimit()},
-                                                 searchType = ${articles.getSearchCondition().getSearchType()},
-                                                 keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                 sort       = 'id' +'_' +(${articles.getSortingDirection() == 'DESC'} ? 'ASC' : 'DESC'))}" class="text-warning">번호</a>
+                        <a th:href="@{/articles (page          = ${articles.getPageableRequestCondition().page},
+                                                 size          = ${articles.getPageableRequestCondition().size},
+                                                 sort          = 'id' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                 searchType    = ${articles.getPageableRequestCondition().searchType},
+                                                 searchKeyword = ${articles.getPageableRequestCondition().searchKeyword})}" class="text-warning">번호</a>
                     </th>
                     <th class="title col-6">
-                        <a th:href="@{/articles (offset     = ${articles.getPaginationRequest().getOffset()},
-                                                 limit      = ${articles.getPaginationRequest().getLimit()},
-                                                 searchType = ${articles.getSearchCondition().getSearchType()},
-                                                 keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                 sort       = 'title' +'_' +(${articles.getSortingDirection() == 'DESC'} ? 'ASC' : 'DESC'))}" class="text-warning">제목</a>
+                        <a th:href="@{/articles (page          = ${articles.getPageableRequestCondition().page},
+                                                 size          = ${articles.getPageableRequestCondition().size},
+                                                 sort          = 'title' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                 searchType    = ${articles.getPageableRequestCondition().searchType},
+                                                 searchKeyword = ${articles.getPageableRequestCondition().searchKeyword})}" class="text-warning">제목</a>
                     </th>
-                    <th class="hashtag col-2">
-                        <a th:href="@{/articles (offset     = ${articles.getPaginationRequest().getOffset()},
-                                                 limit      = ${articles.getPaginationRequest().getLimit()},
-                                                 searchType = ${articles.getSearchCondition().getSearchType()},
-                                                 keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                 sort       = 'hashtag' +'_' +(${articles.getSortingDirection() == 'DESC'} ? 'ASC' : 'DESC'))}" class="text-warning">해시태그</a>
-                    </th>
-                    <th class="user-id">
-                        <a th:href="@{/articles (offset     = ${articles.getPaginationRequest().getOffset()},
-                                                 limit      = ${articles.getPaginationRequest().getLimit()},
-                                                 searchType = ${articles.getSearchCondition().getSearchType()},
-                                                 keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                 sort       = 'createdBy' +'_' +(${articles.getSortingDirection() == 'DESC'} ? 'ASC' : 'DESC'))}" class="text-warning">작성자</a>
+                    <th class="hashtag col-2 text-warning">해시태그</th>
+                    <th class="user-nickname">
+                        <a th:href="@{/articles (page          = ${articles.getPageableRequestCondition.page},
+                                                 size          = ${articles.getPageableRequestCondition.size},
+                                                 sort          = 'createdBy.nickname' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                 searchType    = ${articles.getPageableRequestCondition.searchType},
+                                                 searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">닉네임</a>
                     </th>
                     <th class="created-at">
-                        <a th:href="@{/articles (offset     = ${articles.getPaginationRequest().getOffset()},
-                                                 limit      = ${articles.getPaginationRequest().getLimit()},
-                                                 searchType = ${articles.getSearchCondition().getSearchType()},
-                                                 keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                 sort       = 'createdAt' +'_' +(${articles.getSortingDirection() == 'DESC'} ? 'ASC' : 'DESC'))}" class="text-warning">작성일</a>
+                        <a th:href="@{/articles (page          = ${articles.getPageableRequestCondition.page},
+                                                 size          = ${articles.getPageableRequestCondition.size},
+                                                 sort          = 'createdAt' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                 searchType    = ${articles.getPageableRequestCondition.searchType},
+                                                 searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">작성일</a>
                     </th>
                 </tr>
             </thead>
@@ -72,15 +58,20 @@
                 <tr th:each="article : ${articles.getResponseArticleFindDtos()}">
                     <td class="article_id" th:text="${article.id}">1</td>
                     <td class="title">
-                        <a th:href="@{/articles/{id} (id         = ${article.id},
-                                                      offset     = ${articles.getPaginationRequest().getOffset()},
-                                                      limit      = ${articles.getPaginationRequest().getLimit()},
-                                                      searchType = ${articles.getSearchCondition().getSearchType()},
-                                                      keyword    = ${articles.getSearchCondition().getKeyword()},
-                                                      sort       = ${articles.getSortingRequest().getSort()})}"
+                        <a th:href="@{/articles/{id} (id            = ${article.id},
+                                                      page          = ${articles.getPageableRequestCondition.page},
+                                                      size          = ${articles.getPageableRequestCondition.size},
+                                                      sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                      searchType    = ${articles.getPageableRequestCondition.searchType},
+                                                      searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}"
                            th:text="${article.title}">게시글 제목</a>
                     </td>
-                    <td class="hashtag" th:text="${article.getHashtag}">#게시글 해시태그</td>
+                    <td class="hashtag">
+                        <span th:each="hashtag : ${article.getHashtags()}" >
+                            <a th:text="'#'+${hashtag}" class="btn btn-warning btn-sm" style="font-size: 10px;padding: 5px;"
+                               th:href="@{/articles (searchType    = ${hashtagSearchType}, searchKeyword = ${hashtag})}"/>
+                        </span>
+                    </td>
                     <td class="user-nickname" th:text="${article.nickname}">작성자 닉네임</td>
                     <td class="created-at">
                         <time th:text="${#temporals.format(article.createdAt, 'yyyy/MM/dd HH:mm')}">2022-01-01</time>
@@ -94,26 +85,26 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <form th:action="@{/articles}" th:method="get">
                 <label for="list-limit" hidden>목록개수</label>
-                <select class="form-control" id="list-limit" name="limit" onchange="this.form.submit()">
-                    <option value="5"  th:selected="${articles.getPaginationRequest().getLimit() == null || (articles.getPaginationRequest().getLimit().toString == '5')}">5줄</option>
-                    <option value="10" th:selected="${articles.getPaginationRequest().getLimit() == null || (articles.getPaginationRequest().getLimit().toString == '10')}">10줄</option>
-                    <option value="20" th:selected="${articles.getPaginationRequest().getLimit() == null || (articles.getPaginationRequest().getLimit().toString == '20')}">20줄</option>
-                    <option value="30" th:selected="${articles.getPaginationRequest().getLimit() == null || (articles.getPaginationRequest().getLimit().toString == '30')}">30줄</option>
-                    <option value="50" th:selected="${articles.getPaginationRequest().getLimit() == null || (articles.getPaginationRequest().getLimit().toString == '50')}">50줄</option>
+                <select class="form-control" id="list-limit" name="size" onchange="this.form.submit()">
+                    <option value="5"  th:selected="${articles.getPageableRequestCondition.size == 5}">5줄</option>
+                    <option value="10" th:selected="${articles.getPageableRequestCondition.size == 10}">10줄</option>
+                    <option value="20" th:selected="${articles.getPageableRequestCondition.size == 20}">20줄</option>
+                    <option value="30" th:selected="${articles.getPageableRequestCondition.size == 30}">30줄</option>
+                    <option value="50" th:selected="${articles.getPageableRequestCondition.size == 50}">50줄</option>
                 </select>
 
-                <input type="hidden" th:value="${articles.getPaginationRequest().getOffset()}" name="offset">
-                <input type="hidden" th:value="${articles.getSortingRequest().getSort()}" name="sort">
-                <input type="hidden" th:value="${articles.getSearchCondition().getKeyword()}" name="keyword">
-                <input type="hidden" th:value="${articles.getSearchCondition().getSearchType()}" name="searchType">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.page}" name="page">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection}" name="sort">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.searchKeyword}" name="searchKeyword">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.searchType}" name="searchType">
             </form>
 
             <a class="btn btn-warning me-md-2 btn-sm" role="button" id="create-article-btn" sec:authorize="isAuthenticated()"
-               th:href="@{/articles/create (offset     = ${articles.getPaginationRequest().getOffset()},
-                                            limit      = ${articles.getPaginationRequest().getLimit()},
-                                            searchType = ${articles.getSearchCondition().getSearchType()},
-                                            keyword    = ${articles.getSearchCondition().getKeyword()},
-                                            sort       = ${articles.getSortingRequest().getSort()})}">글쓰기</a>
+               th:href="@{/articles/create (page           = ${articles.getPageableRequestCondition.page},
+                                            size           = ${articles.getPageableRequestCondition.size},
+                                            sort           = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                            searchKeyword  = ${articles.getPageableRequestCondition.searchKeyword},
+                                            searchType     = ${articles.getPageableRequestCondition.searchType})}">글쓰기</a>
         </div>
     </div>
 
@@ -122,47 +113,47 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item">
                     <a class="page-link"
-                       th:href="@{/articles (offset     = ${1},
-                                             limit      = ${articles.getPaginationRequest().getLimit()},
-                                             searchType = ${articles.getSearchCondition().getSearchType()},
-                                             keyword    = ${articles.getSearchCondition().getKeyword()},
-                                             sort       = ${articles.getSortingRequest().getSort()})}">First</a>
+                       th:href="@{/articles (page          = ${0},
+                                             size          = ${articles.getPageableRequestCondition.size},
+                                             sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                             searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                             searchType    = ${articles.getPageableRequestCondition.searchType})}">First</a>
                 </li>
 
                 <li class="page-item">
                     <a class="page-link"
-                       th:href="@{/articles (offset     = ${articles.getPaginationResponse().prevPage},
-                                             limit      = ${articles.getPaginationRequest().getLimit()},
-                                             searchType = ${articles.getSearchCondition().getSearchType()},
-                                             keyword    = ${articles.getSearchCondition().getKeyword()},
-                                             sort       = ${articles.getSortingRequest().getSort()})}">Previous</a>
+                       th:href="@{/articles (page          = ${articles.getPaginationResponse().prevPage} - 1,
+                                             size          = ${articles.getPageableRequestCondition.size},
+                                             sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                             searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                             searchType    = ${articles.getPageableRequestCondition.searchType})}">Previous</a>
                 </li>
 
                 <li th:each="pageNumber : ${#numbers.sequence(articles.getPaginationResponse().startPage, articles.getPaginationResponse().endPage)}">
                     <a th:attr="class=${pageNumber == articles.getPaginationResponse().getPage() ? 'page-link bg-warning' : 'page-link'}"
-                       th:href="@{/articles (offset     = ${pageNumber},
-                                             limit      = ${articles.getPaginationRequest().getLimit()},
-                                             searchType = ${articles.getSearchCondition().getSearchType()},
-                                             keyword    = ${articles.getSearchCondition().getKeyword()},
-                                             sort       = ${articles.getSortingRequest().getSort()})}" th:text="${pageNumber}"></a>
+                       th:href="@{/articles (page          = ${pageNumber} - 1,
+                                             size          = ${articles.getPageableRequestCondition.size},
+                                             sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                             searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                             searchType    = ${articles.getPageableRequestCondition.searchType})}" th:text="${pageNumber}">1</a>
                 </li>
 
                 <li class="page-item">
                     <a class="page-link"
-                       th:href="@{/articles (offset     = ${articles.getPaginationResponse().nextPage},
-                                             limit      = ${articles.getPaginationRequest().getLimit()},
-                                             searchType = ${articles.getSearchCondition().getSearchType()},
-                                             keyword    = ${articles.getSearchCondition().getKeyword()},
-                                             sort       = ${articles.getSortingRequest().getSort()})}">Next</a>
+                       th:href="@{/articles (page          = ${articles.getPaginationResponse().nextPage} - 1,
+                                             size          = ${articles.getPageableRequestCondition.size},
+                                             sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                             searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                             searchType    = ${articles.getPageableRequestCondition.searchType})}">Next</a>
                 </li>
 
                 <li class="page-item">
                     <a class="page-link"
-                       th:href="@{/articles (offset     = ${articles.getPaginationResponse().endPage},
-                                             limit      = ${articles.getPaginationRequest().getLimit()},
-                                             searchType = ${articles.getSearchCondition().getSearchType()},
-                                             keyword    = ${articles.getSearchCondition().getKeyword()},
-                                             sort       = ${articles.getSortingRequest().getSort()})}">Last</a>
+                        th:href="@{/articles (page          = ${articles.getPaginationResponse().endPage} - 1,
+                                              size          = ${articles.getPageableRequestCondition.size},
+                                              sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                              searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                              searchType    = ${articles.getPageableRequestCondition.searchType})}">Last</a>
                 </li>
             </ul>
         </nav>
