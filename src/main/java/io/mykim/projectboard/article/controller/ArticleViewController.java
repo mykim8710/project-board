@@ -37,12 +37,24 @@ public class ArticleViewController {
                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                Model model) {
 
-        log.info("[GET] /articles?searchKeyword={}&searchType={}&offset={}&limit={}&sort={} => articles View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        log.info("[GET] /articles?searchKeyword={}&searchType={}&page={}&size={}&sort={} => articles View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
         model.addAttribute("articleSearchTypes", SearchType.values());
         model.addAttribute("hashtagSearchType", SearchType.HASHTAG.name());
         model.addAttribute("articles", articleService.findAllArticle(searchKeyword, searchType, pageable));
 
         return "articles/list";
+    }
+
+    @GetMapping("/hashtag")
+    public String articlesHashtagSearchView(@RequestParam(required = false) String searchKeyword,
+                                            @RequestParam(required = false, name = "searchType") SearchType searchType,
+                                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+        log.info("[GET] /articles/hashtag?searchKeyword={}&searchType={}&page={}&size={}&sort={} => articles by Hashtag search View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+
+        model.addAttribute("hashtagSearchType", SearchType.HASHTAG.name());
+        model.addAttribute("articles", articleService.findAllArticle(searchKeyword, searchType, pageable));
+
+        return "articles/search-hashtag";
     }
 
     @GetMapping("/{articleId}")
