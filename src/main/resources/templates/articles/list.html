@@ -43,7 +43,7 @@
                                                  size          = ${articles.getPageableRequestCondition.size},
                                                  sort          = 'createdBy.nickname' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
                                                  searchType    = ${articles.getPageableRequestCondition.searchType},
-                                                 searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">닉네임</a>
+                                                 searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">작성자</a>
                     </th>
                     <th class="created-at">
                         <a th:href="@{/articles (page          = ${articles.getPageableRequestCondition.page},
@@ -149,7 +149,7 @@
 
                 <li class="page-item">
                     <a class="page-link"
-                        th:href="@{/articles (page          = ${articles.getPaginationResponse().endPage} - 1,
+                        th:href="@{/articles (page          = ${articles.getPaginationResponse().totalPage} - 1,
                                               size          = ${articles.getPageableRequestCondition.size},
                                               sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
                                               searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},

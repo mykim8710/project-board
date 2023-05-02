@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+
+<body>
+<header id="bodyHeader" th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!-- 자바스크립트 인라인 사용 후 -->
+<script th:inline="javascript">
+    const hashtagSearchType = [[${hashtagSearchType}]];
+</script>
+
+<main class="container">
+    <div class="py-5 text-center">
+        <h1>Hashtags : <span th:text="${articles.getPageableRequestCondition().searchKeyword}"></span></h1>
+    </div>
+
+    <section class="row mx-3 my-3">
+        <div id="hashtags" class="col-11 d-flex flex-wrap justify-content-evenly"></div>
+        <div id="findMoreHashtagButtonArea" class="col-1 d-flex align-items-end"></div>
+    </section>
+
+    <div class="row mx-3 my-3">
+        <table class="table" id="article-table">
+            <thead>
+                <tr class="table-dark">
+                    <th class="article_id">
+                        <a th:href="@{/articles/hashtag (page          = ${articles.getPageableRequestCondition().page},
+                                                         size          = ${articles.getPageableRequestCondition().size},
+                                                         sort          = 'id' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                         searchType    = ${hashtagSearchType},
+                                                         searchKeyword = ${articles.getPageableRequestCondition().searchKeyword})}" class="text-warning">번호</a>
+                    </th>
+                    <th class="title col-4">
+                        <a th:href="@{/articles/hashtag (page          = ${articles.getPageableRequestCondition().page},
+                                                         size          = ${articles.getPageableRequestCondition().size},
+                                                         sort          = 'title' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                         searchType    = ${hashtagSearchType},
+                                                         searchKeyword = ${articles.getPageableRequestCondition().searchKeyword})}" class="text-warning">제목</a>
+                    </th>
+                    <th class="content col-4">
+                        <a th:href="@{/articles/hashtag (page          = ${articles.getPageableRequestCondition.page},
+                                                         size          = ${articles.getPageableRequestCondition.size},
+                                                         sort          = 'content' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                         searchType    = ${hashtagSearchType},
+                                                         searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">본문</a>
+                    </th>
+                    <th class="user-nickname">
+                        <a th:href="@{/articles/hashtag (page          = ${articles.getPageableRequestCondition.page},
+                                                         size          = ${articles.getPageableRequestCondition.size},
+                                                         sort          = 'createdBy.nickname' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                         searchType    = ${hashtagSearchType},
+                                                         searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">작성자</a>
+                    </th>
+                    <th class="created-at">
+                        <a th:href="@{/articles/hashtag (page          = ${articles.getPageableRequestCondition.page},
+                                                         size          = ${articles.getPageableRequestCondition.size},
+                                                         sort          = 'createdAt' +',' +(${articles.getPageableRequestCondition.getSortDirection() == 'DESC'} ? 'asc' : 'desc'),
+                                                         searchType    = ${hashtagSearchType},
+                                                         searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}" class="text-warning">작성일</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="article : ${articles.getResponseArticleFindDtos()}">
+                    <td class="article_id" th:text="${article.id}">1</td>
+                    <td class="title">
+                        <a th:href="@{/articles/{id} (id            = ${article.id},
+                                                      page          = ${articles.getPageableRequestCondition.page},
+                                                      size          = ${articles.getPageableRequestCondition.size},
+                                                      sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                      searchType    = ${hashtagSearchType},
+                                                      searchKeyword = ${articles.getPageableRequestCondition.searchKeyword})}"
+                           th:text="${article.title}">게시글 제목</a>
+                    </td>
+                    <td class="content">
+                        <span class="d-inline-block text-truncate" style="max-width: 300px;" th:text="${article.content}">본문</span>
+                    </td>
+                    <td class="user-nickname" th:text="${article.nickname}">작성자 닉네임</td>
+                    <td class="created-at">
+                        <time th:text="${#temporals.format(article.createdAt, 'yyyy/MM/dd HH:mm')}">2022-01-01</time>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mx-3 my-3">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <form th:action="@{/articles/hashtag}" th:method="get">
+                <label for="list-limit" hidden>목록개수</label>
+                <select class="form-control" id="list-limit" name="size" onchange="this.form.submit()">
+                    <option value="5"  th:selected="${articles.getPageableRequestCondition.size == 5}">5줄</option>
+                    <option value="10" th:selected="${articles.getPageableRequestCondition.size == 10}">10줄</option>
+                    <option value="20" th:selected="${articles.getPageableRequestCondition.size == 20}">20줄</option>
+                    <option value="30" th:selected="${articles.getPageableRequestCondition.size == 30}">30줄</option>
+                    <option value="50" th:selected="${articles.getPageableRequestCondition.size == 50}">50줄</option>
+                </select>
+
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.page}" name="page">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection}" name="sort">
+                <input type="hidden" th:value="${articles.getPageableRequestCondition.searchKeyword}" name="searchKeyword">
+                <input type="hidden" th:value="${hashtagSearchType}" name="searchType">
+            </form>
+        </div>
+    </div>
+
+    <div class="row mx-3 my-3">
+        <nav id="pagination" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/articles/hashtag (page          = ${0},
+                                                     size          = ${articles.getPageableRequestCondition.size},
+                                                     sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                     searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                                     searchType    = ${hashtagSearchType})}">First</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/articles/hashtag (page          = ${articles.getPaginationResponse().prevPage} - 1,
+                                                     size          = ${articles.getPageableRequestCondition.size},
+                                                     sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                     searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                                     searchType    = ${hashtagSearchType})}">Previous</a>
+                </li>
+
+                <li th:each="pageNumber : ${#numbers.sequence(articles.getPaginationResponse().startPage, articles.getPaginationResponse().endPage)}">
+                    <a th:attr="class=${pageNumber == articles.getPaginationResponse().getPage() ? 'page-link bg-warning' : 'page-link'}"
+                       th:href="@{/articles/hashtag (page          = ${pageNumber} - 1,
+                                                     size          = ${articles.getPageableRequestCondition.size},
+                                                     sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                     searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                                     searchType    = ${hashtagSearchType})}" th:text="${pageNumber}">1</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/articles/hashtag (page          = ${articles.getPaginationResponse().nextPage} - 1,
+                                                     size          = ${articles.getPageableRequestCondition.size},
+                                                     sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                     searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                                     searchType    = ${hashtagSearchType})}">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/articles/hashtag (page          = ${articles.getPaginationResponse().totalPage} - 1,
+                                                     size          = ${articles.getPageableRequestCondition.size},
+                                                     sort          = ${articles.getPageableRequestCondition.sortCondition} +',' +${articles.getPageableRequestCondition.sortDirection},
+                                                     searchKeyword = ${articles.getPageableRequestCondition.searchKeyword},
+                                                     searchType    = ${hashtagSearchType})}">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<script type="text/javascript" src="/js/hashtag.js"></script>
+
+<div id="bodyFooter" th:replace="fragments/bodyFooter :: bodyFooter"/>
+</body>
+</html>
