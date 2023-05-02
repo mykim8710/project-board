@@ -6,11 +6,12 @@ management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    io.mykim.projectboard: debug
-    org.springframework.web.servlet: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    #org.hibernate.SQL: debug
-      # Logger를 통해 하이버네이트 실행 SQL을 남김
+#    io.mykim.projectboard: debug
+#    org.springframework.web.servlet: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+      # org.hibernate.SQL  : Logger를 통해 하이버네이트 실행 SQL을 남김
+      # org.hibernate.type : SQL 실행 파라미터를 로그로 남긴다.
 
 spring:
   profiles:
@@ -51,9 +52,6 @@ spring:
         # create-drop : 테이블을 새로 만들고, 앱이 꺼지기 전에 지운다.
       # update : Entity에서 추가된 필드를 테이블에 반영한다.(테이블 수정)
       # validate : Entity와 테이블의 정합성이 맞는지 검증한다.(안맞으면 오류를 발생 : Application 종료)
-
-    show-sql: true
-      # SQL query 출력
 
     properties:
       hibernate:
