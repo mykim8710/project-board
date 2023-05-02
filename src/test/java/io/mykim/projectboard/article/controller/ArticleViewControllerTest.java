@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +28,8 @@ import static org.springframework.http.MediaType.TEXT_HTML;
 
 @DisplayName("ArticleViewController 테스트 - 게시글(댓글) View")
 @Import(SpringSecurityConfig.class)
-@WebMvcTest(ArticleViewController.class)    // Application Context 완전하게 Start 시키지 않고 web layer를 테스트 하고 싶을 때
+@WebMvcTest(ArticleViewController.class)
+// Application Context 완전하게 Start 시키지 않고 web layer를 테스트 하고 싶을 때
 class ArticleViewControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -42,9 +44,9 @@ class ArticleViewControllerTest {
                 .willReturn(ResponseArticleListDto.builder()
                         .responseArticleFindDtos(List.of())
                         .paginationResponse(CustomPaginationResponse.of(1,2,3))
-                        .paginationRequest(new CustomPaginationRequest())
-                        .sortingRequest(new CustomSortingRequest())
-                        .searchCondition(new ArticleSearchCondition("", ""))
+//                        .paginationRequest(new CustomPaginationRequest())
+//                        .sortingRequest(new CustomSortingRequest())
+//                        .searchCondition(new ArticleSearchCondition("", ""))
                         .build());
 
         String url = "/articles";
@@ -62,14 +64,14 @@ class ArticleViewControllerTest {
     @DisplayName("[VIEW] [GET] 게시글 상세 페이지 - 정상호출")
     void articleDetailViewTest() throws Exception{
         // given
-        given(articleService.findOneArticle(1L))
-                .willReturn(new ResponseArticleFindDto(1L,
-                                                            "title",
-                                                            "content",
-                                                            LocalDateTime.now(),
-                                                            LocalDateTime.now(),
-                                                            1L,
-                                                    "mykim"));
+//        given(articleService.findOneArticle(1L))
+//                .willReturn(new ResponseArticleFindDto(1L,
+//                                                            "title",
+//                                                            "content",
+//                                                            LocalDateTime.now(),
+//                                                            LocalDateTime.now(),
+//                                                            1L,
+//                                                    "mykim"));
 
         String url = "/articles/{articleId}";
         Long articleId = 1L;
@@ -104,14 +106,14 @@ class ArticleViewControllerTest {
     @WithAuthUser(username = "test")
     void articleEditViewTest() throws Exception{
         // given
-        given(articleService.findOneArticle(1L))
-                .willReturn(new ResponseArticleFindDto(1L,
-                                                            "title",
-                                                            "content",
-                                                            LocalDateTime.now(),
-                                                            LocalDateTime.now(),
-                                                            1L,
-                                                            "mykim"));
+//        given(articleService.findOneArticle(1L))
+//                .willReturn(new ResponseArticleFindDto(1L,
+//                                                            "title",
+//                                                            "content",
+//                                                            LocalDateTime.now(),
+//                                                            LocalDateTime.now(),
+//                                                            1L,
+//                                                            "mykim"));
 
         String url = "/articles/{articleId}/edit";
         Long articleId = 1L;

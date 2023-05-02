@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 
 @DisplayName("UserService에 정의된 User 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
 @Transactional
-@SpringBootTest
+@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
 class UserServiceTest {
     @Autowired
     private UserService userService;
