@@ -1,6 +1,7 @@
 package io.mykim.projectboard.article.repository;
 
 import io.mykim.projectboard.article.entity.ArticleComment;
+import io.mykim.projectboard.article.repository.querydsl.ArticleCommentQuerydslRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -11,13 +11,13 @@ import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationResponse;
+import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -46,11 +46,8 @@ public class ArticleCommentService {
      *
      */
     @Transactional(readOnly = true)
-    public ResponseArticleCommentListDto findAllArticleCommentUnderArticle(CustomPaginationRequest paginationRequest,
-                                                                           Long articleId) {
-
-        PageRequest pageRequest = PageRequest.of(paginationRequest.getOffset() - 1, paginationRequest.getLimit());
-        Page<ResponseArticleCommentFindDto> allArticleCommentUnderArticle = articleCommentRepository.findAllArticleCommentUnderArticle(pageRequest, articleId);
+    public ResponseArticleCommentListDto findAllArticleCommentUnderArticle(Pageable pageable, Long articleId) {
+        Page<ResponseArticleCommentFindDto> allArticleCommentUnderArticle = articleCommentRepository.findAllArticleCommentUnderArticle(pageable, articleId);
 
         return ResponseArticleCommentListDto.builder()
                 .responseArticleCommentFindDtos(allArticleCommentUnderArticle.getContent())

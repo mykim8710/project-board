@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @Transactional
 @AutoConfigureMockMvc // @SpringBootTest MockMvc 객체사용
-@SpringBootTest
+@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
 class ArticleApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -114,25 +114,24 @@ class ArticleApiControllerTest {
                 .forEach(i -> createNewArticle("title" + i, "content" + i));
 
         String api = "/api/v1/articles";
-        String sort = "id_DESC";
-        String keyword = "";
-        String searchType = "";
-        int offset = 1;
-        int limit = 5;
+        String sort = "id,DESC";
+        int page = 1;
+        int size = 5;
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get(api)
-                        .queryParam("offset", String.valueOf(offset))
-                        .queryParam("limit", String.valueOf(limit))
+                        .queryParam("page", String.valueOf(page))
+                        .queryParam("size", String.valueOf(size))
                         .queryParam("sort", sort)
-                        .queryParam("keyword", keyword)
-                        .queryParam("searchType", searchType))
+//                        .queryParam("searchKeyword", searchKeyword)
+//                        .queryParam("searchType", searchType)
+                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.status").value(CustomSuccessCode.COMMON_OK.getStatus()))
                 .andExpect(jsonPath("$.code").value(CustomSuccessCode.COMMON_OK.getCode()))
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.COMMON_OK.getMessage()))
                 .andExpect(jsonPath("$.data").isNotEmpty())
-                .andExpect(jsonPath("$.data.responseArticleFindDtos.length()", Matchers.is(limit)))
+                .andExpect(jsonPath("$.data.responseArticleFindDtos.length()", Matchers.is(size)))
                 .andExpect(jsonPath("$.data.responseArticleFindDtos[0].title").value("title30"))
                 .andExpect(jsonPath("$.data.responseArticleFindDtos[1].title").value("title29"))
                 .andExpect(jsonPath("$.data.responseArticleFindDtos[2].title").value("title28"))

@@ -21,14 +21,14 @@ public class ArticleHashTag {
     // Article - ArticleHashTag => 1 : N
     // 연관관계의 주인 : article_hashtag가 article_id(fk)를 갖는다
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
 
     // Hashtag - ArticleHashTag => 1 : N
     // 연관관계의 주인 : article_hashtag가 hashtag_id(fk)를 갖는다
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag;
 

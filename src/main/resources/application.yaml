@@ -6,11 +6,12 @@ management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    io.mykim.projectboard: debug
-    org.springframework.web.servlet: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+#    io.mykim.projectboard: debug
+#    org.springframework.web.servlet: debug
     org.hibernate.SQL: debug
-      # Logger를 통해 하이버네이트 실행 SQL을 남김
+    org.hibernate.type: trace
+      # org.hibernate.SQL  : Logger를 통해 하이버네이트 실행 SQL을 남김
+      # org.hibernate.type : SQL 실행 파라미터를 로그로 남긴다.
 
 spring:
   profiles:
@@ -52,9 +53,6 @@ spring:
       # update : Entity에서 추가된 필드를 테이블에 반영한다.(테이블 수정)
       # validate : Entity와 테이블의 정합성이 맞는지 검증한다.(안맞으면 오류를 발생 : Application 종료)
 
-    show-sql: true
-      # SQL query 출력
-
     properties:
       hibernate:
         format_sql: true
@@ -65,6 +63,7 @@ spring:
           # 설정, in (, , , ,) 의 개수, 100 ~ 1000
         # hibernate.use_sql_comments: true
           #querydsl - jpql parameter
+        metadata_builder_contributor: io.mykim.projectboard.global.config.mysql.CustomMysqlDialect
 
   sql.init.mode: always
     #app실행 시 data.sql 실행

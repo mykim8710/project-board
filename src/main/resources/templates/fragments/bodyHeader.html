@@ -4,9 +4,10 @@
 <header class="p-3 text-bg-dark bodyHeader" th:fragment="bodyHeader">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <div class="col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <h3><a class="text-warning" href="/articles">Mykim's Project Board V1.0</a></h3>
-            </div>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a id="home" href="/articles" class="nav-link px-2 text-warning">Home</a></li>
+                <li><a id="hashtag" href="/articles/hashtag" class="nav-link px-2 text-warning">Hashtags</a></li>
+            </ul>
 
             <div class="text-end" sec:authorize="isAnonymous()">
                 <button type="button" class="btn btn-outline-light me-2 btn-sm" onclick="location.href='/users/sign-up'">Sign-up</button>
