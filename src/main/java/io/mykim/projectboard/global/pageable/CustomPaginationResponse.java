@@ -25,6 +25,7 @@ public class CustomPaginationResponse {
             this.nextPage = 1;
             this.startPage = 1;
             this.endPage = 1;
+            this.totalPage = 1;
             return;
         }
 
@@ -48,7 +49,11 @@ public class CustomPaginationResponse {
          */
 
         startPage = ((page - 1) / pageCount) * pageCount + 1;
-        endPage = totalPage;
+        endPage = startPage + pageCount - 1;
+
+        if (endPage > totalPage) {
+            endPage = totalPage;
+        }
 
         prevPage = startPage - 1;
         if (prevPage < 1) {
