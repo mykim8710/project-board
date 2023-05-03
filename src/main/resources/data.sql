@@ -2,11 +2,11 @@ insert into users(created_at, last_modified_at, user_email, user_memo, user_nick
 insert into users(created_at, last_modified_at, user_email, user_memo, user_nickname, user_password, user_name, user_type) values ('2022-04-17 13:18:26', '2022-04-17 13:18:26', 'test@test.com', 'memo', 'test', '$2a$10$sqPmJxoV2Md0KLTS1WA6gugWHbAw1lWYmw5ASt61A1HVCUAog5hbi', 'test', 'GENERAL');
 insert into users(created_at, last_modified_at, user_email, user_memo, user_nickname, user_password, user_name, user_type) values ('2022-04-17 13:18:26', '2022-04-17 13:18:26', 'zxcv@zxcv.com', 'memo', 'zxcv', '$2a$10$sqPmJxoV2Md0KLTS1WA6gugWHbAw1lWYmw5ASt61A1HVCUAog5hbi', 'zxcv', 'GENERAL');
 
--- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Nulla justo.', 'Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.', '2022-05-20 16:52:45', '2022-05-27 22:40:18', 1, 1);
--- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '2022-09-22 09:11:33', '2023-03-21 18:28:07', 1, 1);
--- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.', 'Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.', '2023-02-08 05:12:52', '2022-08-01 10:36:54', 1, 1);
--- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('In est risus, auctor sed, tristique in, tempus sit amet, sem.', 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.', '2022-10-15 15:18:36', '2022-02-11 14:34:33', 1, 1);
--- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Phasellus id sapien in sapien iaculis congue.', 'Vivamus in felis eu sapien cursus vestibulum. Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc.', '2022-03-08 10:08:38', '2022-12-18 19:43:30', 1, 1);
+insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Nulla justo.', 'Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.', '2022-05-20 16:52:45', '2022-05-27 22:40:18', 1, 1);
+insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '2022-09-22 09:11:33', '2023-03-21 18:28:07', 1, 1);
+insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.', 'Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.', '2023-02-08 05:12:52', '2022-08-01 10:36:54', 1, 1);
+insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('In est risus, auctor sed, tristique in, tempus sit amet, sem.', 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.', '2022-10-15 15:18:36', '2022-02-11 14:34:33', 1, 1);
+insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Phasellus id sapien in sapien iaculis congue.', 'Vivamus in felis eu sapien cursus vestibulum. Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc.', '2022-03-08 10:08:38', '2022-12-18 19:43:30', 1, 1);
 -- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Duis mattis egestas metus.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', '2022-11-05 01:12:06', '2022-09-10 18:47:48', 1, 1);
 -- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.', 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', '2023-01-21 02:10:35', '2023-03-25 09:45:45', 1, 1);
 -- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Vivamus vestibulum sagittis sapien.', 'In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.', '2022-03-20 02:19:02', '2023-03-02 16:57:56', 1, 1);
@@ -104,8 +104,8 @@ insert into users(created_at, last_modified_at, user_email, user_memo, user_nick
 -- insert into article (article_title, article_content, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Aenean auctor gravida sem.', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', '2022-06-20 17:38:51', '2022-12-31 16:43:06', 1, 1);
 --
 insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Pink', '2022-12-09', '2023-02-03');
--- insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Goldenrod', '2023-03-03', '2022-07-28');
--- insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Crimson', '2022-07-31', '2022-11-24');
+insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Goldenrod', '2023-03-03', '2022-07-28');
+insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Crimson', '2022-07-31', '2022-11-24');
 insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Red', '2022-11-01', '2023-04-20');
 insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Blue', '2023-01-27', '2023-04-05');
 -- insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Teal', '2022-09-11', '2022-06-19');
@@ -154,20 +154,20 @@ insert into hashtag (hashtag_name, created_at, last_modified_at) values ('Blue',
 -- insert into hashtag (hashtag_name, created_at, last_modified_at) values ('MYR', '2023-01-27', '2022-06-16');
 -- insert into hashtag (hashtag_name, created_at, last_modified_at) values ('EUR', '2022-10-28', '2022-11-11');
 --
--- insert into article_hashtag (article_id, hashtag_id) values (1, 21);
--- insert into article_hashtag (article_id, hashtag_id) values (1, 49);
--- insert into article_hashtag (article_id, hashtag_id) values (2, 19);
--- insert into article_hashtag (article_id, hashtag_id) values (3, 15);
--- insert into article_hashtag (article_id, hashtag_id) values (4, 1);
--- insert into article_hashtag (article_id, hashtag_id) values (5, 15);
--- insert into article_hashtag (article_id, hashtag_id) values (6, 7);
--- insert into article_hashtag (article_id, hashtag_id) values (7, 22);
--- insert into article_hashtag (article_id, hashtag_id) values (8, 10);
--- insert into article_hashtag (article_id, hashtag_id) values (9, 3);
--- insert into article_hashtag (article_id, hashtag_id) values (9, 30);
--- insert into article_hashtag (article_id, hashtag_id) values (10, 15);
--- insert into article_hashtag (article_id, hashtag_id) values (11, 24);
--- insert into article_hashtag (article_id, hashtag_id) values (12, 3);
+insert into article_hashtag (article_id, hashtag_id) values (1, 5);
+insert into article_hashtag (article_id, hashtag_id) values (1, 2);
+insert into article_hashtag (article_id, hashtag_id) values (2, 2);
+insert into article_hashtag (article_id, hashtag_id) values (2, 3);
+insert into article_hashtag (article_id, hashtag_id) values (3, 1);
+insert into article_hashtag (article_id, hashtag_id) values (3, 2);
+insert into article_hashtag (article_id, hashtag_id) values (3, 4);
+insert into article_hashtag (article_id, hashtag_id) values (3, 3);
+insert into article_hashtag (article_id, hashtag_id) values (4, 1);
+insert into article_hashtag (article_id, hashtag_id) values (4, 3);
+insert into article_hashtag (article_id, hashtag_id) values (5, 5);
+insert into article_hashtag (article_id, hashtag_id) values (5, 2);
+insert into article_hashtag (article_id, hashtag_id) values (5, 4);
+insert into article_hashtag (article_id, hashtag_id) values (5, 3);
 -- insert into article_hashtag (article_id, hashtag_id) values (13, 25);
 -- insert into article_hashtag (article_id, hashtag_id) values (14, 3);
 -- insert into article_hashtag (article_id, hashtag_id) values (15, 12);
