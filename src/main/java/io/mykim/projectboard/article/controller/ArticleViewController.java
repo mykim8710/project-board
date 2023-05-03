@@ -2,6 +2,7 @@ package io.mykim.projectboard.article.controller;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleService;
@@ -96,12 +97,12 @@ public class ArticleViewController {
         log.info("[GET] /articles/{}/edit => article edit View", articleId);
 
         // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
-        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
-        if(!findArticleDto.getUserId().equals(user.getId())) {
+        ResponseArticleEditDto articleForEdit = articleService.findOneArticleForEdit(articleId);
+        if(!articleForEdit.getUserId().equals(user.getId())) {
             response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         }
 
-        model.addAttribute("article", findArticleDto);
+        model.addAttribute("article", articleForEdit);
         return "articles/edit";
     }
 

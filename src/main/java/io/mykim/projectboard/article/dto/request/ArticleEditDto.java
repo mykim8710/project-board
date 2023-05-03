@@ -15,13 +15,13 @@ public class ArticleEditDto {
     private String title;
     @NotBlank(message = "글 내용을 입력해주세요.")
     private String content;
-    private String hashtag;
+    private String hashtags;
 
-    public ArticleEditDto(Long id, String title, String content, String hashtag) {
+    public ArticleEditDto(Long id, String title, String content, String hashtags) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
+        this.hashtags = hashtags;
     }
 
     public ArticleEditDto() {
