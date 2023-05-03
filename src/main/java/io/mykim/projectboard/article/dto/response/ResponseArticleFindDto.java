@@ -3,13 +3,16 @@ package io.mykim.projectboard.article.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.ArticleHashTag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @ToString
@@ -24,6 +27,7 @@ public class ResponseArticleFindDto {
     private LocalDateTime lastModifiedAt;
     private Long userId;
     private String nickname;
+    private String email;
     private List<String> hashtags;
 
     @QueryProjection
@@ -42,25 +46,29 @@ public class ResponseArticleFindDto {
         this.lastModifiedAt = lastModifiedAt;
         this.userId = userId;
         this.nickname = nickname;
-        this.hashtags = Arrays.stream(hashtags.split(",")).toList();
+        this.hashtags = hashtags == null ? new ArrayList<>() : Arrays.stream(hashtags.split(",")).toList();
     }
 
 
-
     private ResponseArticleFindDto(Article article) {
+        List<ArticleHashTag> articleHashTags = article.getArticleHashTags();
+
         this.id = article.getId();
         this.title = article.getTitle();
         this.content = article.getContent();
-        //this.hashtag = article.getHashtag();
         this.createdAt = article.getCreatedAt();
         this.lastModifiedAt = article.getLastModifiedAt();
         this.userId = article.getCreatedBy().getId();
         this.nickname = article.getCreatedBy().getNickname();
+        this.email = article.getCreatedBy().getEmail();
+        this.hashtags = articleHashTags.size() == 0 ? new ArrayList<>() : articleHashTags
+                                                                            .stream()
+                                                                            .map(articleHashTag -> articleHashTag.getHashtag().getName())
+                                                                            .collect(Collectors.toList());
     }
 
-    public static ResponseArticleFindDto of(Article article) {
+    public static ResponseArticleFindDto from(Article article) {
         return new ResponseArticleFindDto(article);
     }
-
 
 }

@@ -2,10 +2,12 @@ package io.mykim.projectboard.article.service;
 
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
+import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentListDto;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.entity.ArticleComment;
+import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
@@ -26,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @DisplayName("ArticleCommentService에 정의된 ArticleComment 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
@@ -219,8 +223,14 @@ class ArticleCommentServiceTest {
     }
 
     private Article createNewArticle(String title, String content) {
-        Article article = Article.of(title, content);
-        return articleRepository.save(article);
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Set<Hashtag> hashtags = IntStream.range(1, 10)
+                .mapToObj(i-> Hashtag.of("blue_"+i))
+                .collect(Collectors.toUnmodifiableSet());
+
+        Article article =  Article.createArticle(articleCreateDto, hashtags);
+        articleRepository.save(article);
+        return article;
     }
 
     private User createUser() {

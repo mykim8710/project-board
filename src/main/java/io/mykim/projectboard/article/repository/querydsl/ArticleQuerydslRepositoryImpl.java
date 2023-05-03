@@ -30,8 +30,8 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
     public Page<ResponseArticleFindDto> findAllArticle(Pageable pageable, ArticleSearchCondition searchCondition) {
         JPQLQuery<ResponseArticleFindDto> jpqlQuery = from(article)
                 .leftJoin(article.createdBy, user)
-                .innerJoin(article.articleHashTags, articleHashTag)
-                .innerJoin(articleHashTag.hashtag, hashtag)
+                .leftJoin(article.articleHashTags, articleHashTag)
+                .leftJoin(articleHashTag.hashtag, hashtag)
                 .groupBy(article.id)
                 .having(createUniversalSearchCondition(searchCondition))
                 .select(

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.article.repository.HashtagRepository;
 import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
@@ -21,6 +23,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -39,6 +45,9 @@ class ArticleApiControllerTest {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Test
@@ -50,8 +59,8 @@ class ArticleApiControllerTest {
 
         String title = "aa";
         String content = "cc";
-        String hashtag = "#gg";
-        ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtag);
+        String hashtags = "#gg#aa#kk#hh";
+        ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtags);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
         // when & then
@@ -74,7 +83,13 @@ class ArticleApiControllerTest {
         // given
         String title = "aa";
         String content = "cc";
-        Article article = createNewArticle(title, content);
+
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article article = createNewArticle(title, content, hashtags);
+
         String api = "/api/v1/articles/{articleId}";
 
         // when & then
@@ -110,12 +125,17 @@ class ArticleApiControllerTest {
     @WithAuthUser(username = "test")
     void findAllArticleApiTest() throws Exception {
         // given
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+
         IntStream.range(1, 31)
-                .forEach(i -> createNewArticle("title" + i, "content" + i));
+                .forEach(i -> createNewArticle("title" + i, "content" + i, hashtags));
 
         String api = "/api/v1/articles";
         String sort = "id,DESC";
-        int page = 1;
+        int page = 0;
         int size = 5;
 
         // when & then
@@ -123,8 +143,6 @@ class ArticleApiControllerTest {
                         .queryParam("page", String.valueOf(page))
                         .queryParam("size", String.valueOf(size))
                         .queryParam("sort", sort)
-//                        .queryParam("searchKeyword", searchKeyword)
-//                        .queryParam("searchType", searchType)
                  )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.status").value(CustomSuccessCode.COMMON_OK.getStatus()))
@@ -137,6 +155,9 @@ class ArticleApiControllerTest {
                 .andExpect(jsonPath("$.data.responseArticleFindDtos[2].title").value("title28"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+
+
 
     @Test
     @DisplayName("[v1 / 인증 적용] 게시글 수정 api를 요청하면 해당 게시글이 수정된다.")
@@ -239,7 +260,23 @@ class ArticleApiControllerTest {
     }
 
     private Article createNewArticle(String title, String content) {
-        Article article = Article.of(title, content);
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        articleRepository.save(article);
+        return article;
+    }
+
+    private Set<Hashtag> createHashtags(String... hashtagNames) {
+        Set<Hashtag> hashtags = Arrays.stream(hashtagNames)
+                .map(hm -> Hashtag.of(hm))
+                .collect(Collectors.toUnmodifiableSet());
+        hashtagRepository.saveAll(hashtags);
+        return hashtags;
+    }
+
+    private Article createNewArticle(String title, String content, Set<Hashtag> hashtags) {
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Article article = Article.createArticle(articleCreateDto, hashtags);
         articleRepository.save(article);
         return article;
     }

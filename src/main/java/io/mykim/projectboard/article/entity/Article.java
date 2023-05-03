@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,19 +47,39 @@ public class Article extends BaseEntity {
     @OneToMany(mappedBy = "article", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<ArticleHashTag> articleHashTags = new ArrayList<>();
 
-
-    private Article(String title, String content) {
-        this.title = title;
-        this.content = content;
+    private Article(ArticleCreateDto createDto) {
+        this.title = createDto.getTitle();
+        this.content = createDto.getContent();
     }
 
-    public static Article of(String title, String content) {
-        return new Article(title, content);
+    public void addArticleHashTag(ArticleHashTag articleHashTag) {
+        this.articleHashTags.add(articleHashTag);
+        articleHashTag.setArticle(this);
     }
 
-    public static Article of(ArticleCreateDto createDto) {
-        return new Article(createDto.getTitle(), createDto.getContent());
+    public static Article createArticle(ArticleCreateDto createDto, Collection<Hashtag> hashtags) {
+        Article article = new Article(createDto);
+
+        for (Hashtag hashtag : hashtags) {
+            ArticleHashTag articleHashTag = ArticleHashTag.createArticleHashTag(hashtag);
+            article.addArticleHashTag(articleHashTag);
+        }
+
+        return article;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void updateTitle(String title){
         this.title = title;
@@ -67,7 +88,6 @@ public class Article extends BaseEntity {
     public void updateContent(String content){
         this.content = content;
     }
-
 
     public void editArticle(ArticleEditDto editDto) {
         this.title = editDto.getTitle();
