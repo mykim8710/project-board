@@ -1,5 +1,6 @@
 package io.mykim.projectboard.article.controller;
 
+import io.mykim.projectboard.article.dto.response.ResponseArticleEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.enums.SearchType;
@@ -149,14 +150,12 @@ class ArticleViewControllerTest {
     @WithAuthUser(username = "test")
     void articleEditViewTest() throws Exception{
         // given
-//        given(articleService.findOneArticle(1L))
-//                .willReturn(new ResponseArticleFindDto(1L,
-//                                                            "title",
-//                                                            "content",
-//                                                            LocalDateTime.now(),
-//                                                            LocalDateTime.now(),
-//                                                            1L,
-//                                                            "mykim"));
+        given(articleService.findOneArticleForEdit(1L))
+                .willReturn(new ResponseArticleEditDto(1L,
+                                                        "title",
+                                                        "content",
+                                                        1L,
+                                                        "#hashtag"));
 
         String url = "/articles/{articleId}/edit";
         Long articleId = 1L;
