@@ -26,7 +26,7 @@ public class ArticleApiController {
     public ResponseEntity<CommonResponse> findAllArticleApi(@RequestParam(required = false) String searchKeyword,
                                                             @RequestParam(required = false) SearchType searchType,
                                                             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("[GET] /api/v1/articles?searchKeyword={}&searchType={}&offset={}&limit={}&sort={} => find all Article api", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        log.info("[GET] /api/v1/articles?searchKeyword={}&searchType={}&page={}&size={}&sort={} => find all Article api", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
         CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.COMMON_OK, articleService.findAllArticle(searchKeyword, searchType, pageable));
         return ResponseEntity
                 .status(commonResponse.getStatus())
@@ -52,6 +52,13 @@ public class ArticleApiController {
                 .status(commonResponse.getStatus())
                 .body(commonResponse);
     }
+
+
+
+
+
+
+
 
     // 게시글 단건 수정
     @PatchMapping("/api/v1/articles/{articleId}")

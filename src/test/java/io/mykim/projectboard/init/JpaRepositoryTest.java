@@ -1,5 +1,8 @@
 package io.mykim.projectboard.init;
 
+import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
+import io.mykim.projectboard.article.entity.Hashtag;
+import io.mykim.projectboard.article.service.HashtagService;
 import io.mykim.projectboard.global.config.jpa.JpaConfig;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
@@ -12,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Disabled("초기 설정 시 진행했던 테스트이므로 개발을 진행됨에 따라 해당 테스트는 진행안함")
 @DisplayName("JPA 연결 테스트")
@@ -50,8 +55,12 @@ class JpaRepositoryTest {
         // given
         long previousCount = articleRepository.count();
 
+        String title = "title";
+        String content = "content";
+        Article article = createArticle(title, content);
+
         // when
-        articleRepository.save(Article.of("title", "content"));
+        articleRepository.save(article);
 
         // then
         Assertions.assertThat(articleRepository.count())
@@ -65,7 +74,7 @@ class JpaRepositoryTest {
         Article article = articleRepository.findById(1L).orElseThrow();
         String updateTitle = "updateTitle";
         String updateContent = "updateContent";
-        String updateHashtag = "updateHashtag";
+        String updateHashtag = "#updateHashtag#RED";
 
         // when
         article.updateTitle(updateTitle);
@@ -96,4 +105,13 @@ class JpaRepositoryTest {
         Assertions.assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentCount);
     }
 
+
+    private Article createArticle(String title, String content) {
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Set<Hashtag> hashtags = IntStream.range(1, 10)
+                                        .mapToObj(i-> Hashtag.of("blue_"+i))
+                                        .collect(Collectors.toUnmodifiableSet());
+
+        return Article.createArticle(articleCreateDto, hashtags);
+    }
 }

@@ -46,7 +46,7 @@
                                 <div class="form-input">
                                     <label>해시태그</label>
                                     <div class="input-items default">
-                                        <input type="text" id="articleHashTag" th:field="*{hashtag}" autocomplete="off"/>
+                                        <input type="text" id="articleHashTag" th:field="*{hashtags}" autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                             <div class="col-md-6">
                                 <div class="form-input rounded-buttons">
                                     <button class="btn primary-btn-outline rounded-full" type="button"
-                                            th:onclick="|location.href='@{/articles/{id}(id=${article.id},offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|">수정 취소</button>
+                                            th:onclick="|location.href='@{/articles/{id}(id=${article.id},page=${param.page},size=${param.size},searchType=${param.searchType},searchKeyword=${param.searchKeyword},sort=${param.sort})}'|">수정 취소</button>
                                 </div>
                             </div>
                         </div>

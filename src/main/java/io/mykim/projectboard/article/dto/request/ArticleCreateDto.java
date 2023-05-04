@@ -14,12 +14,17 @@ public class ArticleCreateDto {
     private String title;
     @NotBlank(message = "글 내용을 입력해주세요.")
     private String content;
-    private String hashtag;
+    private String hashtags;
 
-    public ArticleCreateDto(String title, String content, String hashtag) {
+    public ArticleCreateDto(String title, String content, String hashtags) {
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
+        this.hashtags = hashtags;
+    }
+
+    public ArticleCreateDto(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
     public ArticleCreateDto() {

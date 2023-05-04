@@ -1,9 +1,6 @@
 package io.mykim.projectboard.article.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -32,9 +29,15 @@ public class ArticleHashTag {
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag;
 
-    public ArticleHashTag(Long id, Article article, Hashtag hashtag) {
-        this.id = id;
-        this.article = article;
+    private ArticleHashTag(Hashtag hashtag) {
         this.hashtag = hashtag;
+    }
+
+    public static ArticleHashTag createArticleHashTag(Hashtag hashtag) {
+        return new ArticleHashTag(hashtag);
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 }
