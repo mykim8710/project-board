@@ -17,6 +17,7 @@ public enum CustomErrorCode {
     // article, articleComment
     NOT_FOUND_ARTICLE(404, "A001", "not found this article"),
     NOT_FOUND_ARTICLE_COMMENT(404, "A002", "not found this article comment"),
+    NOT_FOUND_PARENT_ARTICLE_COMMENT(404, "A003", "not found parent article comment"),
 
 
     // user

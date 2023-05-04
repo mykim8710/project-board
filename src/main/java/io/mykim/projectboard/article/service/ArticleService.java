@@ -96,6 +96,8 @@ public class ArticleService {
     public void removeArticle(Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
         confirmArticleCreatedUserId(findArticle.getCreatedBy().getId());
+
+        // todo : 게시글 하부 댓글이 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
         articleRepository.delete(findArticle);
     }
 

@@ -5,11 +5,10 @@ document.getElementById('article-comment-create-button').addEventListener('click
     createNewArticleComment();
 });
 
-let offset = 1;
-const limit = 5;
+let page = 0;
 let articleComments = [];
 function findAllArticleCommentsUnderArticle() {
-    callFindAllArticleCommentUnderArticleApi( offset).then(response => {
+    callFindAllArticleCommentUnderArticleApi().then(response => {
         if(response.status === 200) {
             articleComments = response.data.responseArticleCommentFindDtos;
             drawArticleCommentListDom();
@@ -46,7 +45,11 @@ function drawArticleCommentListDom() {
                         </div>`;
         }
 
-        html += `</div><hr>`;
+        html += `</div>
+                
+                <button type="button" class="btn btn-primary btn-sm">▼ 댓글쓰기</button>
+                
+                <hr>`;
 
         newList.innerHTML = html;
         articleCommentArea.appendChild(newList);
@@ -75,11 +78,11 @@ function drawArticleCommentPagination(paginationResponse) {
     articleCommentPaginationArea.innerHTML = html;
 }
 function movePage(pageNumber) {
-    if (pageNumber === offset) {
+    if (pageNumber-1 === page) {
         return;
     }
 
-    offset = pageNumber;
+    page = pageNumber-1;
     findAllArticleCommentsUnderArticle();
 }
 function createNewArticleComment() {

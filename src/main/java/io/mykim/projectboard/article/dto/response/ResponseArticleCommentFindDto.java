@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import io.mykim.projectboard.article.entity.ArticleComment;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
-
+@ToString
 @Getter
 public class ResponseArticleCommentFindDto {
     private Long articleCommentId;
@@ -18,6 +20,8 @@ public class ResponseArticleCommentFindDto {
     private LocalDateTime lastModifiedAt;
     private Long userId;
     private String nickname;
+    private Long parentArticleCommentId;
+    private Set<ResponseArticleCommentFindDto> childArticleComments = new LinkedHashSet<>();
 
     private ResponseArticleCommentFindDto(ArticleComment articleComment) {
         this.articleCommentId = articleComment.getId();
@@ -26,6 +30,7 @@ public class ResponseArticleCommentFindDto {
         this.lastModifiedAt = articleComment.getLastModifiedAt();
         this.userId = articleComment.getCreatedBy().getId();
         this.nickname = articleComment.getCreatedBy().getNickname();
+        this.parentArticleCommentId = articleComment.getParentArticleComment() == null ? null : articleComment.getParentArticleComment().getId();
     }
 
     public static ResponseArticleCommentFindDto of(ArticleComment articleComment) {
@@ -35,13 +40,21 @@ public class ResponseArticleCommentFindDto {
     @QueryProjection
     public ResponseArticleCommentFindDto(Long articleCommentId,
                                          String articleCommentContent,
-                                         LocalDateTime createdAt, LocalDateTime lastModifiedAt,
-                                         Long userId, String nickname) {
+                                         LocalDateTime createdAt,
+                                         LocalDateTime lastModifiedAt,
+                                         Long userId,
+                                         String nickname,
+                                         Long parentArticleCommentId) {
         this.articleCommentId = articleCommentId;
         this.articleCommentContent = articleCommentContent;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
         this.userId = userId;
         this.nickname = nickname;
+        this.parentArticleCommentId = parentArticleCommentId;
+    }
+
+    public boolean hasParentArticleComment() {
+        return parentArticleCommentId != null;
     }
 }

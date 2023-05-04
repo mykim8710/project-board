@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -32,26 +33,35 @@ public class ArticleComment extends BaseEntity {
     private Article article;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_article_comment_id", updatable = false, nullable = true)
     private ArticleComment parentArticleComment;
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "parentArticleComment", cascade = CascadeType.ALL) // CascadeType.ALL : 해당 댓글이 지워지원 자식댓글들도 다 지워짐
+    @OneToMany(mappedBy = "parentArticleComment", cascade = CascadeType.REMOVE) // CascadeType.ALL : 해당 댓글이 지워지원 자식댓글들도 다 지워짐
     private Set<ArticleComment> childArticleComment = new LinkedHashSet<>();
 
-    private ArticleComment(String content, Article article) {
+    private ArticleComment(String content, Article article, ArticleComment parentArticleComment) {
         this.content = content;
         this.article = article;
+        this.parentArticleComment = parentArticleComment;
     }
 
     public static ArticleComment of(String content, Article article) {
-        return new ArticleComment(content, article);
+        return new ArticleComment(content, article, null);
     }
 
     public void editArticleComment(String content) {
         this.content = content;
     }
 
+    public void addChildArticleComment(ArticleComment childArticleComment) {
+        childArticleComment.setParentArticleComment(this);
+        this.getChildArticleComment().add(childArticleComment);
+    }
+
+    public void setParentArticleComment(ArticleComment parentArticleComment) {
+        this.parentArticleComment = parentArticleComment;
+    }
 }

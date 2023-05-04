@@ -68,7 +68,7 @@ class ArticleCommentApiControllerTest {
 
         String api = "/api/v1/articles/{articleId}/article-comments";
         String content = "cc";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(content);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null, content);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
         // when & then
@@ -93,7 +93,7 @@ class ArticleCommentApiControllerTest {
 
         String api = "/api/v1/articles/{articleId}/article-comments";
         String content = "cc";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(content);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,content);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
         // when & then
