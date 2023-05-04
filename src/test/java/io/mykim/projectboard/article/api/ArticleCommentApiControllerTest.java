@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,12 +55,6 @@ class ArticleCommentApiControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    private EntityManager em;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -249,15 +244,14 @@ class ArticleCommentApiControllerTest {
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
 
         String api = "/api/v1/articles/{articleId}/article-comments";
-        int offset = 1;
+        int offset = 0;
         int limit = 5;  // default 5 : 어떤값을 넣어도 service 단에서 5 fix
-        String keyword = "";
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get(api, article.getId())
-                        .queryParam("offset", String.valueOf(offset))
-                        .queryParam("limit", String.valueOf(limit))
-                        .queryParam("keyword", keyword))
+                        .queryParam("page", String.valueOf(offset))
+                        .queryParam("size", String.valueOf(limit))
+                )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.status").value(CustomSuccessCode.COMMON_OK.getStatus()))
                 .andExpect(jsonPath("$.code").value(CustomSuccessCode.COMMON_OK.getCode()))
@@ -278,11 +272,7 @@ class ArticleCommentApiControllerTest {
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Set<Hashtag> hashtags = IntStream.range(1, 10)
-                .mapToObj(i-> Hashtag.of("blue_"+i))
-                .collect(Collectors.toUnmodifiableSet());
-
-        Article article =  Article.createArticle(articleCreateDto, hashtags);
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
         articleRepository.save(article);
         return article;
     }

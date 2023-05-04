@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -29,10 +31,15 @@ public class ArticleComment extends BaseEntity {
     @JoinColumn(name = "article_id")
     private Article article;
 
-//    @ToString.Exclude
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "parent_article_comment_id", updatable = false, nullable = true)
+    private ArticleComment parentArticleComment;
+
+    @ToString.Exclude
+    @OrderBy("createdAt DESC")
+    @OneToMany(mappedBy = "parentArticleComment", cascade = CascadeType.ALL) // CascadeType.ALL : 해당 댓글이 지워지원 자식댓글들도 다 지워짐
+    private Set<ArticleComment> childArticleComment = new LinkedHashSet<>();
 
     private ArticleComment(String content, Article article) {
         this.content = content;
