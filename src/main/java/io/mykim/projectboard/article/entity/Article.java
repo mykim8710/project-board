@@ -44,7 +44,7 @@ public class Article extends BaseEntity {
     // Article - ArticleHashTag => 1 : N
     // 연관관계의 주인 : article_hashtag가 article_id(fk)를 갖는다
     @ToString.Exclude
-    @OneToMany(mappedBy = "article", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleHashTag> articleHashTags = new ArrayList<>();
 
     private Article(ArticleCreateDto createDto) {
@@ -69,28 +69,24 @@ public class Article extends BaseEntity {
     }
 
 
+    public void editArticle(ArticleEditDto editDto, Collection<Hashtag> hashtags) {
+        this.title = editDto.getTitle();
+        this.content = editDto.getContent();
 
+        for (Hashtag hashtag : hashtags) {
+            ArticleHashTag articleHashTag = ArticleHashTag.createArticleHashTag(hashtag);
 
+            this.articleHashTags.add(articleHashTag);
+            articleHashTag.setArticle(this);
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-    public void updateTitle(String title){
+    public void updateTitle(String title) {
         this.title = title;
     }
 
-    public void updateContent(String content){
+    public void updateContent(String content) {
         this.content = content;
     }
 
-    public void editArticle(ArticleEditDto editDto) {
-        this.title = editDto.getTitle();
-        this.content = editDto.getContent();
-    }
 }

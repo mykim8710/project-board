@@ -3,12 +3,14 @@ package io.mykim.projectboard.article.service;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
-import io.mykim.projectboard.article.dto.response.ResponseArticleEditDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.ArticleHashTag;
 import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.enums.SearchType;
+import io.mykim.projectboard.article.repository.ArticleHashtagRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.global.pageable.PageableRequestCondition;
@@ -25,13 +27,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleHashtagRepository articleHashtagRepository;
     private final HashtagService hashtagService;
 
     @Transactional(readOnly = true)
@@ -60,9 +65,9 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseArticleEditDto findOneArticleForEdit(Long articleId) {
+    public ResponseArticleForEditDto findOneArticleForEdit(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
-        return ResponseArticleEditDto.from(article);
+        return ResponseArticleForEditDto.from(article);
     }
 
     @Transactional
@@ -74,20 +79,17 @@ public class ArticleService {
         return articleRepository.save(article).getId();
     }
 
-
-
-
-
-
-
-
-
-
     @Transactional
     public void editArticle(ArticleEditDto editDto, Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
         confirmArticleCreatedUserId(findArticle.getCreatedBy().getId());
-        findArticle.editArticle(editDto);
+
+        // 기존 데이터 삭제
+        articleHashtagRepository.deleteAllByArticleId(articleId);
+        articleHashtagRepository.flush();
+
+        Set<Hashtag> hashtags = hashtagService.renewHashtags(editDto.getHashtags());
+        findArticle.editArticle(editDto, hashtags);
     }
 
     @Transactional
