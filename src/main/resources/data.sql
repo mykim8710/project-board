@@ -260,9 +260,9 @@ insert into article_hashtag (article_id, hashtag_id) values (5, 3);
 -- insert into article_hashtag (article_id, hashtag_id) values (100, 28);
 --
 --
--- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.', 58, '2022-04-27 13:29:07', '2022-11-22 11:56:39', 1, 1);
--- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Cras pellentesque volutpat dui.', 97, '2023-03-01 20:28:06', '2022-12-01 03:11:45', 1, 1);
--- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Proin leo odio, porttitor id, consequat in, consequat ut, nulla.', 72, '2022-08-09 16:49:20', '2022-08-06 18:20:17', 1, 1);
+insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa.', 5, '2022-04-27 13:29:07', '2022-11-22 11:56:39', 1, 1);
+insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Cras pellentesque volutpat dui.', 5, '2023-03-01 20:28:06', '2022-12-01 03:11:45', 1, 1);
+insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Proin leo odio, porttitor id, consequat in, consequat ut, nulla.', 5, '2022-08-09 16:49:20', '2022-08-06 18:20:17', 1, 1);
 -- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('In quis justo.', 6, '2022-10-02 19:52:21', '2022-11-07 06:10:18', 1, 1);
 -- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Proin at turpis a pede posuere nonummy.', 97, '2022-06-04 06:07:31', '2023-02-08 09:18:19', 1, 1);
 -- insert into article_comment (article_comment_content, article_id, created_at, last_modified_at, created_by_user_id, last_modified_by_user_id) values ('Donec semper sapien a libero.', 53, '2022-09-02 22:34:58', '2022-11-09 07:03:59', 1, 1);

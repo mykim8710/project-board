@@ -25,7 +25,7 @@ public class ArticleCommentApiController {
     // 게시글 하부 댓글 목록조회 (+pagination)
     @GetMapping("/api/v1/articles/{articleId}/article-comments")
     public ResponseEntity<CommonResponse> findAllArticleCommentUnderArticleApi(@PathVariable Long articleId,
-                                                                               @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                               @PageableDefault(page = 0, size = 5, sort = "createdBy", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("[GET] /api/v1/articles/{}/article-comments?page={}&size={} => find all ArticleComment under Article api", articleId, pageable.getOffset(), pageable.getPageSize());
         CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK, articleCommentService.findAllArticleCommentUnderArticle(pageable, articleId));
 

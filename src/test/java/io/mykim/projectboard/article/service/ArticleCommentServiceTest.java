@@ -24,9 +24,12 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -198,22 +201,20 @@ class ArticleCommentServiceTest {
     @WithAuthUser(username = "test")
     void findAllArticleCommentUnderArticleTest() throws Exception {
         // given
-        createUser();
         Article article = createNewArticle("title", "content");
         IntStream.range(1, 31)
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
 
+        int page = 0;
+        int size = 5;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        int offset = 1;
-        int limit = 5;
-//        CustomPaginationRequest customPaginationRequest = new CustomPaginationRequest(offset, limit);
-//
-//        // when
-//        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(customPaginationRequest, article.getId());
-//
-//        // then
-//        Assertions.assertThat(result.getResponseArticleCommentFindDtos().size()).isEqualTo(limit);
-//        Assertions.assertThat(result.getResponseArticleCommentFindDtos().get(0).getArticleCommentContent()).isEqualTo("reply_30");
+        // when
+        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(pageRequest, article.getId());
+
+        // then
+        Assertions.assertThat(result.getResponseArticleCommentFindDtos().size()).isEqualTo(size);
+        Assertions.assertThat(result.getResponseArticleCommentFindDtos().get(0).getArticleCommentContent()).isEqualTo("reply_30");
     }
 
 
@@ -224,11 +225,7 @@ class ArticleCommentServiceTest {
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Set<Hashtag> hashtags = IntStream.range(1, 10)
-                .mapToObj(i-> Hashtag.of("blue_"+i))
-                .collect(Collectors.toUnmodifiableSet());
-
-        Article article =  Article.createArticle(articleCreateDto, hashtags);
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
         articleRepository.save(article);
         return article;
     }
