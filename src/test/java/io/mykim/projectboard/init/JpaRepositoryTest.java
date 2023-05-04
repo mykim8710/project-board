@@ -74,7 +74,7 @@ class JpaRepositoryTest {
         Article article = articleRepository.findById(1L).orElseThrow();
         String updateTitle = "updateTitle";
         String updateContent = "updateContent";
-        String updateHashtag = "updateHashtag";
+        String updateHashtag = "#updateHashtag#RED";
 
         // when
         article.updateTitle(updateTitle);

@@ -1,6 +1,6 @@
 package io.mykim.projectboard.article.controller;
 
-import io.mykim.projectboard.article.dto.response.ResponseArticleEditDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.enums.SearchType;
@@ -151,7 +151,7 @@ class ArticleViewControllerTest {
     void articleEditViewTest() throws Exception{
         // given
         given(articleService.findOneArticleForEdit(1L))
-                .willReturn(new ResponseArticleEditDto(1L,
+                .willReturn(new ResponseArticleForEditDto(1L,
                                                         "title",
                                                         "content",
                                                         1L,

@@ -156,9 +156,6 @@ class ArticleApiControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
-
-
-
     @Test
     @DisplayName("[v1 / 인증 적용] 게시글 수정 api를 요청하면 해당 게시글이 수정된다.")
     @WithAuthUser(username = "test")
@@ -166,14 +163,22 @@ class ArticleApiControllerTest {
         // given
         String api = "/api/v1/articles/{articleId}";
 
+        // create dto
         String title = "aa";
         String content = "cc";
-        Article insertArticle = createNewArticle(title, content);
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article insertArticle = createNewArticle(title, content, hashtags);
 
+        // edit dto
         String editTitle = "qwerty";
         String editContent = "qwerty";
-        String editHashtag = "#qwerty";
-        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag);
+        String editHashtag1 = "#qwerty";
+        String editHashtag2 = "#qwerty";
+        String editHashtag3 = "#qwerty";
+        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag1.concat(editHashtag2).concat(editHashtag3));
         String requestDtoJsonStr = objectMapper.writeValueAsString(editDto);
 
         // when & then
@@ -194,14 +199,22 @@ class ArticleApiControllerTest {
         // given
         String api = "/api/v1/articles/{articleId}";
 
+        // create dto
         String title = "aa";
         String content = "cc";
-        Article insertArticle = createNewArticle(title, content);
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article insertArticle = createNewArticle(title, content, hashtags);
 
+        // edit dto
         String editTitle = "qwerty";
         String editContent = "qwerty";
-        String editHashtag = "#qwerty";
-        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag);
+        String editHashtag1 = "#qwerty";
+        String editHashtag2 = "#qwerty";
+        String editHashtag3 = "#qwerty";
+        ArticleEditDto editDto = new ArticleEditDto(insertArticle.getId(), editTitle, editContent, editHashtag1.concat(editHashtag2).concat(editHashtag3));
         String requestDtoJsonStr = objectMapper.writeValueAsString(editDto);
 
         // when & then

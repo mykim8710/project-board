@@ -158,22 +158,30 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content);
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article article = createNewArticle(title, content, hashtags);
 
         String newTitle = "newTitle";
         String newContent = "newContent";
-        String newHashtag = "newHashtag";
-        ArticleEditDto editDto = new ArticleEditDto(article.getId(), newTitle, newContent, newHashtag);
+
+        String newHashtag1 = "#blue";
+        String newHashtag2 = "#newHashtag";
+        ArticleEditDto editDto = new ArticleEditDto(article.getId(), newTitle, newContent, newHashtag1.concat(newHashtag2));
 
         // when
         articleService.editArticle(editDto, article.getId());
 
         // then
-        Article findArticle = em.find(Article.class, article.getId());
+        Article findArticle = articleRepository.findById(article.getId()).get();
+        Set<String> hashtagNames = findArticle.getArticleHashTags().stream().map(ah -> ah.getHashtag().getName()).collect(Collectors.toUnmodifiableSet());
 
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(newTitle);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(newContent);
+        Assertions.assertThat(hashtagNames).contains(newHashtag1.replace("#", ""), newHashtag2.replace("#", ""));
     }
 
     @Test
