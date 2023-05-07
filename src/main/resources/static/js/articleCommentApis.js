@@ -12,7 +12,7 @@ async function callCreateArticleCommentApi(createDto) {
 }
 
 async function callFindAllArticleCommentUnderArticleApi() {
-    const res = await fetch(`/api/v1/articles/${articleId}/article-comments?page=${page}`, {
+    const res = await fetch(`/api/v1/articles/${articleId}/article-comments`, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

@@ -118,7 +118,23 @@
                         </div>
 
                         <div class="col-md-12">
-                            <nav aria-label="Page navigation" id="articleCommentPaginationArea"></nav>
+                            <nav aria-label="Page navigation" id="articleCommentPaginationArea">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <a th:href="*{article.id - 1} <= 0 ? '#' : |/articles/*{article.id - 1}|" class="page-link" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">이전글</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item">
+                                        <a th:href="*{article.id + 1} > ${totalCount} ? '#' : |/articles/*{article.id + 1}|" class="page-link" aria-label="Next">
+                                            <span class="sr-only">다음글</span>
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

@@ -2,17 +2,15 @@ window.onload = function () {
     findAllArticleCommentsUnderArticle();
 }
 document.getElementById('article-comment-create-button').addEventListener('click', e => {
-    createNewArticleComment();
+    createNewArticleComment(null);
 });
 
-let page = 0;
 let articleComments = [];
 function findAllArticleCommentsUnderArticle() {
     callFindAllArticleCommentUnderArticleApi().then(response => {
         if(response.status === 200) {
-            articleComments = response.data.responseArticleCommentFindDtos;
+            articleComments = response.data;
             drawArticleCommentListDom();
-            drawArticleCommentPagination(response.data.paginationResponse);
         }
         if(response.status === 400) {
             alert(response.message);
@@ -47,45 +45,16 @@ function drawArticleCommentListDom() {
 
         html += `</div>
                 
-                <button type="button" class="btn btn-primary btn-sm">▼ 댓글쓰기</button>
-                
+                <div>
+                    <button type="button" class="btn btn-primary btn-sm">댓글쓰기 ►</button>
+                </div>
                 <hr>`;
 
         newList.innerHTML = html;
         articleCommentArea.appendChild(newList);
     });
 }
-function drawArticleCommentPagination(paginationResponse) {
-    let articleCommentPaginationArea = document.getElementById('articleCommentPaginationArea');
-    articleCommentPaginationArea.innerHTML = "";
-
-    let html = `<ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" onclick="movePage(${paginationResponse.prevPage})" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">이전글</span>
-                        </a>
-                    </li>
-
-                    <li class="page-item">
-                        <a class="page-link" onclick="movePage(${paginationResponse.nextPage})" aria-label="Next">
-                            <span class="sr-only">다음글</span>
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>`;
-
-    articleCommentPaginationArea.innerHTML = html;
-}
-function movePage(pageNumber) {
-    if (pageNumber-1 === page) {
-        return;
-    }
-
-    page = pageNumber-1;
-    findAllArticleCommentsUnderArticle();
-}
-function createNewArticleComment() {
+function createNewArticleComment(parentArticleCommentId) {
     let articleCommentContent = document.getElementById('article-comment-content').value;
     if(articleCommentContent.trim() === '' || articleCommentContent.length === 0) {
         alert("댓글을 작성해주세요.");
@@ -93,13 +62,13 @@ function createNewArticleComment() {
     }
 
     let createDto = {
+        'parentArticleCommentId' : parentArticleCommentId,
         'content' : articleCommentContent
     }
 
     callCreateArticleCommentApi(createDto).then(response => {
         if (response.status === 200) {
             document.getElementById('article-comment-content').value = '';
-            offset = 1;
             findAllArticleCommentsUnderArticle();
         }
         if(response.status === 401) {
@@ -149,7 +118,6 @@ function editArticleComment(articleCommentId) {
 function removeArticleComment(articleCommentId) {
     callRemoveArticleCommentApi(articleCommentId).then(response => {
         if (response.status === 200) {
-            offset = 1;
             findAllArticleCommentsUnderArticle();
         }
         if(response.status === 400) {

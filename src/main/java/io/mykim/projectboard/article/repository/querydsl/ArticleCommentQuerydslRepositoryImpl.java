@@ -1,20 +1,12 @@
 package io.mykim.projectboard.article.repository.querydsl;
 
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.mykim.projectboard.article.dto.response.QResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
-import io.mykim.projectboard.article.entity.ArticleComment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static io.mykim.projectboard.article.entity.QArticleComment.articleComment;
 import static io.mykim.projectboard.user.entity.QUser.user;
 

@@ -158,9 +158,9 @@ class ArticleCommentServiceTest {
     }
 
     @Test
-    @DisplayName("부모 댓글을 삭제하면 부모댓글하부 자식댓글 모두가 삭제된다.")
+    @DisplayName("부모 댓글을 삭제하면 부모 댓글하부 자식댓글 모두가 삭제된다.")
     @WithAuthUser(username = "test")
-    void testCode() throws Exception {
+    void parentArticleCommentDeleteWithChildCommentTest() throws Exception {
         // given
         String title = "title";
         String content = "content";
@@ -183,21 +183,6 @@ class ArticleCommentServiceTest {
         Assertions.assertThat(articleCommentRepository.findById(childArticleComment2.getId())).isEmpty();
         Assertions.assertThat(articleCommentRepository.findById(childArticleComment3.getId())).isEmpty();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Test
     @DisplayName("게시글 하부에 속한 댓글 단건에 대해 조회한다.")
