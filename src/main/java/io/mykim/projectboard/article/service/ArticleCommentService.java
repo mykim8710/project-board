@@ -19,10 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static io.mykim.projectboard.global.result.enums.CustomErrorCode.NOT_FOUND_ARTICLE_COMMENT;
 import static io.mykim.projectboard.global.result.enums.CustomErrorCode.NOT_FOUND_PARENT_ARTICLE_COMMENT;
@@ -105,12 +102,20 @@ public class ArticleCommentService {
 
         for (ResponseArticleCommentFindDto articleCommentFindDto : map.values()) {
             if(articleCommentFindDto.hasParentArticleComment()) {
-                Long parentArticleCommentId = articleCommentFindDto.getParentArticleCommentId();
-                ResponseArticleCommentFindDto parentArticleComment = map.get(parentArticleCommentId);
+                // 부모 댓글이 있다면
+                Long parentArticleCommentId = articleCommentFindDto.getParentArticleCommentId();        // 부모댓글 id
+                ResponseArticleCommentFindDto parentArticleComment = map.get(parentArticleCommentId);   // 부모댓글 객체
                 parentArticleComment.getChildArticleComments().add(articleCommentFindDto);
             }
         }
 
-        return articleCommentFindDtos;
+        List<ResponseArticleCommentFindDto> result = new ArrayList<>();
+        for (ResponseArticleCommentFindDto comment : map.values()) {
+            if(!comment.hasParentArticleComment()) {
+                result.add(comment);
+            }
+        }
+
+        return result;
     }
 }
