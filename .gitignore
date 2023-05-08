@@ -291,3 +291,4 @@ gradle-app.setting
 /src/main/resources/jasypt-encryptor-password.txt
 /src/test/resources/jasypt-encryptor-password.txt
 /src/test/java/io/mykim/projectboard/global/config/jasypt/JasyptConfigTest.java
+/src/main/resources/application-oauth.yaml
