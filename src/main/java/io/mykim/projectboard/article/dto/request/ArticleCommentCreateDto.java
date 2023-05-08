@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ArticleCommentCreateDto {
+
+    private Long parentArticleCommentId;
     private String content;
 
-    public ArticleCommentCreateDto(String content) {
+    public ArticleCommentCreateDto(Long parentArticleCommentId, String content) {
+        this.parentArticleCommentId = parentArticleCommentId;
         this.content = content;
     }
 }

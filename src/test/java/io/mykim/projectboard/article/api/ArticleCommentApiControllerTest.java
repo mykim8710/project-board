@@ -68,7 +68,7 @@ class ArticleCommentApiControllerTest {
 
         String api = "/api/v1/articles/{articleId}/article-comments";
         String content = "cc";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(content);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null, content);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
         // when & then
@@ -93,7 +93,7 @@ class ArticleCommentApiControllerTest {
 
         String api = "/api/v1/articles/{articleId}/article-comments";
         String content = "cc";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(content);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,content);
         String requestDtoJsonStr = objectMapper.writeValueAsString(createDto);
 
         // when & then
@@ -137,6 +137,7 @@ class ArticleCommentApiControllerTest {
     @DisplayName("[v1 / 인증 적용] 존재하지 않는 게시글 하부 댓글에 대해 수정하는 api를 호출하면 NotFoundException(댓글) 예외가 발생한다.")
     @ParameterizedTest(name = "{index}, {displayName}, source = {0}, {1}")
     @CsvSource({"-1, -1", "-1, 10", "10, -1"})
+    @WithAuthUser(username = "test")
     void editArticleCommentApiExceptionTest(ArgumentsAccessor argumentsAccessor) throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
@@ -158,7 +159,7 @@ class ArticleCommentApiControllerTest {
     }
 
     @Test
-    @DisplayName("[v1 / 인증 적용] 게시글 하부에 뎃글을 삭제하는 api를 호출하면 댓글이 삭제된다.")
+    @DisplayName("[v1 / 인증 적용] 게시글 하부에 댓글을 삭제하는 api를 호출하면 댓글이 삭제된다.")
     @WithAuthUser(username = "test")
     void removeArticleCommentApiTest() throws Exception {
         // given
@@ -180,6 +181,7 @@ class ArticleCommentApiControllerTest {
     @DisplayName("[v1 / 인증 적용] 존재하지 않는 게시글 하부 댓글에 대해 삭제하는 api를 호출하면 NotFoundException(댓글) 예외가 발생한다.")
     @ParameterizedTest(name = "{index}, {displayName}, source = {0}, {1}")
     @CsvSource({"-1, -1", "-1, 10", "10, -1"})
+    @WithAuthUser(username = "test")
     void removeArticleCommentApiExceptionTest(ArgumentsAccessor argumentsAccessor) throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
@@ -218,6 +220,7 @@ class ArticleCommentApiControllerTest {
     @DisplayName("게시판 하부 댓글 중 존재하지 않는 댓글에 대해 단건 조회 api를 호출하면 NotFoundException(댓글) 예외가 발생한다.")
     @ParameterizedTest(name = "{index}, {displayName}, source = {0}, {1}")
     @CsvSource({"-1, -1", "-1, 10", "10, -1"})
+    @WithAuthUser(username = "test")
     void findOneArticleCommentUnderArticleApiExceptionTest(ArgumentsAccessor argumentsAccessor) throws Exception {
         // given
         String api = "/api/v1/articles/{articleId}/article-comments/{articleCommentId}";
@@ -244,23 +247,18 @@ class ArticleCommentApiControllerTest {
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
 
         String api = "/api/v1/articles/{articleId}/article-comments";
-        int offset = 0;
-        int limit = 5;  // default 5 : 어떤값을 넣어도 service 단에서 5 fix
 
         // when & then
-        mockMvc.perform(MockMvcRequestBuilders.get(api, article.getId())
-                        .queryParam("page", String.valueOf(offset))
-                        .queryParam("size", String.valueOf(limit))
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get(api, article.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.status").value(CustomSuccessCode.COMMON_OK.getStatus()))
                 .andExpect(jsonPath("$.code").value(CustomSuccessCode.COMMON_OK.getCode()))
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.COMMON_OK.getMessage()))
                 .andExpect(jsonPath("$.data").isNotEmpty())
-                .andExpect(jsonPath("$.data.responseArticleCommentFindDtos.length()", Matchers.is(limit)))
-                .andExpect(jsonPath("$.data.responseArticleCommentFindDtos[0].articleCommentContent").value("reply_30"))
-                .andExpect(jsonPath("$.data.responseArticleCommentFindDtos[1].articleCommentContent").value("reply_29"))
-                .andExpect(jsonPath("$.data.responseArticleCommentFindDtos[2].articleCommentContent").value("reply_28"))
+                .andExpect(jsonPath("$.data.length()", Matchers.is(30)))
+                .andExpect(jsonPath("$.data[0].articleCommentContent").value("reply_30"))
+                .andExpect(jsonPath("$.data[1].articleCommentContent").value("reply_29"))
+                .andExpect(jsonPath("$.data[2].articleCommentContent").value("reply_28"))
                 .andDo(MockMvcResultHandlers.print());
     }
 

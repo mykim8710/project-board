@@ -46,10 +46,13 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
                     .antMatchers("/articles/create", "/articles/{articleId}/edit", "/articles/{articleId}/delete").authenticated()
-                    .antMatchers(HttpMethod.POST,"/api/v1/articles/{articleId}/article-comments").authenticated()
-                    .antMatchers(HttpMethod.PATCH,"/api/v1/articles/{articleId}/article-comments").authenticated()
-                    .antMatchers(HttpMethod.DELETE,"/api/v1/articles/{articleId}/article-comments").authenticated()
+                    .antMatchers(HttpMethod.GET,"/api/v1/articles/{articleId}/article-comments/{articleCommentId}").authenticated()
+                    .antMatchers(HttpMethod.POST, "/api/v1/articles/{articleId}/article-comments").authenticated()
+                    .antMatchers(HttpMethod.PATCH,"/api/v1/articles/{articleId}/article-comments/{articleCommentId}").authenticated()
+                    .antMatchers(HttpMethod.DELETE,"/api/v1/articles/{articleId}/article-comments/{articleCommentId}").authenticated()
+
                     .antMatchers("/users/**", "/api/v1/users/**").anonymous()
+                    .antMatchers(HttpMethod.GET, "/api/v1/articles/{articleId}/article-comments").permitAll()
                     .antMatchers(HttpMethod.GET, "/", "/profile", "/error-page/*", "/articles", "/articles/{articleId}", "/api/v1/articles/{articleId}/article-comments").permitAll()
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
 

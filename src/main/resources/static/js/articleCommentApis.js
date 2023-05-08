@@ -11,8 +11,8 @@ async function callCreateArticleCommentApi(createDto) {
     return await res.json();
 }
 
-async function callFindAllArticleCommentUnderArticleApi(offset) {
-    const res = await fetch(`/api/v1/articles/${articleId}/article-comments?offset=${offset}&limit=${limit}`, {
+async function callFindAllArticleCommentUnderArticleApi() {
+    const res = await fetch(`/api/v1/articles/${articleId}/article-comments`, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

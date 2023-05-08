@@ -4,10 +4,8 @@ import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
-import io.mykim.projectboard.article.dto.response.ResponseArticleCommentListDto;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.entity.ArticleComment;
-import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
@@ -30,9 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @DisplayName("ArticleCommentService에 정의된 ArticleComment 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
@@ -49,9 +46,6 @@ class ArticleCommentServiceTest {
     private ArticleCommentRepository articleCommentRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private EntityManager em;
 
     @Test
@@ -64,24 +58,25 @@ class ArticleCommentServiceTest {
         Article article = createNewArticle(title, content);
 
         String commentContent = "content";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,commentContent);
 
         // when
         Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
 
         // then
-        ArticleComment findArticleComment = em.find(ArticleComment.class, newArticleCommentId);
+        ArticleComment findArticleComment = articleCommentRepository.findById(newArticleCommentId).get();
         Assertions.assertThat(findArticleComment.getContent()).isEqualTo(commentContent);
     }
 
     @Test
     @DisplayName("존재하지 않는 게시글에 대해 새로운 ArticleComment를 생성하고 저장할때 NotFoundException(게시글) 예외가 발생한다.")
+    @WithAuthUser(username = "test")
     void createArticleCommentExceptionTest() throws Exception {
         // given
-        Long notFoundArticleId = 1L;
+        Long notFoundArticleId = -1L;
 
         String commentContent = "content";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null, commentContent);
 
         // when & then
         Assertions.assertThatThrownBy(() ->{
@@ -97,7 +92,6 @@ class ArticleCommentServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
         Article article = createNewArticle(title, content);
 
         String commentContent = "reply~~reply";
@@ -108,9 +102,10 @@ class ArticleCommentServiceTest {
 
         // when
         articleCommentService.editArticleComment(editDto, article.getId(), articleComment.getId());
+        articleCommentRepository.flush();
 
         // then
-        ArticleComment findArticleComment = em.find(ArticleComment.class, articleComment.getId());
+        ArticleComment findArticleComment = articleCommentRepository.findById(articleComment.getId()).get();
         Assertions.assertThat(findArticleComment.getContent()).isEqualTo(editCommentContent);
     }
 
@@ -143,11 +138,10 @@ class ArticleCommentServiceTest {
 
         // when
         articleCommentService.removeArticleComment(article.getId(), articleComment.getId());
+        articleCommentRepository.flush();
 
         // then
-        Assertions.assertThatThrownBy(() -> {
-            articleCommentRepository.findById(articleComment.getId()).get();
-        }).isInstanceOf(NoSuchElementException.class);
+        Assertions.assertThat(articleCommentRepository.findById(articleComment.getId())).isEmpty();
     }
 
     @DisplayName("존재하지 않는 게시글 id, 댓글 id에 대해 ArticleComment를 삭제하려 할때 NotFoundException(댓글) 예외가 발생한다.")
@@ -164,6 +158,33 @@ class ArticleCommentServiceTest {
     }
 
     @Test
+    @DisplayName("부모 댓글을 삭제하면 부모 댓글하부 자식댓글 모두가 삭제된다.")
+    @WithAuthUser(username = "test")
+    void parentArticleCommentDeleteWithChildCommentTest() throws Exception {
+        // given
+        String title = "title";
+        String content = "content";
+        Article article = createNewArticle(title, content);
+
+        String commentContent = "reply~~reply";
+        ArticleComment parentArticleComment = createNewArticleComment(article, commentContent);
+
+        String childCommentContent = "child_comment_content";
+        ArticleComment childArticleComment1 = createNewArticleCommentWithParentArticleComment(article, childCommentContent, parentArticleComment);
+        ArticleComment childArticleComment2 = createNewArticleCommentWithParentArticleComment(article, childCommentContent, parentArticleComment);
+        ArticleComment childArticleComment3 = createNewArticleCommentWithParentArticleComment(article, childCommentContent, parentArticleComment);
+
+        // when
+        articleCommentService.removeArticleComment(article.getId(), parentArticleComment.getId());
+        articleCommentRepository.flush();
+
+        // then
+        Assertions.assertThat(articleCommentRepository.findById(childArticleComment1.getId())).isEmpty();
+        Assertions.assertThat(articleCommentRepository.findById(childArticleComment2.getId())).isEmpty();
+        Assertions.assertThat(articleCommentRepository.findById(childArticleComment3.getId())).isEmpty();
+    }
+
+    @Test
     @DisplayName("게시글 하부에 속한 댓글 단건에 대해 조회한다.")
     @WithAuthUser(username = "test")
     void findOneArticleCommentByIdUnderArticleTest() throws Exception {
@@ -173,7 +194,7 @@ class ArticleCommentServiceTest {
         Article article = createNewArticle(title, content);
 
         String commentContent = "content";
-        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(commentContent);
+        ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,commentContent);
         Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
 
         // when
@@ -205,16 +226,11 @@ class ArticleCommentServiceTest {
         IntStream.range(1, 31)
                 .forEach(i -> createNewArticleComment(article, "reply_" + i));
 
-        int page = 0;
-        int size = 5;
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-
         // when
-        ResponseArticleCommentListDto result = articleCommentService.findAllArticleCommentUnderArticle(pageRequest, article.getId());
+        List<ResponseArticleCommentFindDto> result = articleCommentService.findAllArticleCommentUnderArticle(article.getId());
 
         // then
-        Assertions.assertThat(result.getResponseArticleCommentFindDtos().size()).isEqualTo(size);
-        Assertions.assertThat(result.getResponseArticleCommentFindDtos().get(0).getArticleCommentContent()).isEqualTo("reply_30");
+        Assertions.assertThat(result.get(0).getArticleCommentContent()).isEqualTo("reply_30");
     }
 
 
@@ -223,29 +239,16 @@ class ArticleCommentServiceTest {
         return articleCommentRepository.save(articleComment);
     }
 
+    private ArticleComment createNewArticleCommentWithParentArticleComment(Article article, String commentContent, ArticleComment parentArticleComment) {
+        ArticleComment articleComment = ArticleComment.of(commentContent, article);
+        parentArticleComment.addChildArticleComment(articleComment);
+        return articleCommentRepository.save(articleComment);
+    }
+
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
         Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
         articleRepository.save(article);
         return article;
-    }
-
-    private User createUser() {
-        String username = "test";
-        String password = "1234";
-        String email = "email@eamil.com";
-        String nickname = "nickname";
-        String memo = "memo";
-
-        UserCreateDto createDto = UserCreateDto.builder()
-                .username(username)
-                .password(password)
-                .email(email)
-                .nickname(nickname)
-                .memo(memo)
-                .build();
-
-        User user = User.of(createDto);
-        return userRepository.save(user);
     }
 }

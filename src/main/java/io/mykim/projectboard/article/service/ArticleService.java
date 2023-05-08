@@ -3,11 +3,10 @@ package io.mykim.projectboard.article.service;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
-import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
-import io.mykim.projectboard.article.entity.ArticleHashTag;
 import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.repository.ArticleHashtagRepository;
@@ -27,9 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -64,6 +61,10 @@ public class ArticleService {
         return ResponseArticleFindDto.from(article);
     }
 
+    public long getTotalArticleCount() {
+        return articleRepository.count();
+    }
+
     @Transactional(readOnly = true)
     public ResponseArticleForEditDto findOneArticleForEdit(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
@@ -96,6 +97,8 @@ public class ArticleService {
     public void removeArticle(Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
         confirmArticleCreatedUserId(findArticle.getCreatedBy().getId());
+
+        // todo : 게시글 하부 ArticleComment(자식 ArticleComment,,,,), ArticleHashtag 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
         articleRepository.delete(findArticle);
     }
 

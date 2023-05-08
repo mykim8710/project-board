@@ -61,6 +61,7 @@ public class ArticleViewController {
     @GetMapping("/{articleId}")
     public String articlesDetailView(@PathVariable Long articleId, Model model) {
         log.info("[GET] /articles/{} =>  article Detail View", articleId);
+        model.addAttribute("totalCount", articleService.getTotalArticleCount());
         model.addAttribute("article", articleService.findOneArticle(articleId));
         return "articles/detail";
     }

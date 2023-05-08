@@ -2,18 +2,17 @@ window.onload = function () {
     findAllArticleCommentsUnderArticle();
 }
 document.getElementById('article-comment-create-button').addEventListener('click', e => {
-    createNewArticleComment();
+    createNewArticleComment(null);
 });
 
-let offset = 1;
-const limit = 5;
 let articleComments = [];
+let allChildArticleComments = [];
 function findAllArticleCommentsUnderArticle() {
-    callFindAllArticleCommentUnderArticleApi( offset).then(response => {
+    callFindAllArticleCommentUnderArticleApi().then(response => {
         if(response.status === 200) {
-            articleComments = response.data.responseArticleCommentFindDtos;
+            articleComments = response.data;
+            allChildArticleComments = [];
             drawArticleCommentListDom();
-            drawArticleCommentPagination(response.data.paginationResponse);
         }
         if(response.status === 400) {
             alert(response.message);
@@ -26,77 +25,89 @@ function drawArticleCommentListDom() {
 
     articleComments.forEach(articleComment => {
         const newList = document.createElement('li');
-        let html = `<div class="row my-3">
-                        <div class="col-md-9 col-lg-9">
-                            <b class="me-4">${articleComment.nickname}</b>
-                            <time>${articleComment.lastModifiedAt}</time>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control w-90 articleCommentContent" value="${articleComment.articleCommentContent}" disabled="disabled" id="articleCommentContent_${articleComment.articleCommentId}">`;
 
-        if(articleComment.userId === signInUserId) {
-            html += `
-                                <button class="btn btn-secondary btn-sm" type="button" onclick="editMode(this, ${articleComment.articleCommentId})">수정모드</button>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-3 col-lg-3 text-center">
-                            <br>
-                            <button class="btn btn-warning btn-sm visually-hidden" type="button" id="editBtn_${articleComment.articleCommentId}" onclick="editArticleComment(${articleComment.articleCommentId})">수정</button>
-                            <button class="btn btn-danger  btn-sm" type="button" onclick="removeArticleComment(${articleComment.articleCommentId})">삭제</button>
-                        </div>`;
+        let html = setArticleCommentDom(articleComment);
+        if(articleComment.childArticleComments.length > 0) {
+            let childArticleCommentsDom = setChildArticleCommentsDom(articleComment.childArticleComments);
+            html += childArticleCommentsDom;
         }
 
-        html += `</div><hr>`;
+        html += `<div class="childArticleCommentWriteArea ps-5">
+                    <div class="row my-3">
+                        <div class="col-md-9 col-lg-9">
+                            <div class="form-input">
+                                <label>대댓글을 작성해주세요.</label>
+                                <div class="input-items default">
+                                    <textarea id="article-comment-content_${articleComment.articleCommentId}" style="height: 100px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 text-center">
+                            <div class="form-input rounded-buttons">
+                                <br><br>
+                                <button class="btn btn-primary btn-sm" type="button" onclick="createNewArticleComment(${articleComment.articleCommentId});">대댓글</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>`;
 
         newList.innerHTML = html;
         articleCommentArea.appendChild(newList);
     });
 }
-function drawArticleCommentPagination(paginationResponse) {
-    let articleCommentPaginationArea = document.getElementById('articleCommentPaginationArea');
-    articleCommentPaginationArea.innerHTML = "";
+function setArticleCommentDom(articleComment) {
+    let html = `<div class="row my-3">
+                    <div class="col-md-9 col-lg-9">
+                        <b class="me-4">${articleComment.nickname}</b>
+                        <time>${articleComment.lastModifiedAt}</time>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control w-90 articleCommentContent" value="${articleComment.articleCommentContent}" disabled="disabled" id="articleCommentContent_${articleComment.articleCommentId}">`;
 
-    let html = `<ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" onclick="movePage(${paginationResponse.prevPage})" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">이전글</span>
-                        </a>
-                    </li>
+    if(articleComment.userId === signInUserId) {
+        html += `            <button class="btn btn-secondary btn-sm" type="button" onclick="editMode(this, ${articleComment.articleCommentId}, ${articleComment.parentArticleCommentId})">수정모드</button>`;
+    }
+        html += `       </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 text-center">`;
 
-                    <li class="page-item">
-                        <a class="page-link" onclick="movePage(${paginationResponse.nextPage})" aria-label="Next">
-                            <span class="sr-only">다음글</span>
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>`;
-
-    articleCommentPaginationArea.innerHTML = html;
-}
-function movePage(pageNumber) {
-    if (pageNumber === offset) {
-        return;
+    if(articleComment.userId === signInUserId) {
+        html += `       <br>
+                        <button class="btn btn-warning btn-sm visually-hidden" type="button" id="editBtn_${articleComment.articleCommentId}" onclick="editArticleComment(${articleComment.articleCommentId})">수정</button>
+                        <button class="btn btn-danger  btn-sm" type="button" onclick="removeArticleComment(${articleComment.articleCommentId})">삭제</button>`;
     }
 
-    offset = pageNumber;
-    findAllArticleCommentsUnderArticle();
+    html += `        </div>
+                </div>`;
+
+    return html;
 }
-function createNewArticleComment() {
-    let articleCommentContent = document.getElementById('article-comment-content').value;
+function setChildArticleCommentsDom(childArticleComments) {
+    let html = `<div class="childArticleCommentArea ps-5">`;
+    childArticleComments.forEach(childArticleComment => {
+        allChildArticleComments.push(childArticleComment);
+        html += setArticleCommentDom(childArticleComment);
+    });
+
+    html += '</div>';
+
+    return html;
+}
+function createNewArticleComment(parentArticleCommentId) {
+    let articleCommentContent = parentArticleCommentId == null ? document.getElementById('article-comment-content').value : document.getElementById(`article-comment-content_${parentArticleCommentId}`).value;
     if(articleCommentContent.trim() === '' || articleCommentContent.length === 0) {
         alert("댓글을 작성해주세요.");
         return;
     }
 
     let createDto = {
+        'parentArticleCommentId' : parentArticleCommentId,
         'content' : articleCommentContent
     }
 
     callCreateArticleCommentApi(createDto).then(response => {
         if (response.status === 200) {
             document.getElementById('article-comment-content').value = '';
-            offset = 1;
             findAllArticleCommentsUnderArticle();
         }
         if(response.status === 401) {
@@ -104,20 +115,20 @@ function createNewArticleComment() {
         }
     });
 }
-function editMode(obj, articleCommentId) {
+function editMode(obj, articleCommentId, parentArticleCommentId) {
     let target = obj.previousElementSibling;
     let editBtn = document.getElementById(`editBtn_${articleCommentId}`);
 
     obj.innerText === '수정모드' ? obj.innerText = '수정취소' : obj.innerText = '수정모드';
-    target.disabled ? target.disabled = false : articleCommentInputReset(target, articleCommentId);
+    target.disabled ? target.disabled = false : articleCommentInputReset(target, articleCommentId, parentArticleCommentId);
     editBtn.classList.contains('visually-hidden') ? editBtn.className = 'btn btn-warning btn-sm' : editBtn.className += ' visually-hidden';
 }
-function articleCommentInputReset(target, articleCommentId) {
-    target.value = findRawArticleCommentContent(articleCommentId);
+function articleCommentInputReset(target, articleCommentId, parentArticleCommentId) {
+    target.value = findRawArticleCommentContent(articleCommentId, parentArticleCommentId);
     target.disabled = true;
 }
-function findRawArticleCommentContent(articleCommentId) {
-    let filteredArticleComment = articleComments.filter(ac => ac.articleCommentId === articleCommentId);
+function findRawArticleCommentContent(articleCommentId, parentArticleCommentId) {
+    let filteredArticleComment = (parentArticleCommentId == null) ? articleComments.filter(ac => ac.articleCommentId === articleCommentId) : allChildArticleComments.filter(ac => ac.articleCommentId === articleCommentId);
     return filteredArticleComment[0].articleCommentContent;
 }
 function editArticleComment(articleCommentId) {
@@ -146,7 +157,6 @@ function editArticleComment(articleCommentId) {
 function removeArticleComment(articleCommentId) {
     callRemoveArticleCommentApi(articleCommentId).then(response => {
         if (response.status === 200) {
-            offset = 1;
             findAllArticleCommentsUnderArticle();
         }
         if(response.status === 400) {
