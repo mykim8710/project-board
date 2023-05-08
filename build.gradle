@@ -45,6 +45,8 @@ dependencies {
     // Java Simplified Encryption : Jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 
+    // spring security - oauth client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
