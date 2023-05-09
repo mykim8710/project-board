@@ -1,9 +1,8 @@
 package io.mykim.projectboard.global.config.security;
 
-import io.mykim.projectboard.global.config.security.handler.CustomAccessDeniedHandler;
-import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationEntryPoint;
-import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationFailureHandler;
-import io.mykim.projectboard.global.config.security.handler.CustomAuthenticationSuccessHandler;
+import io.mykim.projectboard.global.config.security.handler.*;
+import io.mykim.projectboard.global.config.security.service.CustomOAuth2UserDetailsService;
+import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizationFailureHandler;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -27,7 +27,14 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity // Spring Security 활성화 => 기본 스프링 필터체인에 등록
 @EnableGlobalMethodSecurity(securedEnabled = true) // secure annotation 활성화
 public class SpringSecurityConfig {
-    // user password encoder 빈등록
+    //private final CustomOAuth2UserDetailsService customOAuth2UserDetailsService;
+    private final UserRepository userRepository;
+
+    @Bean
+    public CustomOAuth2UserDetailsService customOAuth2UserDetailsService() {
+        return new CustomOAuth2UserDetailsService(userRepository, passwordEncoder());
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -80,6 +87,17 @@ public class SpringSecurityConfig {
                 .invalidateHttpSession(true)	 // 로그아웃 후 세션 전체 삭제 여부
                 .deleteCookies("JSESSIONID"); // 로그아웃 후 cookie 삭제
 
+        // oauth 설정
+        httpSecurity
+                .oauth2Login() // oauth2 로그인기능 설정의 진입점
+                    .userInfoEndpoint() // oauth2 로그인 성공이후 사용자 정보를 가져올때의 설정들을 담당
+                    .userService(customOAuth2UserDetailsService())
+
+
+
+
+        ; // 소셜 로그인 성공 시 후속조치를 진행할 UserService 인터페이스 구현체를 등록(소셜 서비스 에서 사용자정보를 가졍노 상태에서 추가로 진행하고자하는 기능들을 명시)
+
         return httpSecurity.build();
     }
 
@@ -107,4 +125,11 @@ public class SpringSecurityConfig {
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
+
+
+
+//    @Bean
+//    public OAuth2AuthorizationFailureHandler oAuth2AuthorizationFailureHandler() {
+//        return new CustomOAuth2AuthenticationFailureHandler();
+//    }
 }
