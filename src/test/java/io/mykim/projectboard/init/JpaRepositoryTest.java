@@ -2,8 +2,6 @@ package io.mykim.projectboard.init;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.entity.Hashtag;
-import io.mykim.projectboard.article.service.HashtagService;
-import io.mykim.projectboard.global.config.jpa.JpaConfig;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;

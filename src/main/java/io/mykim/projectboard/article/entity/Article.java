@@ -2,7 +2,8 @@ package io.mykim.projectboard.article.entity;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.global.config.jpa.BaseEntity;
+import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.List;
         indexes = {
                 @Index(columnList = "article_title")
         })
-public class Article extends BaseEntity {
+public class Article extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id", nullable = false)
@@ -30,6 +31,11 @@ public class Article extends BaseEntity {
     private String title;
     @Column(name = "article_content", nullable = false, length = 10000)
     private String content;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User createdBy;
 
 
     // [양방향 매핑]

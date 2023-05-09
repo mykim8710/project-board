@@ -1,6 +1,7 @@
 package io.mykim.projectboard.article.entity;
 
-import io.mykim.projectboard.global.config.jpa.BaseEntity;
+import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Set;
         indexes = {
                 @Index(columnList = "article_comment_content")
         })
-public class ArticleComment extends BaseEntity {
+public class ArticleComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_comment_id", nullable = false)
@@ -26,6 +27,11 @@ public class ArticleComment extends BaseEntity {
 
     @Column(name = "article_comment_content", nullable = false, length = 500)
     private String content;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User createdBy;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
