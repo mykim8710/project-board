@@ -10,12 +10,11 @@
             </ul>
 
             <div class="text-end" sec:authorize="isAnonymous()">
-                <button type="button" class="btn btn-outline-light me-2 btn-sm" onclick="location.href='/users/sign-up'">Sign-up</button>
                 <button type="button" class="btn btn-warning btn-sm" onclick="location.href='/users/sign-in'">Sign-in</button>
             </div>
 
             <div class="text-end" sec:authorize="isAuthenticated()">
-                <span>반갑습니다. <span th:text="${#authentication.principal.nickname}">mykim</span> 님</span>
+                <span>반갑습니다. <span th:text="${#authentication.principal.user.nickname}">mykim</span> 님</span>
 
                 <form th:action="@{/logout}" th:method="post">
                     <button type="submit" class="btn btn-warning btn-sm">Sign-out</button>

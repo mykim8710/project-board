@@ -22,27 +22,13 @@ public class User extends BaseTimeEntity {
     private String password;
     @Column(name = "user_nickname", length = 100, unique = true, nullable = false)
     private String nickname;
-    @Column(name = "user_email", length = 100, unique = true, nullable = false)
+    @Column(name = "user_email", length = 100, nullable = false)
     private String email;
     @Column(name = "user_memo", length = 255)
     private String memo;
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", length = 50)
-    private UserType userType;
-
-    // [양방향 매핑]
-    // user - articles, 1 : N
-    // 연관관계의 주인 : articles이 userId(fk)를 가짐
-//    @ToString.Exclude
-//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 게시글도 삭제
-//    private List<Article> articles = new ArrayList<>();
-
-    // [양방향 매핑]
-    // user - articleComment, 1 : N
-    // 연관관계의 주인 : articleComment가 userId(fk)를 가짐
-//    @ToString.Exclude
-//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL) // 유저가 지워지면 유저와 연관된 댓글도 삭제
-//    private List<ArticleComment> articleComments = new ArrayList<>();
+    @Column(name = "user_role", length = 50)
+    private UserRole userRole;
 
     private User(UserCreateDto createDto) {
         this.username = createDto.getUsername();
@@ -50,24 +36,24 @@ public class User extends BaseTimeEntity {
         this.nickname = createDto.getNickname();
         this.email = createDto.getEmail();
         this.memo = createDto.getMemo();
-        this.userType = UserType.GENERAL;
+        this.userRole = UserRole.ROLE_USER;
     }
 
-    private User(Long id, String username, String password, String nickname, String email, String memo, UserType userType) {
+    private User(Long id, String username, String password, String nickname, String email, String memo, UserRole userRole) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.memo = memo;
-        this.userType = userType;
+        this.userRole = userRole;
     }
 
     public static User of(UserCreateDto createDto) {
         return new User(createDto);
     }
 
-    public static User of(Long id, String username, String password, String nickname, String email, String memo, UserType userType) {
-        return new User(id, username, password, nickname, email, memo, userType);
+    public static User of(Long id, String username, String password, String nickname, String email, String memo, UserRole userRole) {
+        return new User(id, username, password, nickname, email, memo, userRole);
     }
 }
