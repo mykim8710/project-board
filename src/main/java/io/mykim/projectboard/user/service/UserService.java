@@ -50,12 +50,12 @@ public class UserService {
                     throw new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_NICKNAME);
                 }
                 break;
-            case "email":
-                Boolean existsByEmail = userRepository.existsByEmail(duplicateCheckDto.getKeyword());
-                if(existsByEmail) {
-                    throw new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
-                }
-                break;
+//            case "email":
+//                Boolean existsByEmail = userRepository.existsByEmail(duplicateCheckDto.getKeyword());
+//                if(existsByEmail) {
+//                    throw new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
+//                }
+//                break;
             default:
                 throw new NotValidRequestException(CustomErrorCode.NOT_VALID_REQUEST);
         }

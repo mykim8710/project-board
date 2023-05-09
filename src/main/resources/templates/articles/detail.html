@@ -17,7 +17,7 @@
     let signInUserId = 0;
     [/]
     [# sec:authorize="isAuthenticated()"]
-    let signInUserId = [[${#authentication.principal.id}]];
+    let signInUserId = [[${#authentication.principal.user.id}]];
     [/]
 </script>
 
@@ -76,13 +76,13 @@
                             </div>
                             <br>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.id} == ${article.userId}">
                                 <button class="btn primary-btn rounded-full"
                                         th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},page=${param.page},size=${param.size},searchType=${param.searchType},searchKeyword=${param.searchKeyword},sort=${param.sort})}'|"
                                         type="button">게시글 수정</button>
                             </div>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.id} == ${article.userId}">
                                 <form id="search-form" th:action="@{/articles/{id}/delete(id=${article.id})}" th:method="post">
                                     <button class="btn primary-btn rounded-full" type="submit">게시글 삭제</button>
                                 </form>
