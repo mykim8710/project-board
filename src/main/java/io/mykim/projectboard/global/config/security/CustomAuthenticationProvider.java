@@ -1,5 +1,7 @@
 package io.mykim.projectboard.global.config.security;
 
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
+import io.mykim.projectboard.global.config.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,12 +10,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 // 화면에서 입력한 로그인 정보와 DB에서 가져온 사용자의 정보를 비교해주는 interface >> authenticate 메서드
+// not used
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
