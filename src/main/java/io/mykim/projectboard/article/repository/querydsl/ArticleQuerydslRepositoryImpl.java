@@ -29,7 +29,7 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
     @Override
     public Page<ResponseArticleFindDto> findAllArticle(Pageable pageable, ArticleSearchCondition searchCondition) {
         JPQLQuery<ResponseArticleFindDto> jpqlQuery = from(article)
-                .leftJoin(article.createdBy, user)
+                .leftJoin(article.user, user)
                 .leftJoin(article.articleHashTags, articleHashTag)
                 .leftJoin(articleHashTag.hashtag, hashtag)
                 .groupBy(article.id)
@@ -41,8 +41,8 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
                                 article.content.as("content"),
                                 article.createdAt.as("createdAt"),
                                 article.lastModifiedAt.as("lastModifiedAt"),
-                                article.createdBy.id.as("userId"),
-                                article.createdBy.nickname.as("nickname"),
+                                article.user.id.as("userId"),
+                                article.user.nickname.as("nickname"),
                                 Expressions.stringTemplate("group_concat({0})", hashtag.name).as("hashtags")
                         )
                 );
@@ -86,7 +86,7 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
         return !StringUtils.hasLength(keyword) ? null : article.content.contains(keyword);
     }
     private BooleanExpression articleCreatedByLike(String keyword) {
-        return !StringUtils.hasLength(keyword) ? null : article.createdBy.nickname.contains(keyword);
+        return !StringUtils.hasLength(keyword) ? null : article.user.nickname.contains(keyword);
     }
     private BooleanExpression articleHashtagLike(String keyword) {
         return !StringUtils.hasLength(keyword) ? null : Expressions.stringTemplate("group_concat({0})", hashtag.name).contains(keyword);
