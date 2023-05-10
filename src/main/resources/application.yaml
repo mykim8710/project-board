@@ -25,7 +25,7 @@ spring:
       uri: http://localhost:8200
       scheme: http
       authentication: TOKEN # 인증방식 설정(token 방식 사용, 상대적으로 보안에 약함)
-      token: hvs.uErBbqxBZ8kcA67pNs9nwURj
+      token: root
   config.import: vault://
 
   security:
