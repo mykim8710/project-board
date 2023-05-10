@@ -11,6 +11,7 @@ import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.repository.ArticleHashtagRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.global.pageable.PageableRequestCondition;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
@@ -72,20 +73,20 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long createArticle(ArticleCreateDto createDto) {
+    public Long createArticle(ArticleCreateDto createDto, User user) {
         Set<Hashtag> hashtags = hashtagService.renewHashtags(createDto.getHashtags());
 
         // create entity
-        Article article = Article.createArticle(createDto, hashtags);
+        Article article = Article.createArticle(createDto, hashtags, user);
         return articleRepository.save(article).getId();
     }
 
     @Transactional
     public void editArticle(ArticleEditDto editDto, Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
-        confirmArticleCreatedUserId(findArticle.getCreatedBy().getId());
+        confirmArticleCreatedUserId(findArticle.getUser().getId());
 
-        // 기존 데이터 삭제
+        // 기존 Article - Hashtag 데이터 삭제
         articleHashtagRepository.deleteAllByArticleId(articleId);
         articleHashtagRepository.flush();
 
@@ -96,7 +97,7 @@ public class ArticleService {
     @Transactional
     public void removeArticle(Long articleId) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
-        confirmArticleCreatedUserId(findArticle.getCreatedBy().getId());
+        confirmArticleCreatedUserId(findArticle.getUser().getId());
 
         // todo : 게시글 하부 ArticleComment(자식 ArticleComment,,,,), ArticleHashtag 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
         articleRepository.delete(findArticle);
@@ -104,8 +105,8 @@ public class ArticleService {
 
     private Long getSignInUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return user.getId();
+        PrincipalDetail principalDetail = (PrincipalDetail)authentication.getPrincipal();
+        return principalDetail.getUser().getId();
     }
 
     private void confirmArticleCreatedUserId(Long articleCreatedUserId) {

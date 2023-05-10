@@ -58,9 +58,9 @@ public class ResponseArticleFindDto {
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();
         this.lastModifiedAt = article.getLastModifiedAt();
-        this.userId = article.getCreatedBy().getId();
-        this.nickname = article.getCreatedBy().getNickname();
-        this.email = article.getCreatedBy().getEmail();
+        this.userId = article.getUser().getId();
+        this.nickname = article.getUser().getNickname();
+        this.email = article.getUser().getEmail();
         this.hashtags = articleHashTags.size() == 0 ? new ArrayList<>() : articleHashTags
                                                                             .stream()
                                                                             .map(articleHashTag -> articleHashTag.getHashtag().getName())

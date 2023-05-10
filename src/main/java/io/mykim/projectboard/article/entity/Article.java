@@ -35,7 +35,7 @@ public class Article extends BaseTimeEntity {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User createdBy;
+    private User user;
 
 
     // [양방향 매핑]
@@ -53,9 +53,10 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleHashTag> articleHashTags = new ArrayList<>();
 
-    private Article(ArticleCreateDto createDto) {
+    private Article(ArticleCreateDto createDto, User user) {
         this.title = createDto.getTitle();
         this.content = createDto.getContent();
+        this.user = user;
     }
 
     public void addArticleHashTag(ArticleHashTag articleHashTag) {
@@ -63,8 +64,8 @@ public class Article extends BaseTimeEntity {
         articleHashTag.setArticle(this);
     }
 
-    public static Article createArticle(ArticleCreateDto createDto, Collection<Hashtag> hashtags) {
-        Article article = new Article(createDto);
+    public static Article createArticle(ArticleCreateDto createDto, Collection<Hashtag> hashtags, User user) {
+        Article article = new Article(createDto, user);
 
         for (Hashtag hashtag : hashtags) {
             ArticleHashTag articleHashTag = ArticleHashTag.createArticleHashTag(hashtag);

@@ -24,7 +24,7 @@ public class ResponseArticleForEditDto {
         this.id = article.getId();
         this.title = article.getTitle();
         this.content = article.getContent();
-        this.userId = article.getCreatedBy().getId();
+        this.userId = article.getUser().getId();
         this.hashtags = articleHashTags.size() == 0 ? "" : articleHashTags
                                                                 .stream()
                                                                 .map(articleHashTag -> "#".concat(articleHashTag.getHashtag().getName()))

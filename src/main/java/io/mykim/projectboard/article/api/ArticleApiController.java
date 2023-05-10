@@ -4,6 +4,7 @@ import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
 import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleService;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,19 +47,13 @@ public class ArticleApiController {
 
     // 게시글 저장
     @PostMapping("/api/v1/articles")
-    public ResponseEntity<CommonResponse> createArticleApi(@RequestBody @Valid ArticleCreateDto createDto) {
+    public ResponseEntity<CommonResponse> createArticleApi(@RequestBody @Valid ArticleCreateDto createDto, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         log.info("[POST] /api/v1/articles  =>  create Article api, ArticleCreateDto = {}", createDto);
-        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.INSERT_OK, articleService.createArticle(createDto));
+        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.INSERT_OK, articleService.createArticle(createDto, principalDetail.getUser()));
         return ResponseEntity
                 .status(commonResponse.getStatus())
                 .body(commonResponse);
     }
-
-
-
-
-
-
 
 
     // 게시글 단건 수정
