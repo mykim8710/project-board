@@ -1,7 +1,6 @@
 package io.mykim.projectboard.global.config.security;
 
 import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
-import io.mykim.projectboard.global.config.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

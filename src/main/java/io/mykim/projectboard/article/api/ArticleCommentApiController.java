@@ -3,6 +3,7 @@ package io.mykim.projectboard.article.api;
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.service.ArticleCommentService;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,11 +46,11 @@ public class ArticleCommentApiController {
 
     // 게시글 하부 댓글 저장
     @PostMapping("/api/v1/articles/{articleId}/article-comments")
-    public ResponseEntity<CommonResponse> createArticleCommentApi(@PathVariable Long articleId, @RequestBody @Valid ArticleCommentCreateDto createDto) {
+    public ResponseEntity<CommonResponse> createArticleCommentApi(@PathVariable Long articleId,
+                                                                  @RequestBody @Valid ArticleCommentCreateDto createDto,
+                                                                  @AuthenticationPrincipal PrincipalDetail principalDetail) {
         log.info("[POST] /api/v1/articles/{}/article-comments  =>  create ArticleComment api, ArticleCommentCreateDto = {}", articleId, createDto);
-
-
-        CommonResponse response = new CommonResponse(CustomSuccessCode.INSERT_OK, articleCommentService.createNewArticleComment(createDto, articleId));
+        CommonResponse response = new CommonResponse(CustomSuccessCode.INSERT_OK, articleCommentService.createNewArticleComment(createDto, articleId, principalDetail.getUser()));
         return ResponseEntity
                 .status(response.getStatus())
                 .body(response);

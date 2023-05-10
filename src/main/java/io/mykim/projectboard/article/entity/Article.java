@@ -2,7 +2,8 @@ package io.mykim.projectboard.article.entity;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.global.config.jpa.BaseEntity;
+import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.List;
         indexes = {
                 @Index(columnList = "article_title")
         })
-public class Article extends BaseEntity {
+public class Article extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id", nullable = false)
@@ -30,6 +31,11 @@ public class Article extends BaseEntity {
     private String title;
     @Column(name = "article_content", nullable = false, length = 10000)
     private String content;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User user;
 
 
     // [양방향 매핑]
@@ -47,9 +53,10 @@ public class Article extends BaseEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleHashTag> articleHashTags = new ArrayList<>();
 
-    private Article(ArticleCreateDto createDto) {
+    private Article(ArticleCreateDto createDto, User user) {
         this.title = createDto.getTitle();
         this.content = createDto.getContent();
+        this.user = user;
     }
 
     public void addArticleHashTag(ArticleHashTag articleHashTag) {
@@ -57,8 +64,8 @@ public class Article extends BaseEntity {
         articleHashTag.setArticle(this);
     }
 
-    public static Article createArticle(ArticleCreateDto createDto, Collection<Hashtag> hashtags) {
-        Article article = new Article(createDto);
+    public static Article createArticle(ArticleCreateDto createDto, Collection<Hashtag> hashtags, User user) {
+        Article article = new Article(createDto, user);
 
         for (Hashtag hashtag : hashtags) {
             ArticleHashTag articleHashTag = ArticleHashTag.createArticleHashTag(hashtag);

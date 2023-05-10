@@ -11,6 +11,7 @@ import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.article.repository.HashtagRepository;
 import io.mykim.projectboard.config.WithAuthUser;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
@@ -23,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -39,18 +44,10 @@ import java.util.stream.IntStream;
 class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
-
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     @Autowired
     private HashtagRepository hashtagRepository;
-
-    @Autowired
-    private EntityManager em;
 
     @Test
     @DisplayName("새로운 Article 생성하고 저장한다.")
@@ -66,9 +63,10 @@ class ArticleServiceTest {
 
         String hashtags = hashtag1.concat(hashtag2).concat(hashtag3);
         ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtags);
+        User signInUser = getSignInUser();
 
         // when
-        Long articleId = articleService.createArticle(createDto);
+        Long articleId = articleService.createArticle(createDto, signInUser);
 
         // then
         Article findArticle = articleRepository.findById(articleId).get();
@@ -101,7 +99,6 @@ class ArticleServiceTest {
         // when
         ResponseArticleFindDto findArticle = articleService.findOneArticle(newArticle.getId());
 
-
         // then
         Assertions.assertThat(findArticle).isNotNull();
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(title);
@@ -126,7 +123,7 @@ class ArticleServiceTest {
     @WithAuthUser(username = "test")
     void findAllArticleTest() throws Exception {
         // given
-        createUser();
+        //createUser();
 
         String hashtag1 = "hashtag";
         String hashtag2 = "red";
@@ -204,7 +201,7 @@ class ArticleServiceTest {
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), getSignInUser());
         articleRepository.save(article);
         return article;
     }
@@ -219,27 +216,14 @@ class ArticleServiceTest {
 
     private Article createNewArticle(String title, String content, Set<Hashtag> hashtags) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, hashtags);
+        Article article = Article.createArticle(articleCreateDto, hashtags, getSignInUser());
         articleRepository.save(article);
         return article;
     }
 
-    private User createUser() {
-        String username = "test";
-        String password = "1234";
-        String email = "email@eamil.com";
-        String nickname = "nickname";
-        String memo = "memo";
-
-        UserCreateDto createDto = UserCreateDto.builder()
-                                                .username(username)
-                                                .password(password)
-                                                .email(email)
-                                                .nickname(nickname)
-                                                .memo(memo)
-                                                .build();
-
-        User user = User.of(createDto);
-        return userRepository.save(user);
+    private User getSignInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetail principal = (PrincipalDetail)authentication.getPrincipal();
+        return principal.getUser();
     }
 }

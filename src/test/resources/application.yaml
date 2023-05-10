@@ -23,6 +23,48 @@ spring:
     init:
       mode: never
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope:
+              - test
+
+          naver:
+            client-id: test
+            client-secret: test
+            redirect-uri: test
+            authorization-grant-type: test
+            client-name: test
+            scope:
+              - test
+
+          kakao:
+            client-id: test
+            client-secret: test
+            authorization-grant-type: test
+            redirect-uri: test
+            client-authentication-method: test
+            client-name: test
+            scope:
+              - test
+
+        provider:
+          naver:
+            authorization-uri: test
+            token-uri: test
+            user-info-uri: test
+            user-name-attribute: test
+
+          kakao:
+            authorization-uri: test
+            token-uri: test
+            user-info-uri: test
+            user-name-attribute: test
+
 logging:
   level:
     org.hibernate.SQL: debug

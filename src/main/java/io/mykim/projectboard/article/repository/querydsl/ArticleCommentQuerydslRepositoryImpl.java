@@ -31,7 +31,7 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
                             articleComment.parentArticleComment.id.as("parentArticleCommentId")
                     ))
                     .from(articleComment)
-                    .leftJoin(articleComment.createdBy, user)
+                    .leftJoin(articleComment.user, user)
                     .where(articleComment.article.id.eq(articleId))
                     .orderBy(articleComment.parentArticleComment.id.asc().nullsFirst(), articleComment.createdAt.desc())
                     .fetch();

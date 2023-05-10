@@ -9,6 +9,7 @@ import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
 import io.mykim.projectboard.user.dto.request.UserCreateDto;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -61,7 +64,7 @@ class ArticleCommentServiceTest {
         ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,commentContent);
 
         // when
-        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
+        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId(), getSignInUser());
 
         // then
         ArticleComment findArticleComment = articleCommentRepository.findById(newArticleCommentId).get();
@@ -80,7 +83,7 @@ class ArticleCommentServiceTest {
 
         // when & then
         Assertions.assertThatThrownBy(() ->{
-            articleCommentService.createNewArticleComment(createDto, notFoundArticleId);
+            articleCommentService.createNewArticleComment(createDto, notFoundArticleId, getSignInUser());
         }).isInstanceOf(NotFoundException.class)
                 .hasMessage(CustomErrorCode.NOT_FOUND_ARTICLE.getMessage());
     }
@@ -195,7 +198,7 @@ class ArticleCommentServiceTest {
 
         String commentContent = "content";
         ArticleCommentCreateDto createDto = new ArticleCommentCreateDto(null,commentContent);
-        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId());
+        Long newArticleCommentId = articleCommentService.createNewArticleComment(createDto, article.getId(), getSignInUser());
 
         // when
         ResponseArticleCommentFindDto findArticleCommentDto = articleCommentService.findOneArticleCommentByIdUnderArticle(article.getId(), newArticleCommentId);
@@ -230,25 +233,31 @@ class ArticleCommentServiceTest {
         List<ResponseArticleCommentFindDto> result = articleCommentService.findAllArticleCommentUnderArticle(article.getId());
 
         // then
-        Assertions.assertThat(result.get(0).getArticleCommentContent()).isEqualTo("reply_30");
+        Assertions.assertThat(result.get(0).getArticleCommentContent()).isEqualTo("reply_1");
     }
 
 
     private ArticleComment createNewArticleComment(Article article, String commentContent) {
-        ArticleComment articleComment = ArticleComment.of(commentContent, article);
+        ArticleComment articleComment = ArticleComment.createArticleComment(commentContent, article, getSignInUser());
         return articleCommentRepository.save(articleComment);
     }
 
     private ArticleComment createNewArticleCommentWithParentArticleComment(Article article, String commentContent, ArticleComment parentArticleComment) {
-        ArticleComment articleComment = ArticleComment.of(commentContent, article);
+        ArticleComment articleComment = ArticleComment.createArticleComment(commentContent, article, getSignInUser());
         parentArticleComment.addChildArticleComment(articleComment);
         return articleCommentRepository.save(articleComment);
     }
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), getSignInUser());
         articleRepository.save(article);
         return article;
+    }
+
+    private User getSignInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetail principal = (PrincipalDetail)authentication.getPrincipal();
+        return principal.getUser();
     }
 }

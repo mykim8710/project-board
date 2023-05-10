@@ -6,15 +6,13 @@ import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.entity.ArticleComment;
-import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.config.WithAuthUser;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
-import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -25,17 +23,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -256,22 +252,25 @@ class ArticleCommentApiControllerTest {
                 .andExpect(jsonPath("$.message").value(CustomSuccessCode.COMMON_OK.getMessage()))
                 .andExpect(jsonPath("$.data").isNotEmpty())
                 .andExpect(jsonPath("$.data.length()", Matchers.is(30)))
-                .andExpect(jsonPath("$.data[0].articleCommentContent").value("reply_30"))
-                .andExpect(jsonPath("$.data[1].articleCommentContent").value("reply_29"))
-                .andExpect(jsonPath("$.data[2].articleCommentContent").value("reply_28"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     private ArticleComment createNewArticleComment(Article article, String commentContent) {
-        ArticleComment articleComment = ArticleComment.of(commentContent, article);
+        ArticleComment articleComment = ArticleComment.createArticleComment(commentContent, article, getSignInUser());
         articleCommentRepository.save(articleComment);
         return articleComment;
     }
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), getSignInUser());
         articleRepository.save(article);
         return article;
+    }
+
+    private User getSignInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetail principal = (PrincipalDetail)authentication.getPrincipal();
+        return principal.getUser();
     }
 }

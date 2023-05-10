@@ -1,6 +1,7 @@
 package io.mykim.projectboard.user.controller;
 
 import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
+import io.mykim.projectboard.user.repository.UserRepository;
 import io.mykim.projectboard.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -17,6 +19,7 @@ import static org.springframework.http.MediaType.TEXT_HTML;
 
 @DisplayName("UserViewController 테스트 - 사용자 View")
 @Import(SpringSecurityConfig.class)
+@MockBean(JpaMetamodelMappingContext.class)
 @WebMvcTest(UserViewController.class)
 class UserViewControllerTest {
 
@@ -25,6 +28,9 @@ class UserViewControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("[VIEW] [GET] 회원가입 페이지 - 정상호출")

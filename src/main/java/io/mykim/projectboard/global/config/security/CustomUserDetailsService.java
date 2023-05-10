@@ -1,5 +1,6 @@
 package io.mykim.projectboard.global.config.security;
 
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.user.entity.User;
 import io.mykim.projectboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

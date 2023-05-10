@@ -1,10 +1,8 @@
 package io.mykim.projectboard.init;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
-import io.mykim.projectboard.article.entity.Hashtag;
-import io.mykim.projectboard.article.service.HashtagService;
-import io.mykim.projectboard.global.config.jpa.JpaConfig;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import org.assertj.core.api.Assertions;
@@ -13,15 +11,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Disabled("초기 설정 시 진행했던 테스트이므로 개발을 진행됨에 따라 해당 테스트는 진행안함")
 @DisplayName("JPA 연결 테스트")
-@Import(JpaConfig.class)  // auding 관련 config import
 @DataJpaTest
 // JPA에 관련된 요소들만 테스트하기 위한 어노테이션으로 JPA 테스트에 관련된 설정들만 적용
 // 메모리상에 내부 데이터베이스를 생성하고 @Entity 클래스들을 등록하고 JPA Repository 설정들을 해준다.
@@ -112,6 +109,6 @@ class JpaRepositoryTest {
                                         .mapToObj(i-> Hashtag.of("blue_"+i))
                                         .collect(Collectors.toUnmodifiableSet());
 
-        return Article.createArticle(articleCreateDto, hashtags);
+        return Article.createArticle(articleCreateDto, hashtags, null);
     }
 }

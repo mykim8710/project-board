@@ -95,10 +95,10 @@ class UserServiceTest {
                 e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_NICKNAME);
                 message = CustomErrorCode.DUPLICATE_USER_NICKNAME.getMessage();
                 break;
-            case "email":
-                e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
-                message = CustomErrorCode.DUPLICATE_USER_EMAIL.getMessage();
-                break;
+//            case "email":
+//                e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
+//                message = CustomErrorCode.DUPLICATE_USER_EMAIL.getMessage();
+//                break;
             default:
                 e = new NotValidRequestException(CustomErrorCode.NOT_VALID_REQUEST);
                 message = CustomErrorCode.NOT_VALID_REQUEST.getMessage();

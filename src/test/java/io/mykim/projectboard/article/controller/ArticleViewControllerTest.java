@@ -1,7 +1,7 @@
 package io.mykim.projectboard.article.controller;
 
-import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleService;
@@ -9,6 +9,7 @@ import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.config.security.SpringSecurityConfig;
 import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.global.pageable.PageableRequestCondition;
+import io.mykim.projectboard.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -28,8 +30,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
-@DisplayName("ArticleViewController 테스트 - 게시글(댓글) View")
-@Import(SpringSecurityConfig.class)
+@DisplayName("ArticleViewController 테스트 - 게시글 View")
+@Import({SpringSecurityConfig.class})
+@MockBean(JpaMetamodelMappingContext.class)
 @WebMvcTest(ArticleViewController.class)
 // Application Context 완전하게 Start 시키지 않고 web layer를 테스트 하고 싶을 때
 class ArticleViewControllerTest {
@@ -37,6 +40,8 @@ class ArticleViewControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ArticleService articleService;
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("[VIEW] [GET] 게시글 목록 페이지 - 정상호출")

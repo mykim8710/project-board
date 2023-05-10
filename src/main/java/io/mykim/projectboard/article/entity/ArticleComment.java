@@ -1,6 +1,7 @@
 package io.mykim.projectboard.article.entity;
 
-import io.mykim.projectboard.global.config.jpa.BaseEntity;
+import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Set;
         indexes = {
                 @Index(columnList = "article_comment_content")
         })
-public class ArticleComment extends BaseEntity {
+public class ArticleComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_comment_id", nullable = false)
@@ -26,6 +27,11 @@ public class ArticleComment extends BaseEntity {
 
     @Column(name = "article_comment_content", nullable = false, length = 500)
     private String content;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User user;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,14 +48,15 @@ public class ArticleComment extends BaseEntity {
     @OneToMany(mappedBy = "parentArticleComment", cascade = CascadeType.REMOVE) // CascadeType.ALL : 해당 댓글이 지워지원 자식댓글들도 다 지워짐
     private Set<ArticleComment> childArticleComment = new LinkedHashSet<>();
 
-    private ArticleComment(String content, Article article, ArticleComment parentArticleComment) {
+    private ArticleComment(String content, Article article, User user, ArticleComment parentArticleComment) {
         this.content = content;
         this.article = article;
+        this.user = user;
         this.parentArticleComment = parentArticleComment;
     }
 
-    public static ArticleComment of(String content, Article article) {
-        return new ArticleComment(content, article, null);
+    public static ArticleComment createArticleComment(String content, Article article, User user) {
+        return new ArticleComment(content, article, user, null);
     }
 
     public void editArticleComment(String content) {
