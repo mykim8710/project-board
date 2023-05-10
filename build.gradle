@@ -28,6 +28,11 @@ repositories {
     mavenCentral()
 }
 
+// vault
+ext {
+    set('springCloudVersion', "2021.0.5")
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -48,6 +53,9 @@ dependencies {
     // spring security - oauth client
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    // vault
+    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -62,9 +70,15 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
+// vault
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
-    systemProperty "JASYPT_SECRET_KEY", findProperty('JASYPT_SECRET_KEY')
 }
 
 jar {
