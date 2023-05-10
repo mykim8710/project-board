@@ -270,7 +270,7 @@ class ArticleCommentApiControllerTest {
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), null);
         articleRepository.save(article);
         return article;
     }

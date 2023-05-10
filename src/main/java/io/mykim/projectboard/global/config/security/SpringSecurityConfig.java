@@ -27,7 +27,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity // Spring Security 활성화 => 기본 스프링 필터체인에 등록
 @EnableGlobalMethodSecurity(securedEnabled = true) // secure annotation 활성화
 public class SpringSecurityConfig {
-    //private final CustomOAuth2UserDetailsService customOAuth2UserDetailsService;
     private final UserRepository userRepository;
 
     @Bean
@@ -91,12 +90,7 @@ public class SpringSecurityConfig {
         httpSecurity
                 .oauth2Login() // oauth2 로그인기능 설정의 진입점
                     .userInfoEndpoint() // oauth2 로그인 성공이후 사용자 정보를 가져올때의 설정들을 담당
-                    .userService(customOAuth2UserDetailsService())
-
-
-
-
-        ; // 소셜 로그인 성공 시 후속조치를 진행할 UserService 인터페이스 구현체를 등록(소셜 서비스 에서 사용자정보를 가졍노 상태에서 추가로 진행하고자하는 기능들을 명시)
+                    .userService(customOAuth2UserDetailsService()) ; // 소셜 로그인 성공 시 후속조치를 진행할 UserService 인터페이스 구현체를 등록(소셜 서비스 에서 사용자정보를 가졍노 상태에서 추가로 진행하고자하는 기능들을 명시)
 
         return httpSecurity.build();
     }
@@ -126,10 +120,4 @@ public class SpringSecurityConfig {
         return new CustomAccessDeniedHandler();
     }
 
-
-
-//    @Bean
-//    public OAuth2AuthorizationFailureHandler oAuth2AuthorizationFailureHandler() {
-//        return new CustomOAuth2AuthenticationFailureHandler();
-//    }
 }

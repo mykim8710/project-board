@@ -8,8 +8,10 @@ import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleRepository;
 import io.mykim.projectboard.article.repository.HashtagRepository;
 import io.mykim.projectboard.config.WithAuthUser;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
+import io.mykim.projectboard.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -274,7 +278,7 @@ class ArticleApiControllerTest {
 
     private Article createNewArticle(String title, String content) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>());
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), getSignInUser());
         articleRepository.save(article);
         return article;
     }
@@ -289,9 +293,15 @@ class ArticleApiControllerTest {
 
     private Article createNewArticle(String title, String content, Set<Hashtag> hashtags) {
         ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
-        Article article = Article.createArticle(articleCreateDto, hashtags);
+        Article article = Article.createArticle(articleCreateDto, hashtags, getSignInUser());
         articleRepository.save(article);
         return article;
+    }
+
+    private User getSignInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetail principal = (PrincipalDetail)authentication.getPrincipal();
+        return principal.getUser();
     }
 
 }
