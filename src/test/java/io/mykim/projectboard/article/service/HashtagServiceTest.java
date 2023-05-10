@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 @DisplayName("HashtagService에 정의된 비지니스로직들을 테스트한다.")
 @Slf4j
 @Transactional
-@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
+@SpringBootTest
 class HashtagServiceTest {
     @Autowired
     private HashtagService hashtagService;

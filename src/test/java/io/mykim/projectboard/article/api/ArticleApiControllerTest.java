@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @Transactional
 @AutoConfigureMockMvc // @SpringBootTest MockMvc 객체사용
-@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
+@SpringBootTest//(properties = {"JASYPT_SECRET_KEY=test"}) : 테스트코드에 환경변수 삽입
 class ArticleApiControllerTest {
     @Autowired
     private MockMvc mockMvc;

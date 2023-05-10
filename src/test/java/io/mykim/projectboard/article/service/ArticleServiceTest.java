@@ -2,7 +2,6 @@ package io.mykim.projectboard.article.service;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
@@ -14,9 +13,7 @@ import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,11 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -40,7 +34,7 @@ import java.util.stream.IntStream;
 
 @DisplayName("ArticleService에 정의된 Article 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
 @Transactional
-@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
+@SpringBootTest
 class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
