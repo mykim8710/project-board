@@ -12,9 +12,7 @@ import io.mykim.projectboard.config.WithAuthUser;
 import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +21,6 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 @DisplayName("ArticleCommentService에 정의된 ArticleComment 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
 @Transactional
-@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
+@SpringBootTest
 class ArticleCommentServiceTest {
     @Autowired
     private ArticleCommentService articleCommentService;
@@ -233,7 +228,7 @@ class ArticleCommentServiceTest {
         List<ResponseArticleCommentFindDto> result = articleCommentService.findAllArticleCommentUnderArticle(article.getId());
 
         // then
-        Assertions.assertThat(result.get(0).getArticleCommentContent()).isEqualTo("reply_1");
+        Assertions.assertThat(result.size()).isEqualTo(30);
     }
 
 
