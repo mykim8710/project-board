@@ -7,6 +7,7 @@ import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotAllowedUserException;
@@ -43,9 +44,9 @@ public class ArticleCommentService {
     }
 
     @Transactional
-    public Long createNewArticleComment(ArticleCommentCreateDto createDto, Long articleId) {
+    public Long createNewArticleComment(ArticleCommentCreateDto createDto, Long articleId, User user) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
-        ArticleComment articleComment = ArticleComment.of(createDto.getContent(), findArticle);
+        ArticleComment articleComment = ArticleComment.createArticleComment(createDto.getContent(), findArticle, user);
 
         if(createDto.getParentArticleCommentId() != null) {
             ArticleComment parentArticleComment = articleCommentRepository.findById(createDto.getParentArticleCommentId()).orElseThrow(() -> new NotFoundException(NOT_FOUND_PARENT_ARTICLE_COMMENT));
@@ -61,7 +62,7 @@ public class ArticleCommentService {
         ArticleComment articleComment = articleCommentRepository.findArticleCommentByIdAndArticleId(articleId, articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
 
         // 본인이 작성한 댓글만 수정 가능
-        confirmArticleCommentCreatedUserId(articleComment.getCreatedBy().getId());
+        confirmArticleCommentCreatedUserId(articleComment.getUser().getId());
 
         articleComment.editArticleComment(editDto.getContent());
     }
@@ -71,7 +72,7 @@ public class ArticleCommentService {
         ArticleComment articleComment = articleCommentRepository.findArticleCommentByIdAndArticleId(articleId, articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
 
         // 본인이 작성한 댓글만 삭제 가능
-        confirmArticleCommentCreatedUserId(articleComment.getCreatedBy().getId());
+        confirmArticleCommentCreatedUserId(articleComment.getUser().getId());
 
         // todo : 자식댓글이 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
         articleCommentRepository.delete(articleComment);
@@ -79,8 +80,8 @@ public class ArticleCommentService {
 
     private Long getSignInUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return user.getId();
+        PrincipalDetail principalDetail = (PrincipalDetail)authentication.getPrincipal();
+        return principalDetail.getUser().getId();
     }
 
     private void confirmArticleCommentCreatedUserId(Long articleCommentCreatedUserId) {

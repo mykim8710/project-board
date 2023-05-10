@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -28,8 +29,8 @@ public class ResponseArticleCommentFindDto {
         this.articleCommentContent = articleComment.getContent();
         this.createdAt = articleComment.getCreatedAt();
         this.lastModifiedAt = articleComment.getLastModifiedAt();
-        this.userId = articleComment.getCreatedBy().getId();
-        this.nickname = articleComment.getCreatedBy().getNickname();
+        this.userId = articleComment.getUser().getId();
+        this.nickname = articleComment.getUser().getNickname();
         this.parentArticleCommentId = articleComment.getParentArticleComment() == null ? null : articleComment.getParentArticleComment().getId();
     }
 

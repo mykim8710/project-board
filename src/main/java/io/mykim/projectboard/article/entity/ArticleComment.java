@@ -31,7 +31,7 @@ public class ArticleComment extends BaseTimeEntity {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User createdBy;
+    private User user;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,14 +48,15 @@ public class ArticleComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentArticleComment", cascade = CascadeType.REMOVE) // CascadeType.ALL : 해당 댓글이 지워지원 자식댓글들도 다 지워짐
     private Set<ArticleComment> childArticleComment = new LinkedHashSet<>();
 
-    private ArticleComment(String content, Article article, ArticleComment parentArticleComment) {
+    private ArticleComment(String content, Article article, User user, ArticleComment parentArticleComment) {
         this.content = content;
         this.article = article;
+        this.user = user;
         this.parentArticleComment = parentArticleComment;
     }
 
-    public static ArticleComment of(String content, Article article) {
-        return new ArticleComment(content, article, null);
+    public static ArticleComment createArticleComment(String content, Article article, User user) {
+        return new ArticleComment(content, article, user, null);
     }
 
     public void editArticleComment(String content) {
