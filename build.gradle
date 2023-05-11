@@ -53,16 +53,11 @@ dependencies {
     // spring security - oauth client
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    // vault
-    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
-
     // aws parameter store
     implementation 'com.coveo:spring-boot-parameter-store-integration:1.1.2'
 
     // swagger ui > springdoc-openapi v1.7.0
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-//    implementation 'org.springdoc-openapi-javadoc:1.6.11'
-//    annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0' // javadoc을 swagger 문서에 추가해줌
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'

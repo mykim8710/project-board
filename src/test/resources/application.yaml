@@ -1,13 +1,8 @@
-awsParameterStorePropertySource:
-  enabled: false
-
 spring:
   profiles:
     active: test
 
-  h2:
-    console:
-      enabled: true
+  h2.console.enabled: true
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -22,18 +17,7 @@ spring:
         default_batch_fetch_size: 100
         metadata_builder_contributor: io.mykim.projectboard.global.config.mysql.CustomMysqlDialect
 
-  sql:
-    init:
-      mode: never
-
-  application.name: project-board-local
-  cloud:
-    vault:
-      uri: http://localhost:8200
-      scheme: http
-      authentication: TOKEN
-      token: root
-  config.import: vault://
+  sql.init.mode: never
 
   security:
     oauth2:
