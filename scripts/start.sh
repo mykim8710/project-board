@@ -6,7 +6,6 @@ source ${ABSDIR}/profile.sh
 
 REPOSITORY=/home/ec2-user/app/step4
 PROJECT_NAME=project-board
-JASYPT_SECRET_KEY=password
 
 echo "> Build 파일 복사"
 echo "> cp $REPOSITORY/zip/*.jar $REPOSITORY/"

@@ -26,6 +26,15 @@ spring:
     init:
       mode: never
 
+  application.name: project-board-local
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      scheme: http
+      authentication: TOKEN
+      token: root
+  config.import: vault://
+
   security:
     oauth2:
       client:

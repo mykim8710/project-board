@@ -2,7 +2,6 @@
 
 REPOSITORY=/home/ec2-user/app/step2
 PROJECT_NAME=project-board
-JASYPT_SECRET_KEY=password
 
 cp $REPOSITORY/zip/*.jar $REPOSITORY/
 
