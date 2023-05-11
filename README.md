@@ -205,17 +205,20 @@ url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:8080
 <img src="document/CI_CD_Structure.png">
 
 ## Reference
-* 유즈케이스 다이어그램 [#5](https://github.com/mykim8710/project-board/pull/5)
-  https://app.diagrams.net/#Hmykim8710%2Fproject-board%2Fmain%2Fdocument%2Fproject-board.drawio.svg
+* 유즈케이스 다이어그램 
+<h4>v1.0</h4>
+<img src="document/project-board_usecase_v1.svg">
 
-* ERD 다이어그램 [#8](https://github.com/mykim8710/project-board/pull/8)
-  https://app.diagrams.net/#Hmykim8710%2Fproject-board%2Fmain%2Fdocument%2Fproject-board_ERD.drawio.svg
 
-* 클래스 다이어그램 [#16](https://github.com/mykim8710/project-board/pull/16)
-  https://app.diagrams.net/#Hmykim8710%2Fproject-board%2Fmain%2Fdocument%2Fproject-board_CLASS.drawio.svg
+* ERD 다이어그램 
+<h4>v1.0</h4>
+<img src="document/project-board_ERD_v1.svg">
 
-* API Endpoint 구글시트
-  https://docs.google.com/spreadsheets/d/1r8QbP8IHxHKV3ZOqgRVC4t4-3RyDnIEKAm7XFUG4RG0/edit#gid=0
 
-* 어드민 서비스
+* 클래스 다이어그램 
+<h4>v1.0</h4>
+<img src="document/project-board_CLASS_v1.svg">
 
+* API Endpoint
+  * https://docs.google.com/spreadsheets/d/1r8QbP8IHxHKV3ZOqgRVC4t4-3RyDnIEKAm7XFUG4RG0/edit#gid=0
+  

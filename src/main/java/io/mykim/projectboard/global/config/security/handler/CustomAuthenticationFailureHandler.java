@@ -28,17 +28,17 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         /**
          * form login 방식
          */
-        String errorMessage = null;
+        String errorMessage = CustomErrorCode.NOT_VALID_ACCOUNT.getMessage();
 
-        // 해당계정이 없을때
-        if (exception instanceof UsernameNotFoundException) {
-            errorMessage = CustomErrorCode.NOT_FOUND_USER.getMessage();
-        }
-
-        // 비밀번호가 틀릴때 BadCredentialsException < AuthenticationException < RuntimeException
-        if (exception instanceof BadCredentialsException) {
-            errorMessage = CustomErrorCode.NOT_MATCH_PASSWORD.getMessage();
-        }
+//        // 해당계정이 없을때
+//        if (exception instanceof UsernameNotFoundException) {
+//            errorMessage = CustomErrorCode.NOT_FOUND_USER.getMessage();
+//        }
+//
+//        // 비밀번호가 틀릴때 BadCredentialsException < AuthenticationException < RuntimeException
+//        if (exception instanceof BadCredentialsException) {
+//            errorMessage = CustomErrorCode.NOT_MATCH_PASSWORD.getMessage();
+//        }
 
         errorMessage= URLEncoder.encode(errorMessage,"UTF-8"); // 한글 인코딩 깨지는 문제방지
         setDefaultFailureUrl("/users/sign-in?error=true&exception=" +errorMessage);

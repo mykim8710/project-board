@@ -1,8 +1,10 @@
 package io.mykim.projectboard.config;
 
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.entity.UserType;
+import io.mykim.projectboard.user.entity.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +17,10 @@ public class WithAuthUserSecurityContextFactory implements WithSecurityContextFa
     public SecurityContext createSecurityContext(WithAuthUser annotation) {
         String username = annotation.username();
 
-        User user = User.of(1L, username, "1234", "nickname", "email@eamil.com", "memo", UserType.GENERAL);
+        User user = User.of(1L, username, "1234", "nickname", "email@eamil.com", "memo", UserRole.ROLE_USER);
+        PrincipalDetail principalDetail = new PrincipalDetail(user);
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), List.of(new SimpleGrantedAuthority(user.getUserType().name())));
+        Authentication token = new UsernamePasswordAuthenticationToken(principalDetail, null, List.of(new SimpleGrantedAuthority(user.getUserRole().name())));
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
         return context;

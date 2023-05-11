@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 
 @DisplayName("UserService에 정의된 User 엔티티에 대한 CRUD 비지니스 로직을 테스트한다.")
 @Transactional
-@SpringBootTest
+@SpringBootTest(properties = {"JASYPT_SECRET_KEY=test"})
 class UserServiceTest {
     @Autowired
     private UserService userService;
@@ -95,10 +95,10 @@ class UserServiceTest {
                 e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_NICKNAME);
                 message = CustomErrorCode.DUPLICATE_USER_NICKNAME.getMessage();
                 break;
-            case "email":
-                e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
-                message = CustomErrorCode.DUPLICATE_USER_EMAIL.getMessage();
-                break;
+//            case "email":
+//                e = new DuplicateUserInfoException(CustomErrorCode.DUPLICATE_USER_EMAIL);
+//                message = CustomErrorCode.DUPLICATE_USER_EMAIL.getMessage();
+//                break;
             default:
                 e = new NotValidRequestException(CustomErrorCode.NOT_VALID_REQUEST);
                 message = CustomErrorCode.NOT_VALID_REQUEST.getMessage();

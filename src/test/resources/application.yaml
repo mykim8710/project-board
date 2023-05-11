@@ -13,24 +13,59 @@ spring:
     password:
 
   jpa:
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
+        metadata_builder_contributor: io.mykim.projectboard.global.config.mysql.CustomMysqlDialect
 
   sql:
     init:
       mode: never
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope:
+              - test
+
+          naver:
+            client-id: test
+            client-secret: test
+            redirect-uri: test
+            authorization-grant-type: test
+            client-name: test
+            scope:
+              - test
+
+          kakao:
+            client-id: test
+            client-secret: test
+            authorization-grant-type: test
+            redirect-uri: test
+            client-authentication-method: test
+            client-name: test
+            scope:
+              - test
+
+        provider:
+          naver:
+            authorization-uri: test
+            token-uri: test
+            user-info-uri: test
+            user-name-attribute: test
+
+          kakao:
+            authorization-uri: test
+            token-uri: test
+            user-info-uri: test
+            user-name-attribute: test
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor
-    algorithm: PBEWithMD5AndDES
-    pool-size: 2
-    key-obtention-iterations: 1000
-    password: ${JASYPT_SECRET_KEY}

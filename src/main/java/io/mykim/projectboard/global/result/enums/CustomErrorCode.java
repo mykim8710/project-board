@@ -17,6 +17,7 @@ public enum CustomErrorCode {
     // article, articleComment
     NOT_FOUND_ARTICLE(404, "A001", "not found this article"),
     NOT_FOUND_ARTICLE_COMMENT(404, "A002", "not found this article comment"),
+    NOT_FOUND_PARENT_ARTICLE_COMMENT(404, "A003", "not found parent article comment"),
 
 
     // user
@@ -25,12 +26,13 @@ public enum CustomErrorCode {
     DUPLICATE_USER_EMAIL(400, "U003", "duplicate email"),
 
     NOT_FOUND_USER(400, "U004", "not found this username"),
-
     NOT_MATCH_PASSWORD(400, "U005", "not match password"),
 
-    UN_AUTHORIZED_USER(401, "U006", "You are an unauthenticated user."),
+    NOT_VALID_ACCOUNT(400, "U006", "check your account or password"),
 
-    NOT_ALLOWED_USER(403, "U007", "You are not allowed user."),
+    UN_AUTHORIZED_USER(401, "U007", "You are an unauthenticated user."),
+
+    NOT_ALLOWED_USER(403, "U008", "You are not allowed user."),
     ;
 
 

@@ -2,17 +2,22 @@ package io.mykim.projectboard.article.controller;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
+import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleService;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,24 +36,36 @@ public class ArticleViewController {
     private final ArticleService articleService;
 
     @GetMapping
-    public String articlesView(@RequestParam(defaultValue = "") String keyword,
-                               @RequestParam(defaultValue = "") String searchType,
-                               @RequestParam(defaultValue = "1") int offset,
-                               @RequestParam(defaultValue = "10") int limit,
-                               @RequestParam(defaultValue = "id_DESC") String sort,
+    public String articlesView(@RequestParam(required = false) String searchKeyword,
+                               @RequestParam(required = false, name = "searchType") SearchType searchType,
+                               @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                Model model) {
 
-        log.info("[GET] /articles?keyword={}&searchType={}&offset={}&limit={}&sort={} => articles View", keyword, searchType, offset, limit, sort);
+        log.info("[GET] /articles?searchKeyword={}&searchType={}&page={}&size={}&sort={} => articles View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
 
-        // add model
-        model.addAttribute("articles", articleService.findAllArticle(new CustomPaginationRequest(offset, limit), new CustomSortingRequest(sort), new ArticleSearchCondition(keyword, searchType)));
+        model.addAttribute("articleSearchTypes", SearchType.values());
+        model.addAttribute("hashtagSearchType", SearchType.HASHTAG.name());
+        model.addAttribute("articles", articleService.findAllArticle(searchKeyword, searchType, pageable));
 
         return "articles/list";
+    }
+
+    @GetMapping("/hashtag")
+    public String articlesHashtagSearchView(@RequestParam(required = false) String searchKeyword,
+                                            @RequestParam(required = false, name = "searchType") SearchType searchType,
+                                            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+        log.info("[GET] /articles/hashtag?searchKeyword={}&searchType={}&page={}&size={}&sort={} => articles by Hashtag search View", searchKeyword, searchType, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+
+        model.addAttribute("hashtagSearchType", SearchType.HASHTAG.name());
+        model.addAttribute("articles", articleService.findAllArticle(searchKeyword, searchType, pageable));
+
+        return "articles/search-hashtag";
     }
 
     @GetMapping("/{articleId}")
     public String articlesDetailView(@PathVariable Long articleId, Model model) {
         log.info("[GET] /articles/{} =>  article Detail View", articleId);
+        model.addAttribute("totalCount", articleService.getTotalArticleCount());
         model.addAttribute("article", articleService.findOneArticle(articleId));
         return "articles/detail";
     }
@@ -63,7 +80,8 @@ public class ArticleViewController {
     @PostMapping("/create")
     public String articleCreate(@Validated @ModelAttribute("article") ArticleCreateDto articleCreateDto,
                                 BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes,
+                                @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
         log.info("[POST] /articles/create  =>  article create, ArticleCreateDto = {}", articleCreateDto);
 
@@ -72,7 +90,7 @@ public class ArticleViewController {
             return "articles/create";
         }
 
-        Long articleId = articleService.createArticle(articleCreateDto);
+        Long articleId = articleService.createArticle(articleCreateDto, principalDetail.getUser());
         redirectAttributes.addAttribute("articleId", articleId);
 
         return "redirect:/articles/{articleId}";
@@ -80,30 +98,32 @@ public class ArticleViewController {
 
     @GetMapping("/{articleId}/edit")
     public String articleEditView(@PathVariable Long articleId,
-                                  @AuthenticationPrincipal User user,
+                                  @AuthenticationPrincipal PrincipalDetail principalDetail,
                                   Model model, HttpServletResponse response) throws IOException {
         log.info("[GET] /articles/{}/edit => article edit View", articleId);
 
         // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
-        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
-        if(!findArticleDto.getUserId().equals(user.getId())) {
+        ResponseArticleForEditDto articleForEdit = articleService.findOneArticleForEdit(articleId);
+        if(!articleForEdit.getUserId().equals(principalDetail.getUser().getId())) {
             response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         }
 
-        model.addAttribute("article", findArticleDto);
+        model.addAttribute("article", articleForEdit);
         return "articles/edit";
     }
 
     @PostMapping("/{articleId}/edit")
-    public String articleEdit(@PathVariable Long articleId, @AuthenticationPrincipal User user,
+    public String articleEdit(@PathVariable Long articleId,
+                              @AuthenticationPrincipal PrincipalDetail principalDetail,
                               @Validated @ModelAttribute("article") ArticleEditDto articleEditDto,
-                              BindingResult bindingResult, HttpServletResponse response) throws IOException {
+                              BindingResult bindingResult,
+                              HttpServletResponse response) throws IOException {
 
         log.info("[POST] /articles/{}/edit => article edit, ArticleCreateDto = {}", articleId, articleEditDto);
 
         // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
-        ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
-        if(!findArticleDto.getUserId().equals(user.getId())) {
+        ResponseArticleForEditDto articleForEdit = articleService.findOneArticleForEdit(articleId);
+        if(!articleForEdit.getUserId().equals(principalDetail.getUser().getId())) {
             response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         }
 
@@ -123,12 +143,15 @@ public class ArticleViewController {
     }
 
     @PostMapping("/{articleId}/delete")
-    public void articleRemove(@PathVariable Long articleId, @AuthenticationPrincipal User user, HttpServletResponse response) throws IOException {
+    public void articleRemove(@PathVariable Long articleId,
+                              @AuthenticationPrincipal PrincipalDetail principalDetail,
+                              HttpServletResponse response) throws IOException {
+
         log.info("[POST] /articles/{}/delete => article delete");
 
         // 해당 게시글 작성자의 id와 현재 로그인 한 사용자의 id가 같은지 비교할 필요가 있음 : 본인이 작성한 글만 수정 및 삭제가 가능하다.
         ResponseArticleFindDto findArticleDto = articleService.findOneArticle(articleId);
-        if(!findArticleDto.getUserId().equals(user.getId())) {
+        if(!findArticleDto.getUserId().equals(principalDetail.getUser().getId())) {
             System.out.println("do this ");
             response.sendError(HttpStatus.FORBIDDEN.value(), CustomErrorCode.NOT_ALLOWED_USER.getMessage());
         } else {

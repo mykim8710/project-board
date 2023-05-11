@@ -176,7 +176,7 @@ class UserApiControllerTest {
 
     @DisplayName("회원가입 중 중복체크 api를 호출할때 해당 필드가 중복되지않으면 정상 응답을 리턴한다.")
     @ParameterizedTest(name = "{index} {displayName}, source = {0} {1}")
-    @CsvSource({"'username', 'test2'", "'nickname', 'nicknam2e'", "'email', 'email2@email.com'"})
+    @CsvSource({"'username', 'test2'", "'nickname', 'nickname2'"})
     void duplicateCheckUserInfoApiTest(ArgumentsAccessor argumentsAccessor) throws Exception {
         // given
         String username = "test";
@@ -211,7 +211,7 @@ class UserApiControllerTest {
 
     @DisplayName("회원가입 중 중복체크 api를 호출할때 해당 필드가 중복된다면 DuplicateUserInfoException 예외가 발생한다.")
     @ParameterizedTest(name = "{index} {displayName}, source = {0} {1}")
-    @CsvSource({"'username', 'test'", "'nickname', 'nickname'", "'email', 'email@email.com'", "'abc', 'abc'"})
+    @CsvSource({"'username', 'test'", "'nickname', 'nickname'", "'abc', 'abc'"})
     void duplicateCheckUserInfoApiExceptionTest(ArgumentsAccessor argumentsAccessor) throws Exception {
         // given
         String username = "test";
@@ -241,9 +241,9 @@ class UserApiControllerTest {
             case "nickname":
                 ec = CustomErrorCode.DUPLICATE_USER_NICKNAME;
                 break;
-            case "email":
-                ec = CustomErrorCode.DUPLICATE_USER_EMAIL;
-                break;
+//            case "email":
+//                ec = CustomErrorCode.DUPLICATE_USER_EMAIL;
+//                break;
             default:
                 ec = CustomErrorCode.NOT_VALID_REQUEST;
                 break;

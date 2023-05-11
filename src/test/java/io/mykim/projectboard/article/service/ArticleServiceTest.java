@@ -2,27 +2,33 @@ package io.mykim.projectboard.article.service;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
 import io.mykim.projectboard.article.entity.Article;
+import io.mykim.projectboard.article.entity.Hashtag;
+import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.article.repository.HashtagRepository;
 import io.mykim.projectboard.config.WithAuthUser;
+import io.mykim.projectboard.global.config.security.dto.PrincipalDetail;
 import io.mykim.projectboard.global.result.enums.CustomErrorCode;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
-import io.mykim.projectboard.global.select.pagination.CustomPaginationRequest;
-import io.mykim.projectboard.global.select.sort.CustomSortingRequest;
-import io.mykim.projectboard.user.dto.request.UserCreateDto;
 import io.mykim.projectboard.user.entity.User;
-import io.mykim.projectboard.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,15 +38,10 @@ import java.util.stream.IntStream;
 class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
-
     @Autowired
     private ArticleRepository articleRepository;
-
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private EntityManager em;
+    private HashtagRepository hashtagRepository;
 
     @Test
     @DisplayName("새로운 Article 생성하고 저장한다.")
@@ -49,16 +50,29 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtag);
+
+        String hashtag1 = "#hashtag";
+        String hashtag2 = "#red";
+        String hashtag3 = "#blue";
+
+        String hashtags = hashtag1.concat(hashtag2).concat(hashtag3);
+        ArticleCreateDto createDto = new ArticleCreateDto(title, content, hashtags);
+        User signInUser = getSignInUser();
 
         // when
-        Long articleId = articleService.createArticle(createDto);
+        Long articleId = articleService.createArticle(createDto, signInUser);
 
         // then
-        Article findArticle = em.find(Article.class, articleId);
+        Article findArticle = articleRepository.findById(articleId).get();
         Assertions.assertThat(title).isEqualTo(findArticle.getTitle());
         Assertions.assertThat(content).isEqualTo(findArticle.getContent());
+
+        List<String> hashtagNames = findArticle.getArticleHashTags()
+                                                .stream()
+                                                .map(articleHashTag -> articleHashTag.getHashtag().getName())
+                                                .collect(Collectors.toList());
+
+        Assertions.assertThat(hashtagNames).contains(hashtag1.replace("#", ""), hashtag2.replace("#", ""), hashtag3.replace("#", ""));
     }
 
     @Test
@@ -68,8 +82,13 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article newArticle = createNewArticle(title, content, hashtag);
+
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article newArticle = createNewArticle(title, content, hashtags);
 
         // when
         ResponseArticleFindDto findArticle = articleService.findOneArticle(newArticle.getId());
@@ -78,6 +97,7 @@ class ArticleServiceTest {
         Assertions.assertThat(findArticle).isNotNull();
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(title);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(content);
+        Assertions.assertThat(findArticle.getHashtags()).contains(hashtag1, hashtag2, hashtag3);
     }
 
     @Test
@@ -97,28 +117,29 @@ class ArticleServiceTest {
     @WithAuthUser(username = "test")
     void findAllArticleTest() throws Exception {
         // given
-        createUser();
+        //createUser();
 
-        IntStream.range(1, 31)
-                .forEach(i -> createNewArticle("title"+i, "content"+i, "#hashtag"+i));
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        IntStream.range(1, 21)
+                .forEach(i -> createNewArticle("title"+i, "content"+i, hashtags));
 
-        String sort = "id_ASC";
-        CustomSortingRequest customSortingRequest = new CustomSortingRequest(sort);
+        int page = 1;   // 0부터 시작
+        int size = 5;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
-        int offset = 2;
-        int limit = 5;
-        CustomPaginationRequest customPaginationRequest = new CustomPaginationRequest(offset, limit);
-
-        String keyword = "";
-        String searchType = "A";
-        ArticleSearchCondition articleSearchCondition = new ArticleSearchCondition(keyword, searchType);
+        String searchKeyword = "";
+        SearchType searchType = SearchType.ALL;
 
         // when
-        ResponseArticleListDto result = articleService.findAllArticle(customPaginationRequest, customSortingRequest, articleSearchCondition);
+        ResponseArticleListDto result = articleService.findAllArticle(searchKeyword, searchType, pageRequest);
 
         // then
-        Assertions.assertThat(result.getResponseArticleFindDtos().size()).isEqualTo(limit);
+        Assertions.assertThat(result.getResponseArticleFindDtos().size()).isEqualTo(size);
         Assertions.assertThat(result.getResponseArticleFindDtos().get(0).getTitle()).isEqualTo("title6");
+        Assertions.assertThat(result.getResponseArticleFindDtos().get(0).getHashtags()).contains(hashtag1, hashtag2, hashtag3);
     }
 
     @Test
@@ -128,23 +149,30 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        String hashtag1 = "hashtag";
+        String hashtag2 = "red";
+        String hashtag3 = "blue";
+
+        Set<Hashtag> hashtags = createHashtags(new String[]{hashtag1, hashtag2, hashtag3});
+        Article article = createNewArticle(title, content, hashtags);
 
         String newTitle = "newTitle";
         String newContent = "newContent";
-        String newHashtag = "newHashtag";
-        ArticleEditDto editDto = new ArticleEditDto(article.getId(), newTitle, newContent, newHashtag);
+
+        String newHashtag1 = "#blue";
+        String newHashtag2 = "#newHashtag";
+        ArticleEditDto editDto = new ArticleEditDto(article.getId(), newTitle, newContent, newHashtag1.concat(newHashtag2));
 
         // when
         articleService.editArticle(editDto, article.getId());
 
         // then
-        Article findArticle = em.find(Article.class, article.getId());
+        Article findArticle = articleRepository.findById(article.getId()).get();
+        Set<String> hashtagNames = findArticle.getArticleHashTags().stream().map(ah -> ah.getHashtag().getName()).collect(Collectors.toUnmodifiableSet());
 
         Assertions.assertThat(findArticle.getTitle()).isEqualTo(newTitle);
         Assertions.assertThat(findArticle.getContent()).isEqualTo(newContent);
-        Assertions.assertThat(findArticle.getHashtag()).isEqualTo(newHashtag);
+        Assertions.assertThat(hashtagNames).contains(newHashtag1.replace("#", ""), newHashtag2.replace("#", ""));
     }
 
     @Test
@@ -154,8 +182,7 @@ class ArticleServiceTest {
         // given
         String title = "title";
         String content = "content";
-        String hashtag = "hashtag";
-        Article article = createNewArticle(title, content, hashtag);
+        Article article = createNewArticle(title, content);
 
         // when
         articleService.removeArticle(article.getId());
@@ -166,27 +193,31 @@ class ArticleServiceTest {
                 .hasMessage(CustomErrorCode.NOT_FOUND_ARTICLE.getMessage());
     }
 
-    private Article createNewArticle(String title, String content, String hashtag) {
-        Article article = Article.of(title, content, hashtag);
-        return articleRepository.save(article);
+    private Article createNewArticle(String title, String content) {
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Article article = Article.createArticle(articleCreateDto, new LinkedHashSet<>(), getSignInUser());
+        articleRepository.save(article);
+        return article;
     }
 
-    private User createUser() {
-        String username = "test";
-        String password = "1234";
-        String email = "email@eamil.com";
-        String nickname = "nickname";
-        String memo = "memo";
+    private Set<Hashtag> createHashtags(String... hashtagNames) {
+        Set<Hashtag> hashtags = Arrays.stream(hashtagNames)
+                                        .map(hm -> Hashtag.of(hm))
+                                        .collect(Collectors.toUnmodifiableSet());
+        hashtagRepository.saveAll(hashtags);
+        return hashtags;
+    }
 
-        UserCreateDto createDto = UserCreateDto.builder()
-                                                .username(username)
-                                                .password(password)
-                                                .email(email)
-                                                .nickname(nickname)
-                                                .memo(memo)
-                                                .build();
+    private Article createNewArticle(String title, String content, Set<Hashtag> hashtags) {
+        ArticleCreateDto articleCreateDto = new ArticleCreateDto(title, content);
+        Article article = Article.createArticle(articleCreateDto, hashtags, getSignInUser());
+        articleRepository.save(article);
+        return article;
+    }
 
-        User user = User.of(createDto);
-        return userRepository.save(user);
+    private User getSignInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalDetail principal = (PrincipalDetail)authentication.getPrincipal();
+        return principal.getUser();
     }
 }

@@ -17,7 +17,7 @@
     let signInUserId = 0;
     [/]
     [# sec:authorize="isAuthenticated()"]
-    let signInUserId = [[${#authentication.principal.id}]];
+    let signInUserId = [[${#authentication.principal.user.id}]];
     [/]
 </script>
 
@@ -55,6 +55,12 @@
                                 </div>
                             </div>
                             <div class="form-input">
+                                <label>email</label>
+                                <div class="input-items default">
+                                    <p><a th:href="'mailto:' +${article.email}" th:text="${article.email}"></a></p>
+                                </div>
+                            </div>
+                            <div class="form-input">
                                 <label>최종수정일</label>
                                 <div class="input-items default">
                                     <p th:text="${#temporals.format(article.lastModifiedAt, 'yyyy/MM/dd HH:mm')}">2023-01-01</p>
@@ -63,18 +69,20 @@
                             <div class="form-input">
                                 <label>해시태그</label>
                                 <div class="input-items default">
-                                    <p th:text="${article.hashtag}">hashtag</p>
+                                    <span th:each="hashtag : ${article.getHashtags()}" >
+                                        <a th:text="'#'+${hashtag}" class="btn btn-warning btn-sm" style="font-size: 10px;padding: 5px;"/>
+                                    </span>
                                 </div>
                             </div>
                             <br>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.id} == ${article.userId}">
                                 <button class="btn primary-btn rounded-full"
-                                        th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|"
+                                        th:onclick="|location.href='@{/articles/{id}/edit(id=${article.id},page=${param.page},size=${param.size},searchType=${param.searchType},searchKeyword=${param.searchKeyword},sort=${param.sort})}'|"
                                         type="button">게시글 수정</button>
                             </div>
 
-                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${article.userId}">
+                            <div class="form-input rounded-buttons" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.id} == ${article.userId}">
                                 <form id="search-form" th:action="@{/articles/{id}/delete(id=${article.id})}" th:method="post">
                                     <button class="btn primary-btn rounded-full" type="submit">게시글 삭제</button>
                                 </form>
@@ -82,7 +90,7 @@
 
                             <div class="form-input rounded-buttons">
                                 <button class="btn primary-btn-outline rounded-full" type="button"
-                                        th:onclick="|location.href='@{/articles (offset=${param.offset},limit=${param.limit},searchType=${param.searchType},keyword=${param.keyword},sort=${param.sort})}'|">게시글 목록</button>
+                                        th:onclick="|location.href='@{/articles (page=${param.page},size=${param.size},searchType=${param.searchType},searchKeyword=${param.searchKeyword},sort=${param.sort})}'|">게시글 목록</button>
                             </div>
                         </div>
                     </div>
@@ -110,7 +118,23 @@
                         </div>
 
                         <div class="col-md-12">
-                            <nav aria-label="Page navigation" id="articleCommentPaginationArea"></nav>
+                            <nav aria-label="Page navigation" id="articleCommentPaginationArea">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <a th:href="*{article.id - 1} <= 0 ? '#' : |/articles/*{article.id - 1}|" class="page-link" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">이전글</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item">
+                                        <a th:href="*{article.id + 1} > ${totalCount} ? '#' : |/articles/*{article.id + 1}|" class="page-link" aria-label="Next">
+                                            <span class="sr-only">다음글</span>
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

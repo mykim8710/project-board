@@ -1,4 +1,4 @@
-package io.mykim.projectboard.article.repository;
+package io.mykim.projectboard.article.repository.querydsl;
 
 
 import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
