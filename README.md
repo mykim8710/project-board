@@ -199,25 +199,36 @@ Spring Boot
 ```
 
 ## 데모 페이지
-url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:8080
+url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com
 
 ## CI/CD Structure
 <img src="document/CI_CD_Structure.png">
+
+## Git branch 운용[ feature(issue) > develop > main > deploy ]
+- deploy : 배포용 branch
+- main : default branch, 최신버전 유지를 위한 브랜치
+- develop : 개발 최상 branch, 기능별 브랜치를 머지
+- feature : 기능 별 개발 branch
 
 ## Reference
 * 유즈케이스 다이어그램 
 <h4>v1.0</h4>
 <img src="document/project-board_usecase_v1.svg">
+<h4>v2.0</h4>
+<img src="document/project-board_usecase_v2.svg">
 
 
 * ERD 다이어그램 
 <h4>v1.0</h4>
 <img src="document/project-board_ERD_v1.svg">
-
+<h4>v2.0</h4>
+<img src="document/project-board_ERD_v2.svg">
 
 * 클래스 다이어그램 
 <h4>v1.0</h4>
 <img src="document/project-board_CLASS_v1.svg">
+<h4>v2.0</h4>
+<img src="document/project-board_CLASS_v2.svg">
 
 * API Endpoint
   * https://docs.google.com/spreadsheets/d/1r8QbP8IHxHKV3ZOqgRVC4t4-3RyDnIEKAm7XFUG4RG0/edit#gid=0
