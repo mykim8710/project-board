@@ -8,13 +8,14 @@ Springboot + JPA를 사용하여 개발한 가장 기본적이고 보편적인 �
     * 게시글 작성
     * 게시글 수정(본인이 작성한 글만)
     * 게시글 삭제(본인이 작성한 글만)
-  * 댓글(현재까지는 1대1 댓글)
-    * 댓글 목록(+페이징)
+    * 해시태그 전용 검색
+  * 댓글
+    * 대댓글(무한단계까지 가능하나 실서비스는 1단계까지만 적용) 
+    * 댓글 목록(페이징 X)
     * 댓글 작성
     * 댓글 수정(본인이 작성한 글만)
     * 댓글 삭제(본인이 작성한 글만)
-  * 회원가입
-  * 로그인
+  * 회원가입 / 로그인(직접가입, OAuth2 Social : Google, Naver, Kakao)
 
 ## 개발 환경
 
@@ -25,22 +26,22 @@ Springboot + JPA를 사용하여 개발한 가장 기본적이고 보편적인 �
 
 ## 기술 세부 스택
 
-
 Spring Boot
-* Spring Boot Actuator
 * Spring Web
 * Spring Data JPA
+* QueryDSL 5.0.0
 * Spring Security
-* ~~Rest Repositories~~
-* ~~Rest Repositories HAL Explorer~~
+* Spring Security OAuth2 Client
+* Spring Boot DevTools
 * Thymeleaf
 * H2 Database
 * MySQL Driver
 * Lombok
-* Spring Boot DevTools
+* Validation
+* Swagger UI
+* aws parameter Store
 
 그 외
-* QueryDSL 5.0.0
 * Bootstrap 5.2.3
 * JavaScript
 
@@ -211,23 +212,17 @@ url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com
 - feature : 기능 별 개발 branch
 
 ## Reference
-* 유즈케이스 다이어그램 
-<h4>v1.0</h4>
+* 유즈케이스 다이어그램
 <img src="document/project-board_usecase_v1.svg">
-<h4>v2.0</h4>
 <img src="document/project-board_usecase_v2.svg">
 
 
-* ERD 다이어그램 
-<h4>v1.0</h4>
+* ERD 다이어그램
 <img src="document/project-board_ERD_v1.svg">
-<h4>v2.0</h4>
 <img src="document/project-board_ERD_v2.svg">
 
-* 클래스 다이어그램 
-<h4>v1.0</h4>
+* 클래스 다이어그램
 <img src="document/project-board_CLASS_v1.svg">
-<h4>v2.0</h4>
 <img src="document/project-board_CLASS_v2.svg">
 
 * API Endpoint
