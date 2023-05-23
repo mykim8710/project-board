@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
@@ -14,4 +15,6 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
     Slice<String> findAllNames(Pageable pageable);
 
     List<Hashtag> findByNameIn(Set<String> hashtagNames);
+
+    boolean existsByName(String name);
 }

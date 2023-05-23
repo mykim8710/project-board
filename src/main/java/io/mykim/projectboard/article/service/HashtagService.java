@@ -2,7 +2,11 @@ package io.mykim.projectboard.article.service;
 
 import io.mykim.projectboard.article.dto.response.ResponseHashtagListDto;
 import io.mykim.projectboard.article.entity.Hashtag;
+import io.mykim.projectboard.article.repository.ArticleHashtagRepository;
 import io.mykim.projectboard.article.repository.HashtagRepository;
+import io.mykim.projectboard.global.result.exception.DuplicateHashtagException;
+import io.mykim.projectboard.global.result.exception.NotAllowDeleteException;
+import io.mykim.projectboard.global.result.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,11 +20,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static io.mykim.projectboard.global.result.enums.CustomErrorCode.*;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class HashtagService {
     private final HashtagRepository hashtagRepository;
+    private final ArticleHashtagRepository articleHashtagRepository;
 
     @Transactional(readOnly = true)
     public ResponseHashtagListDto findAllHashtags(Pageable pageable) {
@@ -59,6 +66,30 @@ public class HashtagService {
 
         return hashtags;
     }
+
+    @Transactional
+    public Long addNewHashtag(String name) {
+        // 중복체크
+        if(hashtagRepository.existsByName(name)) {
+            throw new DuplicateHashtagException(DUPLICATE_HASHTAG_NAME);
+        }
+
+        Hashtag hashtag = Hashtag.of(name);
+        return hashtagRepository.save(hashtag).getId();
+    }
+
+    @Transactional
+    public void removeHashtag(Long hashtagId) {
+        Hashtag hashtag = hashtagRepository.findById(hashtagId).orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG));
+
+        // 사용여부 체크
+        if(articleHashtagRepository.existByHashtagId(hashtagId)) {
+            throw new NotAllowDeleteException(NOT_ALLOW_DELETE_HASHTAG);
+        }
+
+        hashtagRepository.delete(hashtag);
+    }
+
 
     private Set<String> parseHashtagNames(String hashtags) {
         if (hashtags == null || hashtags.isEmpty() || !hashtags.contains("#")) {

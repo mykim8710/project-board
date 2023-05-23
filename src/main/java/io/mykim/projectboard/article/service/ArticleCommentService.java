@@ -43,6 +43,12 @@ public class ArticleCommentService {
         return ResponseArticleCommentFindDto.of(articleComment);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseArticleCommentFindDto findOneArticleCommentById(Long articleCommentId) {
+        ArticleComment articleComment = articleCommentRepository.findById(articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
+        return ResponseArticleCommentFindDto.of(articleComment);
+    }
+
     @Transactional
     public Long createNewArticleComment(ArticleCommentCreateDto createDto, Long articleId, User user) {
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
@@ -75,6 +81,12 @@ public class ArticleCommentService {
         confirmArticleCommentCreatedUserId(articleComment.getUser().getId());
 
         // todo : 자식댓글이 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
+        articleCommentRepository.delete(articleComment);
+    }
+
+    @Transactional
+    public void removeArticleCommentFromAdmin(Long articleCommentId) {
+        ArticleComment articleComment = articleCommentRepository.findById(articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
         articleCommentRepository.delete(articleComment);
     }
 
