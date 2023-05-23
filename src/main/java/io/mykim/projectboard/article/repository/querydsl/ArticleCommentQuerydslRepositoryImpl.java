@@ -1,8 +1,12 @@
 package io.mykim.projectboard.article.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.mykim.projectboard.global.dto.SearchCondition;
 import io.mykim.projectboard.article.dto.response.QResponseArticleCommentFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -35,5 +39,14 @@ public class ArticleCommentQuerydslRepositoryImpl implements ArticleCommentQuery
                     .where(articleComment.article.id.eq(articleId))
                     .orderBy(articleComment.parentArticleComment.id.asc().nullsFirst(), articleComment.createdAt.desc())
                     .fetch();
+    }
+
+    @Override
+    public Page<ResponseArticleFindDto> findAllArticleComment(Pageable pageable, SearchCondition searchCondition) {
+
+
+
+
+        return null;
     }
 }

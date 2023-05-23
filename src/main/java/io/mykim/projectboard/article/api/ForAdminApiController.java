@@ -1,6 +1,7 @@
 package io.mykim.projectboard.article.api;
 
 import io.mykim.projectboard.article.dto.request.HashtagCreateDto;
+import io.mykim.projectboard.article.enums.SearchType;
 import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.article.service.ArticleService;
 import io.mykim.projectboard.article.service.HashtagService;
@@ -26,24 +27,25 @@ public class ForAdminApiController {
     private final ArticleCommentService articleCommentService;
     private final HashtagService hashtagService;
 
-    // 게시글 목록 조회
+    // 게시글 목록 조회 : OK
     @GetMapping("/articles")
     public ResponseEntity<CommonResponse> findAllArticleApiForAdmin(HttpServletRequest request,
                                                                     @RequestParam(required = false) String searchKeyword,
+                                                                    @RequestParam(required = false) SearchType searchType,
                                                                     @PageableDefault(page = 0, size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("[GET] /api/admin/articles?searchKeyword={}&page={}&size={}&sort={} => find all Article for Admin Service api", searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        log.info("[GET] /api/admin/articles?searchType={}&searchKeyword={}&page={}&size={}&sort={} => find all Article for Admin Service api", searchType, searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
 
         System.out.println("request.getRemotePort() = " + request.getRemotePort());
         
         
-        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.COMMON_OK, articleService.findAllArticle(searchKeyword, null, pageable));
+        CommonResponse commonResponse = new CommonResponse<>(CustomSuccessCode.COMMON_OK, articleService.findAllArticle(searchKeyword, searchType, pageable));
 
         return ResponseEntity
                 .status(commonResponse.getStatus())
                 .body(commonResponse);
     }
 
-    // 게시글 단건 조회
+    // 게시글 단건 조회 : OK
     @GetMapping("/articles/{articleId}")
     public ResponseEntity<CommonResponse> findOneArticleApiForAdmin(HttpServletRequest request, @PathVariable Long articleId) {
         log.info("[GET] /api/admin/articles/{articleId}  =>  find one Article for Admin Service api, articleId = {}", articleId);
@@ -53,7 +55,7 @@ public class ForAdminApiController {
                 .body(commonResponse);
     }
 
-    // 게시글 단건 삭제
+    // 게시글 단건 삭제 : OK
     @DeleteMapping("/articles/{articleId}")
     public ResponseEntity<CommonResponse> removeArticleApiForAdmin(HttpServletRequest request, @PathVariable Long articleId) {
         log.info("[DELETE] /api/admin/articles/{}  =>  remove Article for Admin Service api", articleId);
@@ -68,18 +70,22 @@ public class ForAdminApiController {
     @GetMapping("/article-comments")
     public ResponseEntity<CommonResponse> findAllArticleCommentForAdminApi(HttpServletRequest request,
                                                                            @RequestParam(required = false) String searchKeyword,
+                                                                           @RequestParam(required = false) SearchType searchType,
                                                                            @PageableDefault(page = 0, size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("[GET] /api/admin/article-comments?searchKeyword={}&page={}&size={}&sort={} => find all articleComment for Admin Service api", searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        log.info("[GET] /api/admin/article-comments?searchType={}&searchKeyword={}&page={}&size={}&sort={} => find all articleComment for Admin Service api", searchType, searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
 
 
 
         CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_OK);
+
+
+
         return ResponseEntity
                 .status(response.getStatus())
                 .body(response);
     }
 
-    // 댓글 단건조회
+    // 댓글 단건조회 : OK
     @GetMapping("/article-comments/{articleCommentId}")
     public ResponseEntity<CommonResponse> findOneArticleCommentForAdminApi(HttpServletRequest request, @PathVariable Long articleCommentId) {
         log.info("[GET] /api/admin/articles/{articleId}  =>  find one articleComment for Admin Service api, articleCommentId = {}", articleCommentId);
@@ -89,7 +95,7 @@ public class ForAdminApiController {
                 .body(response);
     }
 
-    // 댓글 단건 삭제
+    // 댓글 단건 삭제 : OK
     @DeleteMapping("/article-comments/{articleCommentId}")
     public ResponseEntity<CommonResponse> removeArticleCommentApiForAdmin(HttpServletRequest request, @PathVariable Long articleCommentId) {
         log.info("[DELETE] /api/admin/article-comments/{}  =>  remove articleComment for Admin Service api", articleCommentId);
@@ -100,18 +106,19 @@ public class ForAdminApiController {
                 .body(commonResponse);
     }
 
-    // 전체 해시태그 목록조회(사용여부 파악)
+    // 전체 해시태그 목록조회
     @GetMapping("/api/admin/hashtags")
     public CommonResponse findAllHashtagsApiForAdmin(HttpServletRequest request,
                                                      @RequestParam(required = false) String searchKeyword,
+                                                     @RequestParam(required = false) SearchType searchType,
                                                      @PageableDefault(page = 0, size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        log.info("[GET] /api/admin/hashtags?searchKeyword={}&page={}&size={}&sort={} => find all hashtags for Admin Service api", searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+        log.info("[GET] /api/admin/hashtags?searchType={}&searchKeyword={}&page={}&size={}&sort={} => find all hashtags for Admin Service api", searchType, searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
 
 
         return new CommonResponse(CustomSuccessCode.COMMON_OK);
     }
 
-    // 해시태그 추가
+    // 해시태그 추가 : OK
     @PostMapping("/api/admin/hashtags")
     public CommonResponse addNewHashtagApiForAdmin(HttpServletRequest request, @RequestBody HashtagCreateDto hashtagCreateDto) {
         log.info("[POST] /api/admin/hashtags => add new hashtag for Admin Service Api, HashtagCreateDto = {}",  hashtagCreateDto);
@@ -119,7 +126,7 @@ public class ForAdminApiController {
     }
 
 
-    // 해시태그 삭제(미사용중인 해시태그만)
+    // 해시태그 삭제(미사용 중인 해시태그만) : OK
     @DeleteMapping("/api/admin/hashtags/{hashtagId}")
     public CommonResponse removeHashtagApiForAdmin(HttpServletRequest request, @PathVariable Long hashtagId) {
         log.info("[DELETE] /api/admin/hashtags => remove hashtag for Admin Service Api, hashtagId : {}", hashtagId);
@@ -128,8 +135,17 @@ public class ForAdminApiController {
     }
 
 
-    // 전채 회원 목록
-    //@GetMapping("/api/admin/users")
+    // 전체 회원 목록
+    @GetMapping("/api/admin/users")
+    public CommonResponse findAllUserApiForAdmin(HttpServletRequest request,
+                                                 @RequestParam(required = false) String searchKeyword,
+                                                 @RequestParam(required = false) SearchType searchType,
+                                                 @PageableDefault(page = 0, size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        log.info("[GET] /api/admin/users?searchType={}&searchKeyword={}&page={}&size={}&sort={} => find all users for Admin Service api", searchType, searchKeyword, pageable.getOffset(), pageable.getPageSize(), pageable.getSort());
+
+
+        return new CommonResponse(CustomSuccessCode.COMMON_OK);
+    }
 
 
 }

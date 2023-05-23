@@ -1,4 +1,4 @@
-package io.mykim.projectboard.global.config.jpa;
+package io.mykim.projectboard.global.jpa;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

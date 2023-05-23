@@ -2,7 +2,7 @@ package io.mykim.projectboard.article.service;
 
 import io.mykim.projectboard.article.dto.request.ArticleCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleEditDto;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
+import io.mykim.projectboard.global.dto.SearchCondition;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleForEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleListDto;
@@ -39,7 +39,7 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public ResponseArticleListDto findAllArticle(String searchKeyword, SearchType searchType, Pageable pageable) {
-        Page<ResponseArticleFindDto> findArticles = articleRepository.findAllArticle(pageable, new ArticleSearchCondition(searchKeyword, searchType));
+        Page<ResponseArticleFindDto> findArticles = articleRepository.findAllArticle(pageable, new SearchCondition(searchKeyword, searchType));
 
         return ResponseArticleListDto.builder()
                                         .responseArticleFindDtos(findArticles.getContent())

@@ -3,7 +3,7 @@ package io.mykim.projectboard.article.repository.querydsl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
-import io.mykim.projectboard.article.dto.request.ArticleSearchCondition;
+import io.mykim.projectboard.global.dto.SearchCondition;
 import io.mykim.projectboard.article.dto.response.QResponseArticleFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleFindDto;
 import io.mykim.projectboard.article.entity.Article;
@@ -27,7 +27,7 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
     }
 
     @Override
-    public Page<ResponseArticleFindDto> findAllArticle(Pageable pageable, ArticleSearchCondition searchCondition) {
+    public Page<ResponseArticleFindDto> findAllArticle(Pageable pageable, SearchCondition searchCondition) {
         JPQLQuery<ResponseArticleFindDto> jpqlQuery = from(article)
                 .leftJoin(article.user, user)
                 .leftJoin(article.articleHashTags, articleHashTag)
@@ -53,11 +53,11 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
         return new PageImpl<>(content, pageable, result.fetchCount());
     }
 
-    private BooleanExpression createUniversalSearchCondition(ArticleSearchCondition searchCondition) {
+    private BooleanExpression createUniversalSearchCondition(SearchCondition searchCondition) {
         return !StringUtils.hasLength(searchCondition.getKeyword()) ? null : chooseSearchCondition(searchCondition);
     }
 
-    private BooleanExpression chooseSearchCondition(ArticleSearchCondition searchCondition) {
+    private BooleanExpression chooseSearchCondition(SearchCondition searchCondition) {
         switch (searchCondition.getSearchType()) {
             case TITLE:
                 return articleTitleLike(searchCondition.getKeyword());
