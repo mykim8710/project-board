@@ -38,6 +38,9 @@ public enum CustomErrorCode {
     DUPLICATE_HASHTAG_NAME(400, "H001", "duplicate hashtag"),
     NOT_FOUND_HASHTAG(400, "H002", "not found this hashtag"),
     NOT_ALLOW_DELETE_HASHTAG(400, "H003", "this hashtag is not deleted."),
+
+    // admin
+    NOT_ALLOW_ACCESS(400, "A001", "This is the port number that cannot access the api."),
     ;
 
 
