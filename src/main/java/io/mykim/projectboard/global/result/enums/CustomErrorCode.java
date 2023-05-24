@@ -33,6 +33,14 @@ public enum CustomErrorCode {
     UN_AUTHORIZED_USER(401, "U007", "You are an unauthenticated user."),
 
     NOT_ALLOWED_USER(403, "U008", "You are not allowed user."),
+
+    // hashtag
+    DUPLICATE_HASHTAG_NAME(400, "H001", "duplicate hashtag"),
+    NOT_FOUND_HASHTAG(400, "H002", "not found this hashtag"),
+    NOT_ALLOW_DELETE_HASHTAG(400, "H003", "this hashtag is not deleted."),
+
+    // admin
+    NOT_ALLOW_ACCESS(400, "A001", "This is the port number that cannot access the api."),
     ;
 
 

@@ -1,6 +1,6 @@
 package io.mykim.projectboard.article.entity;
 
-import io.mykim.projectboard.global.config.jpa.BaseTimeEntity;
+import io.mykim.projectboard.global.jpa.BaseTimeEntity;
 import io.mykim.projectboard.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;

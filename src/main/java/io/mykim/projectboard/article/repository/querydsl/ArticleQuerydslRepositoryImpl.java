@@ -61,10 +61,8 @@ public class ArticleQuerydslRepositoryImpl extends QuerydslRepositorySupport imp
         switch (searchCondition.getSearchType()) {
             case TITLE:
                 return articleTitleLike(searchCondition.getKeyword());
-
             case CONTENT:
                 return articleContentLike(searchCondition.getKeyword());
-
             case NICKNAME:
                 return articleCreatedByLike(searchCondition.getKeyword());
             case HASHTAG:

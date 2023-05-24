@@ -3,6 +3,7 @@ package io.mykim.projectboard.article.service;
 import io.mykim.projectboard.article.dto.request.ArticleCommentCreateDto;
 import io.mykim.projectboard.article.dto.request.ArticleCommentEditDto;
 import io.mykim.projectboard.article.dto.response.ResponseArticleCommentFindDto;
+import io.mykim.projectboard.article.dto.response.ResponseArticleCommentListDto;
 import io.mykim.projectboard.article.entity.Article;
 import io.mykim.projectboard.article.entity.ArticleComment;
 import io.mykim.projectboard.article.repository.ArticleCommentRepository;
@@ -15,6 +16,8 @@ import io.mykim.projectboard.global.result.exception.NotFoundException;
 import io.mykim.projectboard.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,8 +41,23 @@ public class ArticleCommentService {
     }
 
     @Transactional(readOnly = true)
+    public ResponseArticleCommentListDto findAllArticleCommentFromAdmin(String searchKeyword, Pageable pageable) {
+        Page<ResponseArticleCommentFindDto> articleCommentFindDtos = articleCommentRepository.findAllArticleComment(pageable, searchKeyword);
+        return ResponseArticleCommentListDto.builder()
+                                                .articleCommentFindDtos(articleCommentFindDtos.getContent())
+                                                .paginationResponse(CustomPaginationResponse.of(articleCommentFindDtos.getTotalElements(), articleCommentFindDtos.getTotalPages(), articleCommentFindDtos.getNumber()))
+                                                .build();
+    }
+
+    @Transactional(readOnly = true)
     public ResponseArticleCommentFindDto findOneArticleCommentByIdUnderArticle(Long articleId, Long articleCommentId) {
         ArticleComment articleComment = articleCommentRepository.findArticleCommentByIdAndArticleId(articleId, articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
+        return ResponseArticleCommentFindDto.of(articleComment);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseArticleCommentFindDto findOneArticleCommentById(Long articleCommentId) {
+        ArticleComment articleComment = articleCommentRepository.findById(articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
         return ResponseArticleCommentFindDto.of(articleComment);
     }
 
@@ -75,6 +93,12 @@ public class ArticleCommentService {
         confirmArticleCommentCreatedUserId(articleComment.getUser().getId());
 
         // todo : 자식댓글이 일일이 개별삭제로 진행되고있음 -> 한방에 지울수있도록 수정필요
+        articleCommentRepository.delete(articleComment);
+    }
+
+    @Transactional
+    public void removeArticleCommentFromAdmin(Long articleCommentId) {
+        ArticleComment articleComment = articleCommentRepository.findById(articleCommentId).orElseThrow(() -> new NotFoundException(NOT_FOUND_ARTICLE_COMMENT));
         articleCommentRepository.delete(articleComment);
     }
 

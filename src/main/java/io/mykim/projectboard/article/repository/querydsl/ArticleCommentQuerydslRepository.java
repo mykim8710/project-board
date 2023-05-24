@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ArticleCommentQuerydslRepository {
     List<ResponseArticleCommentFindDto> findAllArticleCommentUnderArticle(Long articleId);
+
+    Page<ResponseArticleCommentFindDto> findAllArticleComment(Pageable pageable, String keyword);
 }

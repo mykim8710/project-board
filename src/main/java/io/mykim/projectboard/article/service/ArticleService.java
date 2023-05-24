@@ -103,6 +103,12 @@ public class ArticleService {
         articleRepository.delete(findArticle);
     }
 
+    @Transactional
+    public void removeArticleFromAdmin(Long articleId) {
+        Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_ARTICLE));
+        articleRepository.delete(findArticle);
+    }
+
     private Long getSignInUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetail principalDetail = (PrincipalDetail)authentication.getPrincipal();
