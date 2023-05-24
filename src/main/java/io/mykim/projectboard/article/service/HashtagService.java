@@ -1,9 +1,12 @@
 package io.mykim.projectboard.article.service;
 
+import io.mykim.projectboard.article.dto.response.ResponseHashtagFindDto;
 import io.mykim.projectboard.article.dto.response.ResponseHashtagListDto;
+import io.mykim.projectboard.article.dto.response.ResponseHashtagListForAdminDto;
 import io.mykim.projectboard.article.entity.Hashtag;
 import io.mykim.projectboard.article.repository.ArticleHashtagRepository;
 import io.mykim.projectboard.article.repository.HashtagRepository;
+import io.mykim.projectboard.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboard.global.result.exception.DuplicateHashtagException;
 import io.mykim.projectboard.global.result.exception.NotAllowDeleteException;
 import io.mykim.projectboard.global.result.exception.NotFoundException;
@@ -38,6 +41,22 @@ public class HashtagService {
                                         .hasNextPage(findHashtags.hasNext())
                                         .isLast(findHashtags.isLast())
                                         .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseHashtagListForAdminDto findAllHashtagForAdmin(Pageable pageable, String searchKeyword) {
+        Page<Hashtag> allHashtag = hashtagRepository.findAllHashtag(pageable, searchKeyword);
+
+        List<ResponseHashtagFindDto> hashtagFindDtos = allHashtag.getContent()
+                                                                    .stream()
+                                                                    .map(hashtag -> ResponseHashtagFindDto.from(hashtag))
+                                                                    .collect(Collectors.toList());
+
+        return ResponseHashtagListForAdminDto
+                .builder()
+                .responseHashtagFindDtos(hashtagFindDtos)
+                .paginationResponse(CustomPaginationResponse.of(allHashtag.getTotalElements(), allHashtag.getTotalPages(), allHashtag.getNumber()))
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -89,7 +108,6 @@ public class HashtagService {
 
         hashtagRepository.delete(hashtag);
     }
-
 
     private Set<String> parseHashtagNames(String hashtags) {
         if (hashtags == null || hashtags.isEmpty() || !hashtags.contains("#")) {
