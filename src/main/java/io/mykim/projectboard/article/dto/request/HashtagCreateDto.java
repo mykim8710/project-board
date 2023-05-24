@@ -8,6 +8,9 @@ import lombok.ToString;
 public class HashtagCreateDto {
     private String name;
 
+    public HashtagCreateDto() {
+    }
+
     public HashtagCreateDto(String name) {
         this.name = name;
     }
