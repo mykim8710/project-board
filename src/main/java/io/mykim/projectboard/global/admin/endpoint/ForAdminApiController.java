@@ -2,11 +2,15 @@ package io.mykim.projectboard.global.admin.endpoint;
 
 import io.mykim.projectboard.article.dto.request.HashtagCreateDto;
 import io.mykim.projectboard.article.enums.SearchType;
+import io.mykim.projectboard.article.repository.ArticleCommentRepository;
+import io.mykim.projectboard.article.repository.ArticleRepository;
+import io.mykim.projectboard.article.repository.HashtagRepository;
 import io.mykim.projectboard.article.service.ArticleCommentService;
 import io.mykim.projectboard.article.service.ArticleService;
 import io.mykim.projectboard.article.service.HashtagService;
 import io.mykim.projectboard.global.result.enums.CustomSuccessCode;
 import io.mykim.projectboard.global.result.model.CommonResponse;
+import io.mykim.projectboard.user.repository.UserRepository;
 import io.mykim.projectboard.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +33,11 @@ public class ForAdminApiController {
     private final ArticleCommentService articleCommentService;
     private final HashtagService hashtagService;
     private final UserService userService;
+
+    private final ArticleRepository articleRepository;
+    private final ArticleCommentRepository articleCommentRepository;
+    private final HashtagRepository hashtagRepository;
+    private final UserRepository userRepository;
 
     // 게시글 목록 조회
     @GetMapping("/articles")
@@ -143,5 +154,18 @@ public class ForAdminApiController {
         return ResponseEntity
                 .status(response.getStatus())
                 .body(response);
+    }
+
+    // 각각 전체 카운트 조회
+    @GetMapping("/dashboard/total-count")
+    public Map<String, Long> findTotalCount() {
+        log.info("[GET] /api/admin//dashboard/total-count");
+
+        long articlesTotalCount = articleRepository.count();
+        long articleCommentTotalCount = articleCommentRepository.count();
+        long hashtagTotalCount = hashtagRepository.count();
+        long userTotalCount = userRepository.count();
+
+        return Map.of("articlesTotalCount", articlesTotalCount, "articleCommentTotalCount", articleCommentTotalCount, "hashtagTotalCount", hashtagTotalCount, "userTotalCount", userTotalCount);
     }
 }

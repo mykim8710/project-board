@@ -27,7 +27,7 @@ public class UserQuerydslRepositoryImpl implements UserQuerydslRepository {
     @Override
     public Page<UserFindDto> findAllUser(Pageable pageable, String searchKeyword) {
         List<UserFindDto> userFindDtos = queryFactory
-                                            .select(new QUserFindDto(user.id, user.username, user.nickname, user.email))
+                                            .select(new QUserFindDto(user.id, user.username, user.nickname, user.email, user.createdAt, user.lastModifiedAt))
                                             .from(user)
                                             .where(createUniversalSearchCondition(searchKeyword))
                                             .orderBy(getOrderSpecifier(pageable.getSort(), user.getType(), user.getMetadata())
