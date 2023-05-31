@@ -228,3 +228,5 @@ url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com
 * API Endpoint
   * https://docs.google.com/spreadsheets/d/1r8QbP8IHxHKV3ZOqgRVC4t4-3RyDnIEKAm7XFUG4RG0/edit#gid=0
   
+## Admin page(test 계정 : master/1111)
+ * http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:9090
